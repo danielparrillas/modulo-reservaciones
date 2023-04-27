@@ -1,3 +1,4 @@
+# URL equivalente 
 RewriteEngine On
 
 # No se mostrara el directorio, en lugar lanzara el error 403 Forbidden

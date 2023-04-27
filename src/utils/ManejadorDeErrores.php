@@ -8,11 +8,14 @@ class ManejadorDeErrores
     http_response_code(500);
     echo json_encode([
       'error' => [
+        'status' => true,
         'message' => $exception->getMessage(),
-        'code' => $exception->getCode(),
-        'file' => $exception->getFile(),
-        'line' => $exception->getLine(),
-        'trace' => $exception->getTraceAsString()
+        'details' => [
+          'code' => $exception->getCode(),
+          'file' => $exception->getFile(),
+          'line' => $exception->getLine(),
+          'trace' => $exception->getTraceAsString()
+        ]
       ]
     ]);
   }
