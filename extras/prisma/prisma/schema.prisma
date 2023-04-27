@@ -1,0 +1,150 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model detalles_reservaciones {
+  id             Int           @id @default(autoincrement())
+  reservacion_id Int
+  servicio_id    Int
+  cantidad       Int
+  precio         Decimal       @db.Decimal(10, 2)
+  creado         DateTime      @default(now()) @db.DateTime(0)
+  actualizado    DateTime      @default(now()) @db.DateTime(0)
+  eliminado      Int           @default(0) @db.TinyInt
+  reservaciones  reservaciones @relation(fields: [reservacion_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_detalle_reservacion")
+  servicios      servicios     @relation(fields: [servicio_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_detalle_servicio")
+
+  @@unique([reservacion_id, servicio_id], map: "unique_reservacionid_servicioid")
+  @@index([reservacion_id], map: "fk_detalle_reservacion_idx")
+  @@index([servicio_id], map: "fk_detalle_servicio_idx")
+}
+
+model lugares_turisticos {
+  id                                       Int                                        @id @default(autoincrement())
+  anp_id                                   Int
+  municipio                                Int
+  nombre                                   String                                     @db.VarChar(255)
+  permite_acampar                          Int                                        @default(1) @db.TinyInt
+  activo                                   Int                                        @default(1) @db.TinyInt
+  creado                                   DateTime                                   @default(now()) @db.DateTime(0)
+  actualizado                              DateTime                                   @default(now()) @db.DateTime(0)
+  eliminado                                Int                                        @default(0) @db.TinyInt
+  disponibilidades_lugares_gruposservicios disponibilidades_lugares_gruposservicios[]
+  periodos_deshabilitados                  periodos_deshabilitados[]
+  reservaciones                            reservaciones[]
+}
+
+model reservaciones {
+  id                     Int                      @id @default(autoincrement())
+  cliente_id             Int
+  lugar_id               Int
+  nombre                 String                   @db.VarChar(45)
+  apellidos              String                   @db.VarChar(45)
+  dui                    String                   @db.VarChar(45)
+  pagada                 Int                      @db.TinyInt
+  inicio                 DateTime                 @db.Date
+  fin                    DateTime                 @db.Date
+  creado                 DateTime                 @default(now()) @db.DateTime(0)
+  actualizado            DateTime                 @default(now()) @db.DateTime(0)
+  eliminado              Int                      @default(0) @db.TinyInt
+  detalles_reservaciones detalles_reservaciones[]
+  cliente                clientes_api             @relation(fields: [cliente_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_reservacion_cliente")
+  lugar_turistico        lugares_turisticos       @relation(fields: [lugar_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_reservacion_lugar")
+
+  @@index([cliente_id], map: "fk_reservacion_cliente_idx")
+  @@index([lugar_id], map: "fk_reservacion_lugar_idx")
+}
+
+model servicios {
+  id                      Int                      @id @default(autoincrement())
+  grupo_disponibilidad_id Int
+  nombre                  String                   @db.VarChar(255)
+  precio                  Decimal                  @db.Decimal(10, 2)
+  creado                  DateTime                 @default(now()) @db.DateTime(0)
+  actualizado             DateTime                 @default(now()) @db.DateTime(0)
+  eliminado               Int                      @default(0) @db.TinyInt
+  descripcion             String                   @db.VarChar(255)
+  detalles_reservaciones  detalles_reservaciones[]
+  grupos_disponibilidades grupos_disponibilidades  @relation(fields: [grupo_disponibilidad_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_servicio_grupodisponibilidad")
+
+  @@index([grupo_disponibilidad_id], map: "fk_servicio_tipo_idx")
+}
+
+model solicitudes {
+  id          Int          @id @default(autoincrement())
+  cliente_id  Int
+  body        Json
+  metodo      String       @db.VarChar(45)
+  creado      DateTime     @default(now()) @db.DateTime(0)
+  actualizado DateTime     @default(now()) @db.DateTime(0)
+  eliminado   Int          @default(0) @db.TinyInt
+  clientes    clientes_api @relation(fields: [cliente_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_solicitud_cliente")
+
+  @@index([cliente_id], map: "fk_solicitud_cliente_idx")
+}
+
+model periodos_deshabilitados {
+  id              Int                @id @default(autoincrement())
+  lugar_id        Int
+  inicio          DateTime           @db.Date
+  fin             DateTime           @db.Date
+  creado          DateTime           @default(now()) @db.DateTime(0)
+  actualizado     DateTime           @default(now()) @db.DateTime(0)
+  eliminado       Int                @default(0) @db.TinyInt
+  lugar_turistico lugares_turisticos @relation(fields: [lugar_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_periododes_lugar")
+
+  @@index([lugar_id], map: "fk_deshabilitados_lugar_idx")
+}
+
+model disponibilidades_lugares_gruposservicios {
+  id                      Int                     @id @default(autoincrement())
+  lugar_id                Int
+  grupo_id                Int
+  cantidad_maxima         Int
+  creado                  DateTime                @default(now()) @db.DateTime(0)
+  actualizado             DateTime                @default(now()) @db.DateTime(0)
+  eliminado               Int                     @default(0) @db.TinyInt
+  grupos_disponibilidades grupos_disponibilidades @relation(fields: [grupo_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_disponibilidad_gruposervicio")
+  lugares_turisticos      lugares_turisticos      @relation(fields: [lugar_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_disponibilidad_lugar")
+
+  @@unique([lugar_id, grupo_id], map: "unique_lugar_gruposervicio")
+  @@index([lugar_id], map: "fk_disponibilidad_lugar_idx")
+  @@index([grupo_id], map: "fk_disponibilidad_servicio_idx")
+}
+
+model grupos_disponibilidades {
+  id                                       Int                                        @id @default(autoincrement())
+  nombre                                   String                                     @unique(map: "nombre_UNIQUE") @db.VarChar(45)
+  creado                                   DateTime                                   @default(now()) @db.DateTime(0)
+  actualizado                              DateTime                                   @default(now()) @db.DateTime(0)
+  eliminado                                Int                                        @default(0) @db.TinyInt
+  disponibilidades_lugares_gruposservicios disponibilidades_lugares_gruposservicios[]
+  servicios                                servicios[]
+}
+
+model clientes_api {
+  id                 Int                @id @default(autoincrement())
+  nombre             String             @db.VarChar(255)
+  api_key            String             @db.VarChar(500)
+  activo             Int                @default(1) @db.TinyInt
+  creado             DateTime           @default(now()) @db.DateTime(0)
+  actualizado        DateTime           @default(now()) @db.DateTime(0)
+  eliminado          Int                @default(0) @db.TinyInt
+  tipo_id            Int
+  tipos_clientes_api tipos_clientes_api @relation(fields: [tipo_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_clienteapi_tipo")
+  reservaciones      reservaciones[]
+  solicitudes        solicitudes[]
+
+  @@index([tipo_id], map: "fk_clienteapi_tipo_idx")
+}
+
+model tipos_clientes_api {
+  id           Int            @id @default(autoincrement())
+  nombre       String         @unique(map: "nombre_UNIQUE") @db.VarChar(45)
+  clientes_api clientes_api[]
+}

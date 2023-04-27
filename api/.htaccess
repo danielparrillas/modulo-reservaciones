@@ -1,0 +1,17 @@
+RewriteEngine On
+
+# No se mostrara el directorio, en lugar lanzara el error 403 Forbidden
+Options -Indexes
+
+# URL amigables archivo.php?id=numero equivalente a archivo/numero
+RewriteRule ^(.*)/(\d+)$ $1.php?id=$2 [L]
+
+# No es necesario agregar a una ruta el .php
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME}.php -f
+RewriteRule ^(.*)$ $1.php
+
+# No es necesario agregar a una ruta el .html
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME}.html -f
+RewriteRule ^(.*)$ $1.html
