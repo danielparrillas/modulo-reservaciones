@@ -1,8 +1,7 @@
 <?php
 
-include_once(dirname(__DIR__) . '/models/Lugar.php');
 include_once(dirname(__DIR__) . '/utils/Database.php');
-class LugarService
+class Lugar
 {
   public function __construct(private Database $db)
   {
@@ -63,38 +62,20 @@ class LugarService
                   S.precio AS precio,
                   S.descripcion AS descripcion
               FROM (
-                SELECT
-                  id,
-                  nombre,
-                  permite_acampar
-                FROM lugares_turisticos
+                SELECT id, nombre, permite_acampar FROM lugares_turisticos
                 WHERE id = :lugar_id AND eliminado = 0 AND activo = 1
               ) L
               INNER JOIN (
-                SELECT
-                  id,
-                  lugar_id,
-                  grupo_id,
-                  cantidad_maxima
+                SELECT id, lugar_id, grupo_id, cantidad_maxima
                 FROM disponibilidades_lugares_gruposservicios
                 WHERE lugar_id = :lugar_id AND eliminado = 0
               ) D ON L.id = D.lugar_id
               INNER JOIN (
-                SELECT
-                  id,
-                  nombre
-                FROM grupos_disponibilidades
-                WHERE eliminado = 0
+                SELECT id, nombre FROM grupos_disponibilidades WHERE eliminado = 0
               ) G ON G.id = D.grupo_id
               INNER JOIN (
-                SELECT
-                  id,
-                  nombre,
-                  precio,
-                  grupo_disponibilidad_id,
-                  descripcion
-                FROM servicios
-                WHERE eliminado = 0
+                SELECT id, nombre, precio, grupo_disponibilidad_id, descripcion
+                FROM servicios WHERE eliminado = 0
               ) S ON G.id = S.grupo_disponibilidad_id
               ";
       $stmt = $conn->prepare($sql);

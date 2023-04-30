@@ -3,7 +3,7 @@
 include_once(dirname(__DIR__) . '/models/Cliente.php');
 include_once(dirname(__DIR__) . '/utils/Database.php');
 
-class ClienteService
+class Cliente
 {
   public function __construct(private Database $db)
   {

@@ -18,7 +18,7 @@ function App() {
       Authorization: "Bearer Marn_bdps-2023?_3j--_0sdf20J09J988hj9",
     };
 
-    let response = await fetch("/reservaciones/api/lugares", {
+    let response = await fetch("/reservaciones/app/api/lugares.php", {
       method: "GET",
       headers: headersList,
     });

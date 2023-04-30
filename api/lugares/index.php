@@ -1,6 +1,6 @@
 <?php
 
-include_once(dirname(__DIR__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'src' . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'index.php');
+include_once(dirname(__DIR__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'app' . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'index.php');
 include_once($PATH_CONTROLADORES . 'LugarController.php');
 include_once($PATH_MIDDLEWARES . 'ApiMiddleware.php');
 
@@ -12,9 +12,9 @@ $uri = explode("/", explode("reservaciones", $_SERVER["REQUEST_URI"])[1]);
 // se instancia un middleware, este utilizara el servico del cliente
 // instanciado direcatemente en el middleware
 // el objeto ClienteServicio recibe como parametro la instancia tipo Database
-$middleware_api = new ApiMiddleware(new ClienteService($DB_RESERVACIONES));
+$middleware_api = new ApiMiddleware(new Cliente($DB_RESERVACIONES));
 // se instancia un objeto que pueda manejar la solicitudes del cliente
-$controller = new LugarController(new LugarService($DB_RESERVACIONES));
+$controller = new LugarController(new Lugar($DB_RESERVACIONES));
 
 if ( // api/lugares
   count($uri) === 3 ||

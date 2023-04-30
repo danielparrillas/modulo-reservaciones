@@ -1,22 +1,21 @@
 <?php
 
 include_once(dirname(__DIR__) . '/models/Lugar.php');
-include_once(dirname(__DIR__) . '/services/LugarService.php');
 
 class LugarController
 {
-  public function __construct(private LugarService $service)
+  public function __construct(private Lugar $model)
   {
   }
 
   public function obtenerTodos(): void
   {
-    echo json_encode($this->service->obtenerTodosSimple());
+    echo json_encode($this->model->obtenerTodosSimple());
   }
 
   public function obtenerServicios($lugar_id): void
   {
-    $response = $this->service->obtenerDetalle($lugar_id);
+    $response = $this->model->obtenerDetalle($lugar_id);
     $newData = [
       "lugarId" => null,
       "lugar" => null,

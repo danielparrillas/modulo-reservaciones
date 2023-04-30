@@ -1,9 +1,9 @@
 <?php
 
-include_once(dirname(__DIR__) . '/services/ClienteService.php');
+include_once(dirname(__DIR__) . '/models/Cliente.php');
 class ApiMiddleware
 {
-  public function __construct(private ClienteService $service)
+  public function __construct(private Cliente $model)
   {
   }
 
@@ -18,7 +18,7 @@ class ApiMiddleware
     $api_key = $this->obtenerApiKeyDelHeaderCliente();
     if ($api_key !== null) {
 
-      if (!$this->service->validarApiKey($api_key)) {
+      if (!$this->model->validarApiKey($api_key)) {
         http_response_code(401);
         echo json_encode([
           "error" => [
