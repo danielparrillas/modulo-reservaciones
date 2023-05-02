@@ -1,12 +1,11 @@
 <?php
-
 include_once(dirname(__DIR__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'index.php');
 include_once($PATH_CONTROLADORES . 'LugarController.php');
 include_once($PATH_MIDDLEWARES . 'ApiMiddleware.php');
 
 //Extraemos el uri solicitado por el cliente y lo particionamos desde el subdirectorio "reservaciones"
 // uri[0] = "", uri[1] = "api", uri[2] = "lugares"
-$uri = explode("/", explode("reservaciones", $_SERVER["REQUEST_URI"])[1]);
+$uri = explode("/", explode("reservaciones/app/api/lugares/", $_SERVER["REQUEST_URI"])[1]);
 
 //echo json_encode($uri);
 // se instancia un middleware, este utilizara el servico del cliente
@@ -17,10 +16,11 @@ $middleware_api = new ApiMiddleware(new Cliente($DB_RESERVACIONES));
 $controller = new LugarController(new Lugar($DB_RESERVACIONES));
 
 if ( // api/lugares
-  count($uri) === 3 ||
-  (count($uri) === 4 && $uri[3] === "")
+  count($uri) === 0 ||
+  (count($uri) === 1 && $uri[0] === "")
 ) {
-  if ($middleware_api->validarApiKey()) {
+  // if ($middleware_api->validarApiKey()) {
+  if (true) {
     switch ($_SERVER["REQUEST_METHOD"]) {
       case "GET":
         $controller->obtenerTodos();
@@ -32,10 +32,11 @@ if ( // api/lugares
     };
   }
 } else if ( // api/lugares/[id]
-  count($uri) === 4 && $uri[3] !== ""
+  count($uri) === 1 && $uri[0] !== ""
 ) {
-  if ($middleware_api->validarApiKey()) {
-    $id = $uri[3];
+  // if ($middleware_api->validarApiKey()) {
+  if (true) {
+    $id = $uri[0];
     switch ($_SERVER["REQUEST_METHOD"]) {
       case "GET":
         $controller->obtenerServicios($id);

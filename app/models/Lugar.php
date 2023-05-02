@@ -10,12 +10,12 @@ class Lugar
   public function obtenerTodosSimple(): array
   {
     $result = [
+      "data" => [],
       "error" => [
         "status" => false,
         "message" => "No hay error",
         "details" => []
-      ],
-      "data" => []
+      ]
     ];
 
     try {
@@ -40,12 +40,12 @@ class Lugar
   public function obtenerDetalle($lugar_id): array
   {
     $result = [
+      "data" => [],
       "error" => [
         "status" => false,
         "message" => "No hay error",
         "details" => []
-      ],
-      "data" => []
+      ]
     ];
     try {
       $conn = $this->db->conectar();
