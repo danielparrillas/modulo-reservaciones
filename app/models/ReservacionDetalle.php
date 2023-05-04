@@ -8,15 +8,7 @@ class ReservacionDetalle
 
   public function obtenerDetallesDeReservacion(int $reservacion_id)
   {
-    $result = [
-      "data" => [],
-      "error" => [
-        "status" => false,
-        "message" => "No hay error",
-        "details" => []
-      ]
-    ];
-
+    $result = [];
     try {
       $conn = $this->db->conectar();
       $sql = "SELECT 
@@ -55,14 +47,7 @@ class ReservacionDetalle
 
   public function agregarDetalleAReservacion(array $data)
   {
-    $result = [
-      "data" => [],
-      "error" => [
-        "status" => false,
-        "message" => "No hay error",
-        "details" => []
-      ]
-    ];
+    $result = [];
     try {
       $conn = $this->db->conectar();
       $sql = "INSERT INTO detalles_reservaciones
@@ -74,7 +59,6 @@ class ReservacionDetalle
       $stmt->bindParam(':cantidad', $data["cantidad"], PDO::PARAM_INT);
       $stmt->bindParam(':precio', $data["precio"], PDO::PARAM_STR);
       $stmt->execute();
-
       $result["data"]["detalleId"] = $conn->lastInsertId();
     } catch (Exception $e) {
       $conn = null;
@@ -88,16 +72,8 @@ class ReservacionDetalle
 
   public function resetearDetallesDeReservacion(int $id_reservaciones)
   {
-    $valor_resetaer = 0;
-    $result = [
-      "data" => [],
-      "error" => [
-        "status" => false,
-        "message" => "No hay error",
-        "details" => []
-      ]
-    ];
-
+    $result = [];
+    $CANTIDAD_RESETEADA = 0;
     try {
       $conn = $this->db->conectar();
       //$sql = "UPDATE products SET name = :name, size = :size, is_available = :is_available WHERE id = :id";
@@ -107,7 +83,7 @@ class ReservacionDetalle
               WHERE reservacion_id = :r_id";
       $stmt = $conn->prepare($sql);
       $stmt->bindParam(':r_id', $id_reservaciones, PDO::PARAM_INT);
-      $stmt->bindParam(':cantidad', $valor_resetaer, PDO::PARAM_INT);
+      $stmt->bindParam(':cantidad', $CANTIDAD_RESETEADA, PDO::PARAM_INT);
       $stmt->execute();
     } catch (Exception $e) {
       $conn = null;
@@ -121,15 +97,7 @@ class ReservacionDetalle
 
   public function actualizarDetalle(array $data)
   {
-    $result = [
-      "data" => [],
-      "error" => [
-        "status" => false,
-        "message" => "No hay error",
-        "details" => []
-      ]
-    ];
-
+    $result = [];
     try {
       $conn = $this->db->conectar();
       //$sql = "UPDATE products SET name = :name, size = :size, is_available = :is_available WHERE id = :id";

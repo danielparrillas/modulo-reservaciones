@@ -8,15 +8,7 @@ class Servicio
 
   public function obtenerPorId($servicio_id)
   {
-    $result = [
-      "data" => [],
-      "error" => [
-        "status" => false,
-        "message" => "No hay error",
-        "details" => []
-      ]
-    ];
-
+    $result = [];
     try {
       $conn = $this->db->conectar();
       $sql = "SELECT id AS servicioId ,precio, nombre AS servicio FROM servicios WHERE id = :id AND eliminado = 0";

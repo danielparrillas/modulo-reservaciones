@@ -6,18 +6,36 @@ class Lugar
   public function __construct(private Database $db)
   {
   }
+  public function obtenerPorIdSimple(int $lugarId): array
+  {
+    $result = [];
+    try {
+      $conn = $this->db->conectar();
+      $sql = "SELECT id AS lugarId, nombre AS lugar, permite_acampar AS permiteAcampar, activo FROM lugares_turisticos
+              WHERE eliminado = 0 AND id = :lugarId";
+      $stmt = $conn->prepare($sql);
+      $stmt->bindParam(':lugarId', $lugarId);
+      $stmt->execute();
+      if ($stmt->rowCount() > 0) {
+        $result["data"] = $stmt->fetch(PDO::FETCH_ASSOC);
+        $result["data"]["activo"] = $result["data"]["activo"] === 1 ? true : false;
+      } else {
+        $result["error"]["status"] = true;
+        $result["error"]["message"] = "No se encontro ningun lugar con el id " . $lugarId;
+      }
+    } catch (Exception $e) {
+      $conn = null;
+      $result["error"]["status"] = true;
+      $result["error"]["message"] = $e->getMessage();
+      $result["error"]["details"][] = ["database" => $e];
+    }
+    $conn = null;
+    return $result;
+  }
 
   public function obtenerTodosSimple(): array
   {
-    $result = [
-      "data" => [],
-      "error" => [
-        "status" => false,
-        "message" => "No hay error",
-        "details" => []
-      ]
-    ];
-
+    $result = [];
     try {
       $conn = $this->db->conectar();
       $sql = "SELECT id, nombre, permite_acampar FROM lugares_turisticos WHERE activo = 1 AND eliminado = 0";
@@ -39,14 +57,7 @@ class Lugar
 
   public function obtenerDetalle($lugar_id): array
   {
-    $result = [
-      "data" => [],
-      "error" => [
-        "status" => false,
-        "message" => "No hay error",
-        "details" => []
-      ]
-    ];
+    $result = [];
     try {
       $conn = $this->db->conectar();
       $sql = "SELECT 

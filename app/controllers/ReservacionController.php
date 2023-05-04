@@ -10,12 +10,14 @@ class ReservacionController
   private $model_reservacion;
   private $model_detalle;
   private $model_servicio;
+  private $model_lugar;
   private $cliente_id = null;
   public function __construct(private Database $db)
   {
     $this->model_reservacion = new Reservacion($db);
     $this->model_detalle = new ReservacionDetalle($db);
     $this->model_servicio = new Servicio($db);
+    $this->model_lugar = new Lugar($db);
   }
 
   public function setClienteId($cliente_id)
@@ -25,6 +27,7 @@ class ReservacionController
 
   public function obtenerPorId(int $id): void
   {
+    $result = [];
     $result = $this->model_reservacion->obtenerPorId($id);
 
     if (!$result["data"]) {
@@ -55,13 +58,14 @@ class ReservacionController
 
   public function crear($data): array
   {
-
     $result_validado = $this->validarEntradas($data);
 
     if (isset($result_validado["error"])) {
       return $result_validado;
     }
-    $result_validado["data"]["claveAcceso"] = $this->generarClaveDeAcceso();
+    // $result_validado["data"]["claveAcceso"] = $this->generarClaveDeAcceso();
+
+    $result_validado['data'] = array_merge(["claveAcceso" => $this->generarClaveDeAcceso()], $result_validado['data']);
     // $new_reservacion = $this->model_reservacion->crear([
     //   'clienteId' => $result_validado['data']['clienteId'],
     //   'lugarId' => $result_validado['data']['lugarId'], // !ALERTA
@@ -85,11 +89,36 @@ class ReservacionController
 
   private function validarEntradas($data): array
   {
+    $result = [];
     $result["data"]["clienteId"] = $this->cliente_id;
     // validacion del cliente id
     if ($result["data"]["clienteId"] === null) {
       $result["error"]["status"] = true;
       $result["error"]["details"]["cliente"][] = "No hay cliente relacionado al api key. Error interno.";
+    }
+
+    // validacion del lugar id
+    if (!isset($data["lugarId"])) {
+      $result["data"]["lugarId"] = null;
+      $result["error"]["status"] = true;
+      $result["error"]["details"]["lugarId"][] = "Parametro obligatorio";
+    }
+    if (isset($data["lugarId"])) {
+      $result["data"]["lugarId"] = $data["lugarId"];
+      if (is_int($data["lugarId"])) {
+        $lugar_data = $this->model_lugar->obtenerPorIdSimple($data["lugarId"]);
+        if ($lugar_data["data"]["activo"]) {
+          $result["data"]["lugarId"] = $lugar_data["data"]["lugarId"];
+          $result["data"]["lugar"] = $lugar_data["data"]["lugar"];
+          $result["data"]["lugarActivo"] = $lugar_data["data"]["activo"];
+        } else {
+          $result["error"]["status"] = true;
+          $result["error"]["details"]["lugarId"][] = "El lugar actualmente no esta activo";
+        }
+      } else {
+        $result["error"]["status"] = true;
+        $result["error"]["details"]["lugarId"][] = "Debe ser un número";
+      }
     }
 
     //validacion nombres
@@ -273,9 +302,9 @@ class ReservacionController
     if (isset($result["error"])) $result["error"]["message"] = "Error en los datos. Revisar los detalles para mayor informacion.";
     return $result;
   }
-
   private function validarDetalle($data)
   {
+    $result = [];
     // que sea un objeto
     if (is_array($data)) {
 
@@ -287,7 +316,7 @@ class ReservacionController
           // que sea mayor a cero
           if ($data["servicioId"] > 0) {
             $result_model = $this->model_servicio->obtenerPorId($data["servicioId"]);
-            if ($result_model["error"]["status"] === false) {
+            if (!isset($result_model["error"])) {
               $result["data"] = $result_model["data"];
             } else {
               $result["error"]["status"] = true;

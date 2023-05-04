@@ -16,14 +16,7 @@ class Cliente
    */
   public function obtenerClientePorApiKey(string $api_key): array
   {
-    $result = [
-      "data" => [],
-      "error" => [
-        "status" => false,
-        "message" => "No hay error",
-        "details" => []
-      ]
-    ];
+    $result = [];
     try {
       $conn = $this->db->conectar();
       $sql = "SELECT id AS clienteId FROM clientes_api WHERE api_key = :api_key AND activo = 1 AND eliminado = 0";

@@ -9,6 +9,7 @@ class Reservacion
   }
   public function crear(array $data)
   {
+    $result = [];
     try {
       $conn = $this->db->conectar();
       $sql = "INSERT INTO reservaciones
@@ -42,15 +43,7 @@ class Reservacion
 
   public function actualizar(array $data)
   {
-    $result = [
-      "data" => [],
-      "error" => [
-        "status" => false,
-        "message" => "No hay error",
-        "details" => []
-      ]
-    ];
-
+    $result = [];
     try {
       $conn = $this->db->conectar();
       $sql = "UPDATE reservaciones
@@ -89,15 +82,7 @@ class Reservacion
 
   public function obtenerPorId(int $reservacion_id)
   {
-    $result = [
-      "data" => [],
-      "error" => [
-        "status" => false,
-        "message" => "No hay error",
-        "details" => []
-      ]
-    ];
-
+    $result = [];
     try {
       $conn = $this->db->conectar();
       $sql = "SELECT 

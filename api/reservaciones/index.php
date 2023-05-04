@@ -13,7 +13,7 @@ $controller_reservacion = new ReservacionController($DB_RESERVACIONES);
 
 if (count($uri) === 1 && $uri[0] === "") { // api/reservaciones/
   $result_api = $middleware_api->validarApiKey();
-  if ($result_api["error"]["status"] === false) {
+  if (!isset($result_api["error"])) {
     // obtenemos los datos enviados por el cliente
     $request = json_decode(file_get_contents("php://input"), true);
     switch ($_SERVER["REQUEST_METHOD"]) {

@@ -15,15 +15,6 @@ class ApiMiddleware
    */
   public function validarApiKey(): array
   {
-    $result = [
-      "data" => [],
-      "error" => [
-        "status" => false,
-        "message" => "No hay error",
-        "details" => []
-      ]
-    ];
-
     $api_key = $this->obtenerApiKeyDelHeaderCliente();
     if ($api_key !== null) {
       $result = $this->model_cliente->obtenerClientePorApiKey($api_key);
