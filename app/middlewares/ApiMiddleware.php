@@ -3,45 +3,39 @@
 include_once(dirname(__DIR__) . '/models/Cliente.php');
 class ApiMiddleware
 {
-  public function __construct(private Cliente $model)
+  private $model_cliente;
+  public function __construct(Database $db)
   {
+    $this->model_cliente = new Cliente($db);
   }
 
   /**
    * - Obtiene la api_key pasada en el header por el cliente y la validara
    * - Lanzara un error si la api no es valida o si no se ha mandado
-   * 
-   * @return bool false si no es valido y true si lo es
    */
-  public function validarApiKey(): bool
+  public function validarApiKey(): array
   {
+    $result = [
+      "data" => [],
+      "error" => [
+        "status" => false,
+        "message" => "No hay error",
+        "details" => []
+      ]
+    ];
+
     $api_key = $this->obtenerApiKeyDelHeaderCliente();
     if ($api_key !== null) {
-
-      if (!$this->model->validarApiKey($api_key)) {
-        http_response_code(401);
-        echo json_encode([
-          "error" => [
-            "message" => "La api key no es valida",
-          ]
-        ]);
-        return false;
-      }
+      $result = $this->model_cliente->obtenerClientePorApiKey($api_key);
     } else {
-      http_response_code(401);
-      echo json_encode([
-        "error" => [
-          "message" => "No esta autorizado",
-        ]
-      ]);
-      return false;
+      $result["error"]["status"] = true;
+      $result["error"]["message"] = "No esta autorizado";
     }
-    return true;
+    return $result;
   }
 
   /**
    * Utiliza getallheaders() para obtener el header Authorization y asi obtener el api key mandado desde el cliente
-   * @return string api key enviada en el header Authorization
    */
   private function obtenerApiKeyDelHeaderCliente(): null | string
   {
