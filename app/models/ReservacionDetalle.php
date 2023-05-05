@@ -12,19 +12,12 @@ class ReservacionDetalle
     try {
       $conn = $this->db->conectar();
       $sql = "SELECT 
-              D.id AS detalleId, R.id AS reservacionId, S.id AS servicioId,
-              S.nombre AS servicio, D.cantidad AS cantidad, D.precio AS precio
-              FROM (
-                SELECT id, reservacion_id,servicio_id, cantidad, precio
-                FROM detalles_reservaciones
-                WHERE reservacion_id = :reservacion_id AND eliminado = 0
-              ) D
-              INNER JOIN (
-                SELECT id, nombre FROM servicios WHERE eliminado = 0
-              ) S ON S.id = D.servicio_id
-              INNER JOIN (
-                SELECT id FROM reservaciones WHERE eliminado = 0
-              ) R ON R.id = D.reservacion_id";
+                D.id AS detalleId, R.id AS reservacionId, S.id AS servicioId,
+                S.nombre AS servicio, D.cantidad AS cantidad, D.precio AS precio
+              FROM detalles_reservaciones D
+              INNER JOIN servicios S ON S.id = D.servicio_id AND S.eliminado = 0
+              INNER JOIN reservaciones R ON R.id = D.reservacion_id AND R.eliminado = 0
+              WHERE D.reservacion_id = :reservacion_id AND D.eliminado = 0";
       $stmt = $conn->prepare($sql);
       $stmt->bindParam(':reservacion_id', $reservacion_id, PDO::PARAM_INT);
       $stmt->execute();

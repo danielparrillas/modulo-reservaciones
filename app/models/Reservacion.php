@@ -14,8 +14,7 @@ class Reservacion
       $conn = $this->db->conectar();
       $sql = "INSERT INTO reservaciones
               (cliente_id, lugar_id, clave_acceso, nombres, apellidos, dui, pagada, inicio, fin)
-              VALUES (:c_id, :l_id, :clave, :nom, :ape, :dui, :pagada, :inicio, :fin)
-              ";
+              VALUES (:c_id, :l_id, :clave, :nom, :ape, :dui, :pagada, :inicio, :fin)";
       $stmt = $conn->prepare($sql);
       $stmt->bindParam(':c_id', $data['clienteId'], PDO::PARAM_INT);
       $stmt->bindParam(':l_id', $data['lugarId'], PDO::PARAM_INT);
@@ -50,8 +49,7 @@ class Reservacion
               SET cliente_id = :c_id, lugar_id = :l_id, clave_acceso = :clave,
                   nombres = :nom, apellidos = :ape, dui = :dui, pagada = :pagado,
                   inicio = :inicio, fin = :fin
-              WHERE id = :id
-              ";
+              WHERE id = :id";
       $stmt = $conn->prepare($sql);
       $stmt->bindParam(':id', $data['id'], PDO::PARAM_INT);
       $stmt->bindParam(':c_id', $data['clienteId'], PDO::PARAM_INT);
@@ -80,21 +78,13 @@ class Reservacion
     try {
       $conn = $this->db->conectar();
       $sql = "SELECT 
-              R.id AS reservacionId, C.id AS clienteId, C.nombre AS cliente,
-              L.id AS lugarId, L.nombre AS lugar, R.nombres AS nombres,
-              R.apellidos AS apellidos, R.dui AS dui, R.pagada AS pagada,
-              R.inicio AS inicio, R.fin AS fin
-              FROM (
-                SELECT id, cliente_id, lugar_id, nombres, apellidos, dui, pagada, inicio, fin
-                FROM reservaciones WHERE id = :reservacion_id AND eliminado = 0
-              ) R
-              INNER JOIN (
-                SELECT id, nombre FROM clientes_api WHERE eliminado = 0
-              ) C ON R.cliente_id = C.id
-              INNER JOIN (
-                SELECT id, nombre FROM lugares_turisticos WHERE eliminado = 0
-              ) L ON R.lugar_id = L.id
-      ";
+                R.id AS reservacionId, C.id AS clienteId, C.nombre AS cliente,
+                L.id AS lugarId, L.nombre AS lugar, R.nombres, R.apellidos,
+                R.dui, R.pagada, R.inicio, R.fin
+              FROM reservaciones R
+              JOIN clientes_api C ON R.cliente_id = C.id AND C.eliminado = 0
+              JOIN lugares_turisticos L ON R.lugar_id = L.id AND L.eliminado = 0
+              WHERE R.id = :reservacion_id AND R.eliminado = 0";
       $stmt = $conn->prepare($sql);
       $stmt->bindParam(':reservacion_id', $reservacion_id, PDO::PARAM_INT);
       $stmt->execute();
