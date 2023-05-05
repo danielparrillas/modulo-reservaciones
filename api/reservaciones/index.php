@@ -59,7 +59,7 @@ if (count($uri) === 1 && $uri[0] === "") { // api/reservaciones/
       case "PUT":
         $controller_reservacion->setClienteId($result_api["data"]["clienteId"]);
         $request["reservacionId"] = $id;
-        $result = $controller_reservacion->recetearActualizar($request);
+        $result = $controller_reservacion->actualizarConDetalles($request);
 
         if (isset($result["error"])) http_response_code(400);
         echo json_encode($result);

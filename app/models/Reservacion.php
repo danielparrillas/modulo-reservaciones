@@ -13,7 +13,7 @@ class Reservacion
     try {
       $conn = $this->db->conectar();
       $sql = "INSERT INTO reservaciones
-              (cliente_id, lugar_id, clave_acceso, nombres, apellidos, dui, pagada, inicio, fin)
+                (cliente_id, lugar_id, clave_acceso, nombres, apellidos, dui, pagada, inicio, fin)
               VALUES (:c_id, :l_id, :clave, :nom, :ape, :dui, :pagada, :inicio, :fin)";
       $stmt = $conn->prepare($sql);
       $stmt->bindParam(':c_id', $data['clienteId'], PDO::PARAM_INT);
@@ -62,6 +62,7 @@ class Reservacion
       $stmt->bindParam(':inicio', $data['inicio'], PDO::PARAM_STR);
       $stmt->bindParam(':fin', $data['fin'], PDO::PARAM_STR);
       $stmt->execute();
+      $result["data"]["filas"] = $stmt->rowCount();
     } catch (Exception $e) {
       $conn = null;
       $result["error"]["status"] = true;

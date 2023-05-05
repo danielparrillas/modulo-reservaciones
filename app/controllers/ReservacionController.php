@@ -101,17 +101,20 @@ class ReservacionController
     return $result_validado;
   }
 
-  public function recetearActualizar($data): array
+  public function actualizarConDetalles($data): array
   {
-
-    $result_validado = $this->validarDatosParaRecetearActualizar($data);
+    $result_validado = $this->validarDatosParaActualizar($data);
 
     $result_validado["data"] = $data;
+    $reservacionId = $data["reservacionId"] ?? 0;
+
+    $reservacionId = intval($data["reservacionId"]);
+    $result_validado = $this->obtenerPorId($reservacionId);
 
     return $result_validado;
   }
 
-  private function validarDatosParaRecetearActualizar($data): array
+  private function validarDatosParaActualizar($data): array
   {
     $result = [];
 
