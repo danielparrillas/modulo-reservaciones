@@ -43,7 +43,7 @@ model reservaciones {
   id                     Int                      @id @default(autoincrement())
   cliente_id             Int
   lugar_id               Int
-  nombre                 String                   @db.VarChar(45)
+  nombres                String                   @db.VarChar(45)
   apellidos              String                   @db.VarChar(45)
   dui                    String                   @db.VarChar(45)
   pagada                 Int                      @db.TinyInt
@@ -52,6 +52,7 @@ model reservaciones {
   creado                 DateTime                 @default(now()) @db.DateTime(0)
   actualizado            DateTime                 @default(now()) @db.DateTime(0)
   eliminado              Int                      @default(0) @db.TinyInt
+  clave_acceso           String                   @db.VarChar(45)
   detalles_reservaciones detalles_reservaciones[]
   cliente                clientes_api             @relation(fields: [cliente_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_reservacion_cliente")
   lugar_turistico        lugares_turisticos       @relation(fields: [lugar_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_reservacion_lugar")
@@ -128,23 +129,13 @@ model grupos_disponibilidades {
 }
 
 model clientes_api {
-  id                 Int                @id @default(autoincrement())
-  nombre             String             @db.VarChar(255)
-  api_key            String             @db.VarChar(500)
-  activo             Int                @default(1) @db.TinyInt
-  creado             DateTime           @default(now()) @db.DateTime(0)
-  actualizado        DateTime           @default(now()) @db.DateTime(0)
-  eliminado          Int                @default(0) @db.TinyInt
-  tipo_id            Int
-  tipos_clientes_api tipos_clientes_api @relation(fields: [tipo_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_clienteapi_tipo")
-  reservaciones      reservaciones[]
-  solicitudes        solicitudes[]
-
-  @@index([tipo_id], map: "fk_clienteapi_tipo_idx")
-}
-
-model tipos_clientes_api {
-  id           Int            @id @default(autoincrement())
-  nombre       String         @unique(map: "nombre_UNIQUE") @db.VarChar(45)
-  clientes_api clientes_api[]
+  id            Int             @id @default(autoincrement())
+  nombre        String          @db.VarChar(255)
+  api_key       String          @db.VarChar(500)
+  activo        Int             @default(1) @db.TinyInt
+  creado        DateTime        @default(now()) @db.DateTime(0)
+  actualizado   DateTime        @default(now()) @db.DateTime(0)
+  eliminado     Int             @default(0) @db.TinyInt
+  reservaciones reservaciones[]
+  solicitudes   solicitudes[]
 }

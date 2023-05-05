@@ -12,15 +12,16 @@ class ReservacionDetalle
     try {
       $conn = $this->db->conectar();
       $sql = "SELECT 
+              D.id AS detalleId,
               R.id AS reservacionId,
               S.id AS servicioId,
               S.nombre AS servicio,
               D.cantidad AS cantidad,
               D.precio AS precio
               FROM (
-                SELECT reservacion_id,servicio_id, cantidad, precio
+                SELECT id, reservacion_id,servicio_id, cantidad, precio
                 FROM detalles_reservaciones
-                WHERE id = :reservacion_id AND eliminado = 0
+                WHERE reservacion_id = :reservacion_id AND eliminado = 0
               ) D
               INNER JOIN (
                 SELECT id, nombre FROM servicios
