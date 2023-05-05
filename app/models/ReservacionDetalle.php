@@ -12,20 +12,15 @@ class ReservacionDetalle
     try {
       $conn = $this->db->conectar();
       $sql = "SELECT 
-              D.id AS detalleId,
-              R.id AS reservacionId,
-              S.id AS servicioId,
-              S.nombre AS servicio,
-              D.cantidad AS cantidad,
-              D.precio AS precio
+              D.id AS detalleId, R.id AS reservacionId, S.id AS servicioId,
+              S.nombre AS servicio, D.cantidad AS cantidad, D.precio AS precio
               FROM (
                 SELECT id, reservacion_id,servicio_id, cantidad, precio
                 FROM detalles_reservaciones
                 WHERE reservacion_id = :reservacion_id AND eliminado = 0
               ) D
               INNER JOIN (
-                SELECT id, nombre FROM servicios
-                WHERE eliminado = 0
+                SELECT id, nombre FROM servicios WHERE eliminado = 0
               ) S ON S.id = D.servicio_id
               INNER JOIN (
                 SELECT id FROM reservaciones WHERE eliminado = 0
@@ -51,8 +46,7 @@ class ReservacionDetalle
     $result = [];
     try {
       $conn = $this->db->conectar();
-      $sql = "INSERT INTO detalles_reservaciones
-              (reservacion_id, servicio_id, cantidad, precio)
+      $sql = "INSERT INTO detalles_reservaciones (reservacion_id, servicio_id, cantidad, precio)
               VALUES (:r_id, :s_id, :cantidad, :precio)";
       $stmt = $conn->prepare($sql);
       $stmt->bindParam(':r_id', $data['reservacionId'], PDO::PARAM_INT);
@@ -79,8 +73,7 @@ class ReservacionDetalle
       $conn = $this->db->conectar();
       //$sql = "UPDATE products SET name = :name, size = :size, is_available = :is_available WHERE id = :id";
 
-      $sql = "UPDATE detalles_reservaciones
-              SET cantidad = :cantidad
+      $sql = "UPDATE detalles_reservaciones SET cantidad = :cantidad
               WHERE reservacion_id = :r_id";
       $stmt = $conn->prepare($sql);
       $stmt->bindParam(':r_id', $id_reservaciones, PDO::PARAM_INT);
@@ -103,8 +96,7 @@ class ReservacionDetalle
       $conn = $this->db->conectar();
       //$sql = "UPDATE products SET name = :name, size = :size, is_available = :is_available WHERE id = :id";
 
-      $sql = "UPDATE detalles_reservaciones
-              SET cantidad = :cantidad, precio = :precio
+      $sql = "UPDATE detalles_reservaciones SET cantidad = :cantidad, precio = :precio
               WHERE reservacion_id = :r_id AND servicio_id = :s_id";
       $stmt = $conn->prepare($sql);
       $stmt->bindParam(':r_id', $data['reservacionId'], PDO::PARAM_INT);

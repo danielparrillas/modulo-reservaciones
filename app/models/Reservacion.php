@@ -47,15 +47,9 @@ class Reservacion
     try {
       $conn = $this->db->conectar();
       $sql = "UPDATE reservaciones
-              SET cliente_id = :c_id,
-                  lugar_id = :l_id,
-                  clave_acceso = :clave,
-                  nombres = :nom,
-                  apellidos = :ape,
-                  dui = :dui,
-                  pagada = :pagado,
-                  inicio = :inicio,
-                  fin = :fin
+              SET cliente_id = :c_id, lugar_id = :l_id, clave_acceso = :clave,
+                  nombres = :nom, apellidos = :ape, dui = :dui, pagada = :pagado,
+                  inicio = :inicio, fin = :fin
               WHERE id = :id
               ";
       $stmt = $conn->prepare($sql);
@@ -86,29 +80,19 @@ class Reservacion
     try {
       $conn = $this->db->conectar();
       $sql = "SELECT 
-              R.id AS reservacionId,
-              C.id AS clienteId,
-              C.nombre AS cliente,
-              L.id AS lugarId,
-              L.nombre AS lugar,
-              R.nombres AS nombres,
-              R.apellidos AS apellidos,
-              R.dui AS dui,
-              R.pagada AS pagada,
-              R.inicio AS inicio,
-              R.fin AS fin
+              R.id AS reservacionId, C.id AS clienteId, C.nombre AS cliente,
+              L.id AS lugarId, L.nombre AS lugar, R.nombres AS nombres,
+              R.apellidos AS apellidos, R.dui AS dui, R.pagada AS pagada,
+              R.inicio AS inicio, R.fin AS fin
               FROM (
                 SELECT id, cliente_id, lugar_id, nombres, apellidos, dui, pagada, inicio, fin
-                FROM reservaciones
-                WHERE id = :reservacion_id AND eliminado = 0
+                FROM reservaciones WHERE id = :reservacion_id AND eliminado = 0
               ) R
               INNER JOIN (
-                SELECT id, nombre FROM clientes_api
-                WHERE eliminado = 0
+                SELECT id, nombre FROM clientes_api WHERE eliminado = 0
               ) C ON R.cliente_id = C.id
               INNER JOIN (
-                SELECT id, nombre FROM lugares_turisticos
-                WHERE eliminado = 0
+                SELECT id, nombre FROM lugares_turisticos WHERE eliminado = 0
               ) L ON R.lugar_id = L.id
       ";
       $stmt = $conn->prepare($sql);
