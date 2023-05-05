@@ -25,42 +25,40 @@ class ReservacionController
     $this->cliente_id = $cliente_id;
   }
 
-  public function obtenerPorId(int $id): void
+  public function obtenerPorId($id)
   {
     $result = [];
-    $result = $this->model_reservacion->obtenerPorId($id);
+    $reservacionId = intval($id);
+    $result = $this->model_reservacion->obtenerPorId($reservacionId);
 
     if (!$result["data"]) {
-      http_response_code(404);
       $result["data"] = [];
       $result["error"]["status"] = true;
       $result["error"]["message"] = "No se encontro la reservacion";
       $result["error"]["details"] = $result["error"]["message"];
-      echo json_encode($result);
-      exit;
+      return $result;
     }
 
-    $result_detalles = $this->model_detalle->obtenerDetallesDeReservacion($id);
+    $result_detalles = $this->model_detalle->obtenerDetallesDeReservacion($reservacionId);
 
-    if ($result_detalles["error"]["status"]) {
-      http_response_code(404);
+    if (isset($result_detalles["error"])) {
       $result["data"] = [];
       $result["error"]["status"] = true;
       $result["error"]["message"] = "Hubo error al obtener los detalles";
       $result["error"]["details"][] = ["detalles" => $result_detalles["error"]];
-      echo json_encode($result);
-      exit;
+      return $result;
     }
 
     $result["data"]["detalles"] = $result_detalles;
-    echo json_encode($result);
+    return $result;
   }
 
-  public function crear($data): array
+  public function crearConDetalles($data): array
   {
-    $result_validado = $this->validarEntradas($data);
+    $result_validado = $this->validarDatosParaCrear($data);
 
     if (isset($result_validado["error"])) {
+      $result_validado['data'] = array_merge(["reservacionId" => null], $result_validado['data']);
       return $result_validado;
     }
     // $result_validado["data"]["claveAcceso"] = $this->generarClaveDeAcceso();
@@ -97,18 +95,30 @@ class ReservacionController
         }
       }
     } else {
+      $result_validado['data'] = array_merge(["reservacionId" => null], $result_validado['data']);
       $result_validado["error"] = $reservacion_guardada["error"];
-    }
-    if (isset($result_valid['error'])) {
-
-      foreach ($result_validado['data']['detalles'] as $key => $detalle) {
-        $result_validado['data']['detalles'][$key]["data"]["asdf"] = "asdf";
-      }
     }
     return $result_validado;
   }
 
-  private function validarEntradas($data): array
+  public function recetearActualizar($data): array
+  {
+
+    $result_validado = $this->validarDatosParaRecetearActualizar($data);
+
+    $result_validado["data"] = $data;
+
+    return $result_validado;
+  }
+
+  private function validarDatosParaRecetearActualizar($data): array
+  {
+    $result = [];
+
+    return $result;
+  }
+
+  private function validarDatosParaCrear($data): array
   {
     $result = [];
     $result["data"]["clienteId"] = $this->cliente_id;
@@ -345,6 +355,8 @@ class ReservacionController
   private function validarDetalle($data)
   {
     $result = [];
+    // se mantendra null hasta que sea guardado, asi indcamos que todavia no se ha guarda
+    $result["data"]["detalleId"] = null;
     // que sea un objeto
     if (is_array($data)) {
 
@@ -358,6 +370,8 @@ class ReservacionController
             $result_model = $this->model_servicio->obtenerPorId($data["servicioId"]);
             if (!isset($result_model["error"])) {
               $result["data"] = $result_model["data"];
+              // se mantendra null hasta que sea guardado, asi indcamos que todavia no se ha guarda
+              $result["data"]["detalleId"] = null;
             } else {
               $result["error"]["status"] = true;
               $result["error"]["details"]["servicioId"] = $result_model["error"]["message"];

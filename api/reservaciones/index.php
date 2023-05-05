@@ -19,7 +19,7 @@ if (count($uri) === 1 && $uri[0] === "") { // api/reservaciones/
     switch ($_SERVER["REQUEST_METHOD"]) {
       case "POST":
         $controller_reservacion->setClienteId($result_api["data"]["clienteId"]);
-        $result = $controller_reservacion->crear($request);
+        $result = $controller_reservacion->crearConDetalles($request);
         if (!isset($result["error"])) {
           echo json_encode($result);
         } else {
@@ -39,17 +39,32 @@ if (count($uri) === 1 && $uri[0] === "") { // api/reservaciones/
 } else if (count($uri) === 1 && $uri[0] !== "") { // api/reservaciones/[id]
   if ($middleware_api->validarApiKey()) {
     $id = $uri[0];
-    switch ($_SERVER["REQUEST_METHOD"]) {
-      case "GET":
-        $controller_reservacion->obtenerPorId($id);
-        break;
-      case "PUT":
-        echo json_encode($uri);
-        break;
-      default:
-        http_response_code(405);
-        header("Allow: PUT");
-        break;
+    $result_api = $middleware_api->validarApiKey();
+    if (!isset($result_api["error"])) {
+      // obtenemos los datos enviados por el cliente
+      $request = json_decode(file_get_contents("php://input"), true);
+      switch ($_SERVER["REQUEST_METHOD"]) {
+        case "GET":
+          // todo validar que el cliente api sea el mismo que el cliente de la reservacion
+          $result = $controller_reservacion->obtenerPorId($id);
+          echo json_encode($result);
+          break;
+        case "PUT":
+          $controller_reservacion->setClienteId($result_api["data"]["clienteId"]);
+          $request["reservacionId"] = $id;
+          $result = $controller_reservacion->recetearActualizar($request);
+
+          if (isset($result["error"])) http_response_code(400);
+          echo json_encode($result);
+          break;
+        default:
+          http_response_code(405);
+          header("Allow: GET,PUT");
+          break;
+      };
+    } else {
+      http_response_code(404);
+      echo json_encode($result_api);
     }
   }
 } else {
