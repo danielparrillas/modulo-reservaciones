@@ -107,13 +107,18 @@ class ReservacionController
       $result["data"]["lugarId"] = $data["lugarId"];
       if (is_int($data["lugarId"])) {
         $lugar_data = $this->model_lugar->obtenerPorIdSimple($data["lugarId"]);
-        if ($lugar_data["data"]["activo"]) {
-          $result["data"]["lugarId"] = $lugar_data["data"]["lugarId"];
-          $result["data"]["lugar"] = $lugar_data["data"]["lugar"];
-          $result["data"]["lugarActivo"] = $lugar_data["data"]["activo"];
+        if (!isset($lugar_data["error"])) {
+          if ($lugar_data["data"]["activo"]) {
+            $result["data"]["lugarId"] = $lugar_data["data"]["lugarId"];
+            $result["data"]["lugar"] = $lugar_data["data"]["lugar"];
+            $result["data"]["lugarActivo"] = $lugar_data["data"]["activo"];
+          } else {
+            $result["error"]["status"] = true;
+            $result["error"]["details"]["lugarId"][] = "El lugar actualmente no esta activo";
+          }
         } else {
           $result["error"]["status"] = true;
-          $result["error"]["details"]["lugarId"][] = "El lugar actualmente no esta activo";
+          $result["error"]["details"]["lugarId"][] = $lugar_data["error"]["message"];
         }
       } else {
         $result["error"]["status"] = true;
@@ -247,10 +252,8 @@ class ReservacionController
     if ($fecha_inicio !== false && $fecha_fin !== false) {
       $fecha_diferencia = $fecha_inicio->diff($fecha_fin);
       $fecha_actual = new DateTime();
-      $fecha_actual->setTime(0, 0, 0, 0);
+      $fecha_actual->setTime(0, 0, 0, 0); // para hacer la diferencia a nivel de fecha sin tomar en cuenta la hora
       $fecha_diff_hoy = $fecha_inicio->diff($fecha_actual);
-      // $result["data"]["diff"][] = $fecha_diff_hoy;
-      // $result["data"]["diff"][] = new DateTime();
       if (
         $fecha_diff_hoy->invert === 0 ||
         $fecha_diff_hoy->invert === 0 && $fecha_diff_hoy->days === 0
