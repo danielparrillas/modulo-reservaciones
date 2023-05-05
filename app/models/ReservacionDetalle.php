@@ -45,21 +45,21 @@ class ReservacionDetalle
     return $result;
   }
 
-  public function agregarDetalleAReservacion(array $data)
+  public function crear(array $data)
   {
     $result = [];
     try {
       $conn = $this->db->conectar();
       $sql = "INSERT INTO detalles_reservaciones
               (reservacion_id, servicio_id, cantidad, precio)
-              VALUES (:r_id, :s_id, :cantidad, :precio])";
+              VALUES (:r_id, :s_id, :cantidad, :precio)";
       $stmt = $conn->prepare($sql);
       $stmt->bindParam(':r_id', $data['reservacionId'], PDO::PARAM_INT);
       $stmt->bindParam(':s_id', $data['servicioId'], PDO::PARAM_INT);
       $stmt->bindParam(':cantidad', $data["cantidad"], PDO::PARAM_INT);
       $stmt->bindParam(':precio', $data["precio"], PDO::PARAM_STR);
       $stmt->execute();
-      $result["data"]["detalleId"] = $conn->lastInsertId();
+      $result["data"]["detalleId"] = (int) $conn->lastInsertId();
     } catch (Exception $e) {
       $conn = null;
       $result["error"]["status"] = true;

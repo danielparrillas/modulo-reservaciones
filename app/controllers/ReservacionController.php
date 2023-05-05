@@ -65,19 +65,40 @@ class ReservacionController
     }
     // $result_validado["data"]["claveAcceso"] = $this->generarClaveDeAcceso();
 
+    // la clavedeacceso permitira actualizar la reservacion. Si la apikey no coincide con la clave de acceso no permitira modificaciones
     $result_validado['data'] = array_merge(["claveAcceso" => $this->generarClaveDeAcceso()], $result_validado['data']);
-    // $new_reservacion = $this->model_reservacion->crear([
-    //   'clienteId' => $result_validado['data']['clienteId'],
-    //   'lugarId' => $result_validado['data']['lugarId'], // !ALERTA
-    //   'claveDeAcceso' => $result_validado['data']['claveDeAcceso'],
-    //   'nombres' => $result_validado['data']['nombres'],
-    //   'apellidos' => $result_validado['data']['apellidos'],
-    //   'dui' => $result_validado['data']['dui'],
-    //   'pagada' => $result_validado['data']['pagada'],
-    //   'inicio' => $result_validado['data']['inicio'],
-    //   'fin' => $result_validado['data']['fin']
-    // ]);
 
+    $reservacion_guardada = $this->model_reservacion->crear([
+      'clienteId' => $result_validado['data']['clienteId'],
+      'lugarId' => $result_validado['data']['lugarId'],
+      'claveDeAcceso' => $result_validado['data']['claveAcceso'],
+      'nombres' => $result_validado['data']['nombres'],
+      'apellidos' => $result_validado['data']['apellidos'],
+      'dui' => $result_validado['data']['dui'],
+      'pagada' => $result_validado['data']['pagada'],
+      'inicio' => $result_validado['data']['inicio'],
+      'fin' => $result_validado['data']['fin']
+    ]);
+    if (!isset($reservacion_guardada['error'])) {
+      $result_validado['data'] = array_merge(["reservacionId" => $reservacion_guardada['data']["reservacionId"]], $result_validado['data']);
+
+      foreach ($result_validado['data']["detalles"] as $key => $detalle) {
+        $detalle_guardado = $this->model_detalle->crear([
+          "reservacionId" => $result_validado["data"]["reservacionId"],
+          "servicioId" => $detalle["data"]["servicioId"],
+          "cantidad" => $detalle["data"]["cantidad"],
+          "precio" => $detalle["data"]["precio"]
+        ]);
+        if (!isset($detalle_guardado["error"])) {
+          $result_validado["data"]["detalles"][$key]["data"]["detalleId"] = $detalle_guardado["data"]["detalleId"];
+        } else {
+          $result_validado["error"]["status"] = true;
+          $result_validado["data"]["detalles"][$key]["error"] = $detalle_guardado["error"];
+        }
+      }
+    } else {
+      $result_validado["error"] = $reservacion_guardada["error"];
+    }
     if (isset($result_valid['error'])) {
 
       foreach ($result_validado['data']['detalles'] as $key => $detalle) {
@@ -267,7 +288,8 @@ class ReservacionController
         $result["error"]["details"]["fin"][] = "No debe ser antes de la fecha de inicio";
       }
     }
-    //validacion del detalle
+
+    // validacion del detalle
     //que no este nulo
     if (!isset($data["detalles"])) {
       $result["data"]["detalles"] = null;
@@ -289,7 +311,22 @@ class ReservacionController
             } else {
               $result["data"]["detalles"][] = $detalle_validado;
               $result["error"]["status"] = true;
-              $result["error"]["details"]["detalles"] = "Error en alguno de los servicios. Revisar detalles en data";
+              $result["error"]["details"]["detalles"][] = "Error en alguno de los servicios. Revisar detalles en data";
+            }
+          }
+          // todo: validar detalles repetidos
+          //se revisa que no haya detalles repetidos si no hay error en alguno de los detalles
+          if (!isset($result["error"]["details"]["detalles"])) {
+            $servicio_id_sin_repetir = [];
+            foreach ($result["data"]["detalles"] as $key => $detalle) {
+              if (!in_array($detalle["data"]["servicioId"], $servicio_id_sin_repetir)) {
+                $servicio_id_sin_repetir[] = $detalle["data"]["servicioId"];
+              } else {
+                $result["error"]["status"] = true;
+                $result["error"]["details"]["detalles"][] = "No debe enviar servicios duplicados";
+                $result["data"]["detalles"][$key]["error"]["status"] = true;
+                $result["data"]["detalles"][$key]["error"]["message"] = "Servicio duplicado";
+              }
             }
           }
         } else {

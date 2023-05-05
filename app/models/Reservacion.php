@@ -14,11 +14,11 @@ class Reservacion
       $conn = $this->db->conectar();
       $sql = "INSERT INTO reservaciones
               (cliente_id, lugar_id, clave_acceso, nombres, apellidos, dui, pagada, inicio, fin)
-              VALUES (:c_id, :l_id, :clave, :nom, :ape, :dui, :pagado, :inicio, :fin)
+              VALUES (:c_id, :l_id, :clave, :nom, :ape, :dui, :pagada, :inicio, :fin)
               ";
       $stmt = $conn->prepare($sql);
       $stmt->bindParam(':c_id', $data['clienteId'], PDO::PARAM_INT);
-      $stmt->bindParam(':l_id', $data['lugar'], PDO::PARAM_INT);
+      $stmt->bindParam(':l_id', $data['lugarId'], PDO::PARAM_INT);
       $stmt->bindParam(':clave', $data['claveDeAcceso'], PDO::PARAM_STR);
       $stmt->bindParam(':nom', $data['nombres'], PDO::PARAM_STR);
       $stmt->bindParam(':ape', $data['apellidos'], PDO::PARAM_STR);
@@ -29,7 +29,7 @@ class Reservacion
       $stmt->execute();
 
       $result["data"] = [
-        "id" => $conn->lastInsertId(),
+        "reservacionId" => (int) $conn->lastInsertId(),
       ];
     } catch (Exception $e) {
       $conn = null;
