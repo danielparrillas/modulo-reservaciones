@@ -107,13 +107,85 @@ class ReservacionController
 
   public function actualizarConDetalles($data): array
   {
-    $result_validado = $this->validarDatosParaActualizar($data);
-    $reservacionId = $data["reservacionId"] ?? 0;
+    $data_validada = $this->validarDatosParaActualizar($data);
+
+    if (isset($data_validada["error"])) return $data_validada;
 
     $reservacionId = intval($data["reservacionId"]);
-    $result_validado["current"] = $this->obtenerPorId($reservacionId);
+    $data_current = $this->obtenerPorId($reservacionId);
 
-    return $result_validado;
+    if (isset($data_current["error"])) {
+      $data_validada["error"] = $data_current["error"];
+      return $data_validada;
+    }
+
+    if ($data_current["data"]["claveAcceso"] !== $data_validada["data"]["claveAcceso"]) {
+      $data_validada["error"]["status"] = true;
+      $data_validada["error"]["message"] = "La clave de acceso es incorrecta";
+      return $data_validada;
+    }
+
+    $data_updated = [
+      "id" => $data_current["data"]["reservacionId"],
+      "clienteId" => $data_current["data"]["clienteId"],
+      "claveAcceso" => $data_current["data"]["claveAcceso"],
+      "lugarId" => $data_validada["data"]["lugarId"] ?? $data_current["data"]["lugarId"],
+      "nombres" => $data_validada["data"]["nombres"] ?? $data_current["data"]["nombres"],
+      "apellidos" => $data_validada["data"]["apellidos"] ?? $data_current["data"]["apellidos"],
+      "dui" => $data_validada["data"]["dui"] ?? $data_current["data"]["dui"],
+      "pagada" => $data_validada["data"]["pagada"] ?? $data_current["data"]["pagada"],
+      "inicio" => $data_validada["data"]["inicio"] ?? $data_current["data"]["inicio"],
+      "fin" => $data_validada["data"]["fin"]  ?? $data_current["data"]["fin"]
+    ];
+
+    $result_detalle_update = $this->model_reservacion->actualizar($data_updated);
+
+    if (isset($result_detalle_update["error"])) {
+      $data_validada["error"] = $result_detalle_update["error"];
+      return $data_validada;
+    }
+
+    if (!isset($data_validada["data"]["detalles"])) {
+      return ["data" => []];
+    }
+
+    // resetaremos todos los detalles
+    $this->model_detalle->resetearDetallesDeReservacion($data_current["data"]["reservacionId"]);
+
+    if (empty($data_validada["data"]["detalles"])) {
+      return ["data" => []];
+    }
+
+    foreach ($data_validada["data"]["detalles"] as $key => $detalle) {
+      $detalle_actualizado = $this->model_detalle->actualizar([
+        "reservacionId" => $data_current["data"]["reservacionId"],
+        "servicioId" => $detalle["data"]["servicioId"],
+        "cantidad" => $detalle["data"]["cantidad"],
+        "precio" => $detalle["data"]["precio"]
+      ]);
+      if (!isset($detalle_actualizado["error"])) {
+        // si no afecto ninguna fila es por que no existe,
+        // por lo tanto creamos el detalle
+        if ($detalle_actualizado["data"]["filas"] === 0) {
+          $detalle_guardado = $this->model_detalle->crear([
+            "reservacionId" => $data_current["data"]["reservacionId"],
+            "servicioId" => $detalle["data"]["servicioId"],
+            "cantidad" => $detalle["data"]["cantidad"],
+            "precio" => $detalle["data"]["precio"]
+          ]);
+          if (isset($detalle_guardado["error"])) {
+            $data_validada["error"]["status"] = "true";
+            $data_validada["error"]["message"] = "Error al crear detalle";
+            $data_validada["error"]["details"]["detalles"][] = $detalle_guardado["error"];
+          }
+        }
+      } else {
+        $data_validada["error"]["status"] = true;
+        $data_validada["data"]["detalles"][$key]["error"] = $detalle_actualizado["error"];
+      }
+    }
+
+    return ["data" => []];
   }
 
   private function validarDatosParaActualizar($data): array
@@ -336,7 +408,7 @@ class ReservacionController
             }
           }
         } else { // no hay error si el arreglo esta vacio
-          $result["data"]["detalles"]["detalles"] = [];
+          $result["data"]["detalles"] = [];
         }
       } else {
         $result["error"]["status"] = true;

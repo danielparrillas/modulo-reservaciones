@@ -47,14 +47,14 @@ class Reservacion
       $conn = $this->db->conectar();
       $sql = "UPDATE reservaciones
               SET cliente_id = :c_id, lugar_id = :l_id, clave_acceso = :clave,
-                  nombres = :nom, apellidos = :ape, dui = :dui, pagada = :pagado,
+                  nombres = :nom, apellidos = :ape, dui = :dui, pagada = :pagada,
                   inicio = :inicio, fin = :fin
               WHERE id = :id";
       $stmt = $conn->prepare($sql);
       $stmt->bindParam(':id', $data['id'], PDO::PARAM_INT);
       $stmt->bindParam(':c_id', $data['clienteId'], PDO::PARAM_INT);
       $stmt->bindParam(':l_id', $data['lugarId'], PDO::PARAM_INT);
-      $stmt->bindParam(':clave', $claveDeAcceso, PDO::PARAM_STR);
+      $stmt->bindParam(':clave', $data["claveAcceso"], PDO::PARAM_STR);
       $stmt->bindParam(':nom', $data['nombres'], PDO::PARAM_STR);
       $stmt->bindParam(':ape', $data['apellidos'], PDO::PARAM_STR);
       $stmt->bindParam(':dui', $data['dui'], PDO::PARAM_STR);
@@ -90,6 +90,7 @@ class Reservacion
       $stmt->bindParam(':reservacion_id', $reservacion_id, PDO::PARAM_INT);
       $stmt->execute();
       $result["data"] = $stmt->fetch(PDO::FETCH_ASSOC);
+      if (isset($result["data"]["pagada"])) $result["data"]["pagada"] = (bool) $result["data"]["pagada"];
     } catch (Exception $e) {
       $conn = null;
       $result["error"]["status"] = true;

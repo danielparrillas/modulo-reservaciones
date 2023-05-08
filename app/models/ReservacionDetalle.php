@@ -72,6 +72,7 @@ class ReservacionDetalle
       $stmt->bindParam(':r_id', $id_reservaciones, PDO::PARAM_INT);
       $stmt->bindParam(':cantidad', $CANTIDAD_RESETEADA, PDO::PARAM_INT);
       $stmt->execute();
+      $result["data"]["filas"] = $stmt->rowCount();
     } catch (Exception $e) {
       $conn = null;
       $result["error"]["status"] = true;
@@ -82,7 +83,7 @@ class ReservacionDetalle
     return $result;
   }
 
-  public function actualizarDetalle(array $data)
+  public function actualizar(array $data)
   {
     $result = [];
     try {
@@ -97,6 +98,7 @@ class ReservacionDetalle
       $stmt->bindParam(':cantidad', $data['cantidad'], PDO::PARAM_INT);
       $stmt->bindParam(':precio', $data['precio'], PDO::PARAM_STR);
       $stmt->execute();
+      $result["data"]["filas"] = $stmt->rowCount();
     } catch (Exception $e) {
       $conn = null;
       $result["error"]["status"] = true;

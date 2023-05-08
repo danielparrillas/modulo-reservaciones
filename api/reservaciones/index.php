@@ -46,6 +46,8 @@ if (count($uri) === 1 && $uri[0] === "") { // api/reservaciones/
       case "GET":
         $result = $controller_reservacion->obtenerPorId($id);
         if (!isset($result["error"])) {
+          unset($result["data"]["claveAcceso"]);
+          unset($result["data"]["cliente"]);
           if ($result["data"]["clienteId"] === $result_api["data"]["clienteId"]) {
             echo json_encode($result);
           } else {
