@@ -31,6 +31,10 @@ class ReservacionController
     $reservacionId = intval($id);
     $result = $this->model_reservacion->obtenerPorId($reservacionId);
 
+    if (isset($result["error"])) {
+      return $result;
+    }
+
     if (!$result["data"]) {
       $result["data"] = [];
       $result["error"]["status"] = true;
@@ -104,12 +108,10 @@ class ReservacionController
   public function actualizarConDetalles($data): array
   {
     $result_validado = $this->validarDatosParaActualizar($data);
-
-    $result_validado["data"] = $data;
     $reservacionId = $data["reservacionId"] ?? 0;
 
     $reservacionId = intval($data["reservacionId"]);
-    $result_validado = $this->obtenerPorId($reservacionId);
+    $result_validado["current"] = $this->obtenerPorId($reservacionId);
 
     return $result_validado;
   }
@@ -117,10 +119,234 @@ class ReservacionController
   private function validarDatosParaActualizar($data): array
   {
     $result = [];
+    $result["data"]["clienteId"] = $this->cliente_id;
+    // validacion del cliente id
+    if ($result["data"]["clienteId"] === null) {
+      $result["error"]["status"] = true;
+      $result["error"]["details"]["cliente"][] = "No hay cliente relacionado al api key. Error interno.";
+    }
 
+    // validacion de reservacionId
+    if (!isset($data["reservacionId"])) {
+      $result["data"]["reservacionId"] = null;
+      $result["error"]["status"] = true;
+      $result["error"]["details"]["reservacionId"][] = "Parametro obligatorio";
+    }
+    if (isset($data["reservacionId"])) {
+      $result["data"]["reservacionId"] = $data["reservacionId"];
+      $reservacionId = intval($data["reservacionId"]);
+      if ($reservacionId > 0) {
+        $result["data"]["reservacionId"] = $reservacionId;
+      } else {
+        $result["error"]["status"] = true;
+        $result["error"]["details"]["reservacionId"][] = "Debe ser un numero";
+      }
+    }
+
+    // validacion de clave de acceso
+    if (!isset($data["claveAcceso"])) {
+      $result["data"]["claveAcceso"] = null;
+      $result["error"]["status"] = true;
+      $result["error"]["details"]["claveAcceso"][] = "Parametro obligatorio";
+      $result["error"]["details"]["claveAcceso"][] = "Es necesario para poder actualizar esta reservacion";
+    } else {
+      $result["data"]["claveAcceso"] = $data["claveAcceso"];
+      if (!is_string($data["claveAcceso"])) {
+        $result["error"]["status"] = true;
+        $result["error"]["details"]["claveAcceso"][] = "Debe ser una cadena de texto";
+      }
+    }
+
+    // validacion del lugar id
+    if (isset($data["lugarId"])) {
+      $result["data"]["lugarId"] = $data["lugarId"];
+      if (is_int($data["lugarId"])) {
+        $lugar_data = $this->model_lugar->obtenerPorIdSimple($data["lugarId"]);
+        if (!isset($lugar_data["error"])) {
+          if ($lugar_data["data"]["activo"]) {
+            $result["data"]["lugarId"] = $lugar_data["data"]["lugarId"];
+            $result["data"]["lugar"] = $lugar_data["data"]["lugar"];
+            $result["data"]["lugarActivo"] = $lugar_data["data"]["activo"];
+          } else {
+            $result["error"]["status"] = true;
+            $result["error"]["details"]["lugarId"][] = "El lugar actualmente no esta activo";
+          }
+        } else {
+          $result["error"]["status"] = true;
+          $result["error"]["details"]["lugarId"][] = $lugar_data["error"]["message"];
+        }
+      } else {
+        $result["error"]["status"] = true;
+        $result["error"]["details"]["lugarId"][] = "Debe ser un número";
+      }
+    }
+
+    //validacion nombres
+    if (isset($data["nombres"])) {
+      $result["data"]["nombres"] = $data["nombres"];
+      if (!is_string($data["nombres"])) {
+        $result["error"]["status"] = true;
+        $result["error"]["details"]["nombres"][] = "Debe ser texto";
+      } else {
+        if (trim($data["nombres"]) === "") {
+          $result["error"]["status"] = true;
+          $result["error"]["details"]["nombres"][] = "No debe ser un texto vacío";
+        }
+      }
+    }
+    //validacion apellidos
+    if (isset($data["apellidos"])) {
+      $result["data"]["apellidos"] = $data["apellidos"];
+      if (!is_string($data["apellidos"])) {
+        $result["error"]["status"] = true;
+        $result["error"]["details"]["apellidos"][] = "Debe ser texto";
+      } else {
+        if (trim($data["apellidos"]) === "") {
+          $result["error"]["status"] = true;
+          $result["error"]["details"]["apellidos"][] = "No debe ser un texto vacío";
+        }
+      }
+    }
+    //validacion de dui
+    if (isset($data["dui"])) {
+      $result["data"]["dui"] = $data["dui"];
+      if (!is_string($data["dui"])) {
+        $result["error"]["status"] = true;
+        $result["error"]["details"]["dui"][] = "Debe ser texto";
+      } else {
+        if (trim($data["dui"]) === "") {
+          $result["error"]["status"] = true;
+          $result["error"]["details"]["dui"][] = "No debe ser un texto vacío";
+        }
+        if (!isDUI($data["dui"])) {
+          $result["error"]["status"] = true;
+          $result["error"]["details"]["dui"][] = "Formato no válido (#######-#)";
+        }
+      }
+    }
+
+    //validacion pagada
+    if (isset($data["pagada"])) {
+      $result["data"]["pagada"] = $data["pagada"];
+      if (!is_bool($data["pagada"])) {
+        $result["error"]["status"] = true;
+        $result["error"]["details"]["pagada"][] = "Debe ser boleano (true o false)";
+      }
+    }
+
+    $fecha_inicio = false;
+    //validacion de inicio de fecha
+    if (isset($data["inicio"])) {
+      $result["data"]["inicio"] = $data["inicio"];
+      if (is_string($data["inicio"])) {
+        $fecha_inicio = DateTime::createFromFormat('Y-m-d', $data["inicio"]);
+        if ($fecha_inicio === false) {
+          $result["error"]["status"] = true;
+          $result["error"]["details"]["inicio"][] = "Formato erróneo (YYYY-MM-DD)";
+        } else {
+          $result["data"]["inicio"] = $fecha_inicio->format('Y-m-d');
+        }
+      } else {
+        $result["error"]["status"] = true;
+        $result["error"]["details"]["inicio"][] = "Debe ser una fecha en texto";
+      }
+    }
+    //validacion de fin de fecha
+    $fecha_fin = false;
+    if (isset($data["fin"])) {
+      $result["data"]["fin"] = $data["fin"];
+      if (is_string($data["fin"])) {
+        $fecha_fin = DateTime::createFromFormat('Y-m-d', $data["fin"]);
+
+        if ($fecha_fin === false) {
+          $result["error"]["status"] = true;
+          $result["error"]["details"]["fin"][] = "Formato erróneo (YYYY-MM-DD)";
+        } else {
+          $result["data"]["fin"] = $fecha_fin->format('Y-m-d');
+        }
+      } else {
+        $result["error"]["status"] = true;
+        $result["error"]["details"]["fin"][] = "Debe ser una fecha en texto";
+      }
+    }
+    //es necesario que si actualizan las fechas, se envien las 2
+    if (isset($data["fin"]) xor isset($data["inicio"])) {
+      $result["error"]["status"] = true;
+      if (!isset($data["fin"])) {
+        $result["data"]["fin"] = null;
+        $result["error"]["details"]["fin"][] = "Debe enviar tambien este parametro para actualizar la fecha de inicio";
+      }
+      if (!isset($data["inicio"])) {
+        $result["data"]["inicio"] = null;
+        $result["error"]["details"]["inicio"][] = "Debe enviar tambien este parametro para actualizar la fecha de fin";
+      }
+    }
+    //validacion de diferencia de fechas
+    if ($fecha_inicio !== false && $fecha_fin !== false) {
+      $fecha_diferencia = $fecha_inicio->diff($fecha_fin);
+      $fecha_actual = new DateTime();
+      $fecha_actual->setTime(0, 0, 0, 0); // para hacer la diferencia a nivel de fecha sin tomar en cuenta la hora
+      $fecha_diff_hoy = $fecha_inicio->diff($fecha_actual);
+      if (
+        $fecha_diff_hoy->invert === 0 ||
+        $fecha_diff_hoy->invert === 0 && $fecha_diff_hoy->days === 0
+      ) {
+        $result["error"]["status"] = true;
+        $result["error"]["details"]["inicio"][] = "La fecha debe ser despues de la fecha actual";
+      }
+      if ($fecha_diferencia->invert === 1 && $fecha_diferencia->days > 0) {
+        $result["error"]["status"] = true;
+        $result["error"]["details"]["inicio"][] = "No debe ser despues de la fecha de fin";
+        $result["error"]["details"]["fin"][] = "No debe ser antes de la fecha de inicio";
+      }
+    }
+
+    // validacion del detalle
+    //si no esta nulo
+    if (isset($data["detalles"])) {
+      //que sea de tipo arreglo
+      if (is_array($data["detalles"])) {
+        //que no sea un arreglo vacio
+        if (count($data["detalles"]) >  0) {
+          foreach ($data["detalles"] as $key => $detalle) {
+            $detalle_validado = $this->validarDetalle($detalle);
+            // si hubo es valido el detalle
+            $detalle_validado["data"]["posicion"] = $key;
+            if (!isset($detalle_validado["error"])) {
+              $result["data"]["detalles"][] = $detalle_validado;
+            } else {
+              $result["data"]["detalles"][] = $detalle_validado;
+              $result["error"]["status"] = true;
+              $result["error"]["details"]["detalles"][] = "Error en alguno de los servicios. Revisar detalles en data";
+            }
+          }
+          // todo: validar detalles repetidos
+          //se revisa que no haya detalles repetidos si no hay error en alguno de los detalles
+          if (!isset($result["error"]["details"]["detalles"])) {
+            $servicio_id_sin_repetir = [];
+            foreach ($result["data"]["detalles"] as $key => $detalle) {
+              if (!in_array($detalle["data"]["servicioId"], $servicio_id_sin_repetir)) {
+                $servicio_id_sin_repetir[] = $detalle["data"]["servicioId"];
+              } else {
+                $result["error"]["status"] = true;
+                $result["error"]["details"]["detalles"][] = "No debe enviar servicios duplicados";
+                $result["data"]["detalles"][$key]["error"]["status"] = true;
+                $result["data"]["detalles"][$key]["error"]["message"] = "Servicio duplicado";
+              }
+            }
+          }
+        } else { // no hay error si el arreglo esta vacio
+          $result["data"]["detalles"]["detalles"] = [];
+        }
+      } else {
+        $result["error"]["status"] = true;
+        $result["error"]["details"]["detalles"][] = "Debe ser un arreglo";
+      }
+    }
+
+    if (isset($result["error"])) $result["error"]["message"] = "Error en los datos. Revisar los detalles para mayor informacion.";
     return $result;
   }
-
   private function validarDatosParaCrear($data): array
   {
     $result = [];

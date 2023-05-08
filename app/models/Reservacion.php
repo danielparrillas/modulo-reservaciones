@@ -79,7 +79,7 @@ class Reservacion
     try {
       $conn = $this->db->conectar();
       $sql = "SELECT 
-                R.id AS reservacionId, C.id AS clienteId, C.nombre AS cliente,
+                R.id AS reservacionId, C.id AS clienteId, C.nombre AS cliente, R.clave_acceso AS claveAcceso,
                 L.id AS lugarId, L.nombre AS lugar, R.nombres, R.apellidos,
                 R.dui, R.pagada, R.inicio, R.fin
               FROM reservaciones R
