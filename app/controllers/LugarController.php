@@ -4,64 +4,14 @@ include_once(dirname(__DIR__) . '/models/Lugar.php');
 
 class LugarController
 {
-  public function __construct(private Lugar $model)
+  private $model_lugar;
+  public function __construct(Database $db)
   {
+    $this->model_lugar = new Lugar($db);
   }
 
-  public function obtenerTodos(): void
+  public function obtenerTodos()
   {
-    echo json_encode($this->model->obtenerTodosSimple());
-  }
-
-  public function obtenerServicios($lugar_id): void
-  {
-    $response = $this->model->obtenerDetalle($lugar_id);
-    $newData = [
-      "lugarId" => null,
-      "lugar" => null,
-      "permiteAcampar" => null,
-      "gruposDeServicios" => []
-    ];
-    $count = 0;
-    foreach ($response["data"] as $row) {
-      $newData["lugarId"] ?? $count++;
-      $newData["lugarId"] ?? $newData["lugarId"] = $row["lugarId"];
-      $newData["lugar"] ?? $newData["lugar"] = $row["lugar"];
-      $newData["permiteAcampar"] ?? $newData["permiteAcampar"]  = $row["permiteAcampar"];
-      $grupo_encontrado =  false;
-      foreach ($newData["gruposDeServicios"] as $index => $grupo) {
-        if ($grupo["grupoId"] === $row["grupoId"]) {
-          $grupo_encontrado = true;
-          $newData["gruposDeServicios"][$index]["servicios"][] = [
-            "servicioId" => $row["servicioId"],
-            "servicio" => $row["servicio"],
-            "precio" => $row["precio"],
-            "descripcion" => $row["descripcion"]
-          ];
-        }
-      }
-      if ($grupo_encontrado === false && $row["cantidadMaximaDiariaPorGrupo"] > 0) {
-        $newData["gruposDeServicios"][] = [
-          "disponibilidadId" => $row["disponibilidadId"],
-          "grupoId" => $row["grupoId"],
-          "nombre" => $row["grupo"],
-          "cantidadMaximaDiaria" => $row["cantidadMaximaDiariaPorGrupo"],
-          "servicios" => [
-            [
-              "servicioId" => $row["servicioId"],
-              "servicio" => $row["servicio"],
-              "precio" => $row["precio"],
-              "descripcion" => $row["descripcion"]
-            ]
-          ]
-        ];
-      }
-    }
-    if ($response["data"]) $response["data"] = $newData;
-    else {
-      $response["error"]["status"] = true;
-      $response["error"]["message"] = "No se encontro el lugar ni servicios";
-    }
-    echo json_encode($response);
+    return $this->model_lugar->obtenerTodos();
   }
 }

@@ -7,39 +7,29 @@ include_once($PATH_MIDDLEWARES . 'ApiMiddleware.php');
 // uri[0] = "", uri[1] = "api", uri[2] = "lugares"
 $uri = explode("/", explode("reservaciones/app/api/lugares/", $_SERVER["REQUEST_URI"])[1]);
 
-//echo json_encode($uri);
-// se instancia un middleware, este utilizara el servico del cliente
-// instanciado direcatemente en el middleware
-// el objeto ClienteServicio recibe como parametro la instancia tipo Database
-$middleware_api = new ApiMiddleware(new Cliente($DB_RESERVACIONES));
 // se instancia un objeto que pueda manejar la solicitudes del cliente
-$controller = new LugarController(new Lugar($DB_RESERVACIONES));
+$controller = new LugarController($DB_RESERVACIONES);
 
-if ( // api/lugares
-  count($uri) === 0 ||
-  (count($uri) === 1 && $uri[0] === "")
-) {
-  // if ($middleware_api->validarApiKey()) {
-  if (true) {
-    switch ($_SERVER["REQUEST_METHOD"]) {
-      case "GET":
-        $controller->obtenerTodos();
-        break;
-      default:
-        http_response_code(405);
-        header("Allow: GET");
-        break;
-    };
-  }
+if (count($uri) === 1 && $uri[0] === "") { // api/lugares
+  switch ($_SERVER["REQUEST_METHOD"]) {
+    case "GET":
+      $get_lugares = $controller->obtenerTodos();
+      if (isset($get_lugares["error"])) http_response_code(404);
+      echo json_encode($get_lugares);
+      break;
+    default:
+      http_response_code(405);
+      header("Allow: GET");
+      break;
+  };
 } else if ( // api/lugares/[id]
   count($uri) === 1 && $uri[0] !== ""
 ) {
-  // if ($middleware_api->validarApiKey()) {
   if (true) {
     $id = $uri[0];
     switch ($_SERVER["REQUEST_METHOD"]) {
       case "GET":
-        $controller->obtenerServicios($id);
+        echo "id";
         break;
       default:
         http_response_code(405);

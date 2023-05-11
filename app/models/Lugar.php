@@ -33,16 +33,40 @@ class Lugar
     return $result;
   }
 
+  public function obtenerTodos(): array
+  {
+    $result = [];
+    try {
+      $conn = $this->db->conectar();
+      $sql = "SELECT id AS lugarId, nombre, permite_acampar AS permiteAcampar, activo
+              FROM lugares_turisticos WHERE eliminado = 0";
+      $stmt = $conn->prepare($sql);
+      $stmt->execute();
+      while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $row['permiteAcampar'] = (bool) $row['permiteAcampar'];
+        $row["activo"] = (bool)$row["activo"];
+        $result["data"][] = $row;
+      }
+    } catch (Exception $e) {
+      $conn = null;
+      $result["error"]["status"] = true;
+      $result["error"]["message"] = $e->getMessage();
+      $result["error"]["details"][] = ["database" => $e];
+    }
+    $conn = null;
+    return $result;
+  }
   public function obtenerTodosSimple(): array
   {
     $result = [];
     try {
       $conn = $this->db->conectar();
-      $sql = "SELECT id, nombre, permite_acampar FROM lugares_turisticos WHERE activo = 1 AND eliminado = 0";
+      $sql = "SELECT id, nombre, permite_acampar AS permiteAcampar
+              FROM lugares_turisticos WHERE activo = 1 AND eliminado = 0";
       $stmt = $conn->prepare($sql);
       $stmt->execute();
       while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-        $row['permite_acampar'] = (bool) $row['permite_acampar'];
+        $row['permiteAcampar'] = (bool) $row['permiteAcampar'];
         $result["data"][] = $row;
       }
     } catch (Exception $e) {
