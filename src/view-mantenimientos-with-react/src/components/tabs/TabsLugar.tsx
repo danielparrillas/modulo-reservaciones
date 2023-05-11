@@ -2,9 +2,28 @@ import { useEffect, useState } from "react";
 import { Dayjs } from "dayjs";
 import { useAppStore } from "../../hooks/appStore";
 import { UnorderedListOutlined, SaveFilled } from "@ant-design/icons";
-import { DatePicker, message, Space, Button } from "antd";
+import { DatePicker, message, Space, Button, Tabs } from "antd";
+import { TabsProps } from "antd";
 
-export default function FormLugar() {
+const tabs: TabsProps["items"] = [
+  {
+    key: "1",
+    label: `Información`,
+    children: <a>sad</a>,
+  },
+  {
+    key: "2",
+    label: `Servicios`,
+    children: `Content of Tab Pane 2`,
+  },
+  {
+    key: "3",
+    label: `Periodos inactivos`,
+    children: `Content of Tab Pane 3`,
+  },
+];
+
+export default function TabsLugar() {
   const [date, setDate] = useState<Dayjs | null>(null);
   const { vista, setVista } = useAppStore();
 
@@ -17,7 +36,7 @@ export default function FormLugar() {
   return (
     <div
       className={
-        `${vista !== "form" && "hidden"}` + " flex flex-col gap-4 h-full"
+        `${vista !== "tabs" && "hidden"}` + " flex flex-col gap-4 h-full"
       }
     >
       <div className="flex gap-3">
@@ -30,11 +49,11 @@ export default function FormLugar() {
           Ver todos los lugares
         </Button>
       </div>
-      <form action="" className="bg-white rounded-md p-4 h-full">
-        <Button type="primary" icon={<SaveFilled />}>
-          Guardar
-        </Button>
-      </form>
+      <Tabs
+        defaultActiveKey="1"
+        items={tabs}
+        className="bg-white p-4 rounded-md h-full"
+      />
     </div>
   );
 }

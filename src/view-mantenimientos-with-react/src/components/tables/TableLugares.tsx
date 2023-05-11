@@ -103,7 +103,7 @@ export default function TableLugares() {
         <Button
           type="primary"
           icon={<PlusOutlined />}
-          onClick={() => setVista("form")}
+          onClick={() => setVista("tabs")}
         >
           Agregar nuevo
         </Button>
@@ -116,7 +116,7 @@ export default function TableLugares() {
         onRow={(record, rowIndex) => {
           return {
             onClick: (event) => {
-              setVista("form");
+              setVista("tabs");
               setLugar(record);
             },
           };

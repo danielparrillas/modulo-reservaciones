@@ -1,6 +1,6 @@
 import { create } from "zustand";
 
-type Vista = "table" | "form";
+type Vista = "table" | "tabs";
 
 interface useAppProps {
   vista: Vista;
