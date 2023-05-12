@@ -4,7 +4,9 @@ Se utilizo pnpm, pero puedes utilizar npm o yarn, si elijes uno diferente a pnpm
 
 # Instala dependencias
 
+```
 pnpm i
+```
 
 # Correr en modo desarrollo
 

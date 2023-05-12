@@ -64,10 +64,6 @@ export default function TableLugares() {
   const { vista, setVista } = useAppStore();
 
   const getLugares = async () => {
-    // let response = await fetch("/reservaciones/app/api/lugares", {
-    //   method: "GET",
-    // });
-
     await axios
       .get("/reservaciones/app/api/lugares")
       .then((response) => setLugares(convertirDataLugares(response.data.data)))
