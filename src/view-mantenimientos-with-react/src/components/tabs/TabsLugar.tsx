@@ -3,6 +3,8 @@ import { UnorderedListOutlined } from "@ant-design/icons";
 import { Button, Tabs } from "antd";
 import { useLugarStore } from "../../hooks/lugarStore";
 import TabLugarInformacion from "./TabLugarInformacion";
+import TabLugarDisponibilidades from "./TabLugarDisponibilidades";
+import TabPeriodosDeshabilitados from "./TabPeriodosDeshabilitados";
 
 export default function TabsLugar() {
   const { width, vista, setVista } = useAppStore();
@@ -19,7 +21,7 @@ export default function TabsLugar() {
           type="default"
           icon={<UnorderedListOutlined />}
           onClick={() => setVista("table")}
-          className=""
+          disabled={modo === "guardando"}
         >
           Ver todos los lugares
         </Button>
@@ -35,15 +37,15 @@ export default function TabsLugar() {
           },
           {
             key: "2",
-            label: `Servicios`,
-            children: `Content of Tab Pane 2`,
-            disabled: modo === "nuevo",
+            label: `Disponibilidades`,
+            children: <TabLugarDisponibilidades />,
+            disabled: modo === "nuevo" || modo === "guardando",
           },
           {
             key: "3",
             label: `Periodos inactivos`,
-            children: `Content of Tab Pane 3`,
-            disabled: modo === "nuevo",
+            children: <TabPeriodosDeshabilitados />,
+            disabled: modo === "nuevo" || modo === "guardando",
           },
         ]}
         className="bg-white p-4 rounded-md h-full overflow-auto"

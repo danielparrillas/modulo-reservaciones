@@ -1,6 +1,6 @@
 import { create } from "zustand";
 
-type Modo = "edicion" | "nuevo";
+type Modo = "edicion" | "nuevo" | "guardando";
 
 interface useLugarProps {
   modo: Modo;
