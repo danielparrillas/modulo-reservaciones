@@ -8,6 +8,7 @@ import {
 import { Table, Tag, Modal, Space, Button } from "antd";
 import { useAppStore } from "../../hooks/appStore";
 import { useLugarStore } from "../../hooks/lugarStore";
+import { ColumnsType } from "antd/es/table";
 
 interface Lugar {
   key: string;
@@ -17,7 +18,7 @@ interface Lugar {
   acampar: string;
 }
 
-const columns = [
+const columns: ColumnsType<any> = [
   {
     title: "Lugar",
     dataIndex: "nombre",
@@ -28,6 +29,7 @@ const columns = [
     title: "Acampar",
     dataIndex: "acampar",
     key: "acampar",
+    width: "20%",
     render: (permitido: boolean) => {
       if (permitido) {
         return <Tag color="processing">Permitido</Tag>;
@@ -40,6 +42,7 @@ const columns = [
     title: "Activo",
     dataIndex: "activo",
     key: "activo",
+    width: "20%",
     render: (estado: boolean) => {
       if (estado) {
         return (
@@ -68,7 +71,7 @@ export default function TableLugares() {
       .get("/reservaciones/app/api/lugares")
       .then((response) => setLugares(convertirDataLugares(response.data.data)))
       .catch((error) => {
-        // console.error(error);
+        console.error(error);
         Modal.error({
           title: "Error al llamar los datos",
           content: error.message,
@@ -77,7 +80,7 @@ export default function TableLugares() {
   };
 
   const convertirDataLugares = (lugares: any[]) => {
-    console.log(lugares);
+    // console.log(lugares);
     return lugares.map((lugar) => ({
       key: `row-lugar-${lugar.lugarId}`,
       id: lugar.lugarId,

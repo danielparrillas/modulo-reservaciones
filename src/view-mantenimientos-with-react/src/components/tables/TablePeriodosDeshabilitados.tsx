@@ -15,7 +15,6 @@ const colums: ColumnsType<any> = [
   {
     title: "",
     className: "text-center",
-
     render: () => {
       return (
         <Popconfirm
