@@ -23,13 +23,13 @@ const columns: ColumnsType<any> = [
     title: "Lugar",
     dataIndex: "nombre",
     key: "lugarnombre",
+    width: "40%",
     sorter: (a: any, b: any) => a.nombre.localeCompare(b.nombre),
   },
   {
     title: "Acampar",
     dataIndex: "acampar",
     key: "acampar",
-    width: "20%",
     render: (permitido: boolean) => {
       if (permitido) {
         return <Tag color="processing">Permitido</Tag>;
@@ -42,7 +42,6 @@ const columns: ColumnsType<any> = [
     title: "Activo",
     dataIndex: "activo",
     key: "activo",
-    width: "20%",
     render: (estado: boolean) => {
       if (estado) {
         return (

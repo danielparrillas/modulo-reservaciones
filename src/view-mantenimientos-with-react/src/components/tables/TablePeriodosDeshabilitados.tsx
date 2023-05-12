@@ -1,4 +1,5 @@
 import { Table, Tag, Popconfirm } from "antd";
+import { DeleteFilled } from "@ant-design/icons";
 import { ColumnsType } from "antd/es/table";
 
 const colums: ColumnsType<any> = [
@@ -23,7 +24,7 @@ const colums: ColumnsType<any> = [
           okText="Si"
           cancelText="No"
         >
-          <Tag color="error" className="cursor-pointer">
+          <Tag color="error" icon={<DeleteFilled />} className="cursor-pointer">
             Eliminar
           </Tag>
         </Popconfirm>
