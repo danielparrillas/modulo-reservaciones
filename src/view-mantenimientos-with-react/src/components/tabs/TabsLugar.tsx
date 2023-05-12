@@ -7,15 +7,11 @@ import TabLugarDisponibilidades from "./TabLugarDisponibilidades";
 import TabPeriodosDeshabilitados from "./TabPeriodosDeshabilitados";
 
 export default function TabsLugar() {
-  const { width, vista, setVista } = useAppStore();
+  const { width, setVista } = useAppStore();
   const { modo } = useLugarStore();
 
   return (
-    <div
-      className={
-        `${vista !== "tabs" && "hidden"}` + " flex flex-col gap-4 h-full"
-      }
-    >
+    <div className=" flex flex-col gap-4 h-full">
       <div className="flex gap-3">
         <Button
           type="default"

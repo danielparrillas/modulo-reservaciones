@@ -1,8 +1,7 @@
-En la consola ejecuta
+# Instala dependencias
 
 Se utilizo pnpm, pero puedes utilizar npm o yarn, si elijes uno diferente a pnpm solo sustituyelo en los siguiente comandos
-
-# Instala dependencias
+En la consola ejecuta, para instalar todas las dependencias
 
 ```
 pnpm i
@@ -10,7 +9,9 @@ pnpm i
 
 # Correr en modo desarrollo
 
+```
 pnpm run dev --base reservaciones/views
+```
 
 Esto hara que se corra en el puerto 5173 (http://localhost:5173/reservaciones/views)
 Pero esto dara un error CORS cuando haga llamadas a la api de php

@@ -6,7 +6,7 @@ import { useEffect } from "react";
 import { useAppStore } from "./hooks/appStore";
 
 function App() {
-  const { setHeight, setWidth } = useAppStore();
+  const { vista, setHeight, setWidth } = useAppStore();
   useEffect(() => {
     window.addEventListener("resize", handleResize);
   }, []);
@@ -17,8 +17,7 @@ function App() {
   };
   return (
     <main className="flex flex-col p-2 md:p-6 bg-gray-200 w-screen h-screen overflow-auto text-slate-600">
-      <TableLugares />
-      <TabsLugar />
+      {vista === "table" ? <TableLugares /> : <TabsLugar />}
     </main>
   );
 }

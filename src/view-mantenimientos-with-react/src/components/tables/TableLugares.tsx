@@ -61,7 +61,7 @@ const columns = [
 export default function TableLugares() {
   const [lugares, setLugares] = useState<Lugar[]>([]);
   const { setLugar, setModo } = useLugarStore();
-  const { vista, setVista } = useAppStore();
+  const { setVista } = useAppStore();
 
   const getLugares = async () => {
     await axios
@@ -92,9 +92,7 @@ export default function TableLugares() {
   }, []);
 
   return (
-    <div
-      className={`${vista !== "table" && "hidden"}` + " flex flex-col gap-4"}
-    >
+    <div className="flex flex-col gap-4 h-full">
       <Space wrap>
         <Button
           type="primary"
@@ -107,22 +105,24 @@ export default function TableLugares() {
           Agregar nuevo
         </Button>
       </Space>
-      <Table
-        dataSource={lugares}
-        columns={columns}
-        pagination={false}
-        scroll={{ y: window.innerHeight - 160 }}
-        onRow={(record) => {
-          return {
-            onClick: () => {
-              setVista("tabs");
-              setLugar(record);
-              setModo("edicion");
-            },
-          };
-        }}
-        rowClassName="cursor-pointer"
-      />
+      <div className="h-full bg-white rounded-md">
+        <Table
+          dataSource={lugares}
+          columns={columns}
+          pagination={false}
+          scroll={{ y: window.innerHeight - 160 }}
+          onRow={(record) => {
+            return {
+              onClick: () => {
+                setVista("tabs");
+                setLugar(record);
+                setModo("edicion");
+              },
+            };
+          }}
+          rowClassName="cursor-pointer"
+        />
+      </div>
     </div>
   );
 }

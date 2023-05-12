@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="es">
 
+
 <head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script type="module">
     import RefreshRuntime from "http://localhost:5173/reservaciones/views/@react-refresh"
     RefreshRuntime.injectIntoGlobalHook(window)
-    window.$RefreshReg$ = () => { }
+    window.$RefreshReg$ = () => {}
     window.$RefreshSig$ = () => (type) => type
     window.__vite_plugin_react_preamble_installed__ = true
   </script>
