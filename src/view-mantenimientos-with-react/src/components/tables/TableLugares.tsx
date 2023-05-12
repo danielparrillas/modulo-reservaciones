@@ -68,7 +68,7 @@ export default function TableLugares() {
       .get("/reservaciones/app/api/lugares")
       .then((response) => setLugares(convertirDataLugares(response.data.data)))
       .catch((error) => {
-        console.error(error);
+        // console.error(error);
         Modal.error({
           title: "Error al llamar los datos",
           content: error.message,

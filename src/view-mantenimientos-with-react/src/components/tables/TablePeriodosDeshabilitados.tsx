@@ -34,14 +34,14 @@ const colums: ColumnsType<any> = [
 ];
 
 const dataSource = [
-  { inicio: "1970-01-01", fin: "2023-01-01" },
-  { inicio: "1980-01-01", fin: "2023-02-01" },
-  { inicio: "1990-01-01", fin: "2023-03-01" },
-  { inicio: "2000-01-01", fin: "2023-04-01" },
-  { inicio: "2001-01-01", fin: "2023-05-01" },
-  { inicio: "2003-01-01", fin: "2023-06-01" },
-  { inicio: "2004-01-01", fin: "2023-07-01" },
-  { inicio: "2005-01-01", fin: "2023-08-01" },
+  { key: "pd-1", inicio: "1970-01-01", fin: "2023-01-01" },
+  { key: "pd-2", inicio: "1980-01-01", fin: "2023-02-01" },
+  { key: "pd-3", inicio: "1990-01-01", fin: "2023-03-01" },
+  { key: "pd-4", inicio: "2000-01-01", fin: "2023-04-01" },
+  { key: "pd-5", inicio: "2001-01-01", fin: "2023-05-01" },
+  { key: "pd-6", inicio: "2003-01-01", fin: "2023-06-01" },
+  { key: "pd-7", inicio: "2004-01-01", fin: "2023-07-01" },
+  { key: "pd-8", inicio: "2005-01-01", fin: "2023-08-01" },
 ];
 
 export default function TablePeriodosDeshabilitados() {
