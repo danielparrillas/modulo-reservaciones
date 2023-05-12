@@ -26,7 +26,7 @@ export default function TabsLugar() {
       </div>
       <Tabs
         defaultActiveKey="1"
-        tabPosition={width < 700 ? "top" : "left"}
+        tabPosition={width < 960 ? "top" : "left"}
         items={[
           {
             key: "1",

@@ -116,9 +116,9 @@ export default function TableLugares() {
         columns={columns}
         pagination={false}
         scroll={{ y: window.innerHeight - 160 }}
-        onRow={(record, rowIndex) => {
+        onRow={(record) => {
           return {
-            onClick: (event) => {
+            onClick: () => {
               setVista("tabs");
               setLugar(record);
               setModo("edicion");

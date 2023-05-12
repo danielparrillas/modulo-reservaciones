@@ -13,9 +13,10 @@ function App() {
   const handleResize = () => {
     setHeight(window.innerHeight);
     setWidth(window.innerWidth);
+    // console.log(window.innerWidth);
   };
   return (
-    <main className="flex flex-col p-2 md:p-6 bg-gray-200 w-screen h-screen overflow-auto ">
+    <main className="flex flex-col p-2 md:p-6 bg-gray-200 w-screen h-screen overflow-auto text-slate-600">
       <TableLugares />
       <TabsLugar />
     </main>
