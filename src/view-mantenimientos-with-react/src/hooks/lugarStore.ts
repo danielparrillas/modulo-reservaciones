@@ -1,10 +1,16 @@
 import { create } from "zustand";
 
-interface useAppProps {
-  vista: any;
-  setLugar: (vista: any) => void;
+type Modo = "edicion" | "nuevo";
+
+interface useLugarProps {
+  modo: Modo;
+  lugar: any;
+  setModo: (modo: Modo) => void;
+  setLugar: (lugar: any) => void;
 }
-export const useLugarStore = create<useAppProps>()((set) => ({
-  vista: "table",
-  setLugar: (vista) => set(() => ({ vista: vista })),
+export const useLugarStore = create<useLugarProps>()((set) => ({
+  modo: "nuevo",
+  lugar: null,
+  setModo: (modo) => set(() => ({ modo: modo })),
+  setLugar: (lugar) => set(() => ({ lugar: lugar })),
 }));

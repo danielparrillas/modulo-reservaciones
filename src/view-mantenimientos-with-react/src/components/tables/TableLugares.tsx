@@ -60,7 +60,7 @@ const columns = [
 
 export default function TableLugares() {
   const [lugares, setLugares] = useState<Lugar[]>([]);
-  const { setLugar } = useLugarStore();
+  const { setLugar, setModo } = useLugarStore();
   const { vista, setVista } = useAppStore();
 
   const getLugares = async () => {
@@ -103,7 +103,10 @@ export default function TableLugares() {
         <Button
           type="primary"
           icon={<PlusOutlined />}
-          onClick={() => setVista("tabs")}
+          onClick={() => {
+            setVista("tabs");
+            setModo("nuevo");
+          }}
         >
           Agregar nuevo
         </Button>
@@ -118,6 +121,7 @@ export default function TableLugares() {
             onClick: (event) => {
               setVista("tabs");
               setLugar(record);
+              setModo("edicion");
             },
           };
         }}

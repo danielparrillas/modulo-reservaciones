@@ -1,38 +1,13 @@
-import { useEffect, useState } from "react";
-import { Dayjs } from "dayjs";
 import { useAppStore } from "../../hooks/appStore";
-import { UnorderedListOutlined, SaveFilled } from "@ant-design/icons";
-import { DatePicker, message, Space, Button, Tabs } from "antd";
-import { TabsProps } from "antd";
-
-const tabs: TabsProps["items"] = [
-  {
-    key: "1",
-    label: `Información`,
-    children: <a>sad</a>,
-  },
-  {
-    key: "2",
-    label: `Servicios`,
-    children: `Content of Tab Pane 2`,
-  },
-  {
-    key: "3",
-    label: `Periodos inactivos`,
-    children: `Content of Tab Pane 3`,
-  },
-];
+import { UnorderedListOutlined } from "@ant-design/icons";
+import { Button, Tabs } from "antd";
+import { useLugarStore } from "../../hooks/lugarStore";
+import TabLugarInformacion from "./TabLugarInformacion";
 
 export default function TabsLugar() {
-  const [date, setDate] = useState<Dayjs | null>(null);
-  const { vista, setVista } = useAppStore();
+  const { width, vista, setVista } = useAppStore();
+  const { modo } = useLugarStore();
 
-  const handleChange = (value: Dayjs | null) => {
-    message.info(
-      `Selected Date: ${value ? value.format("YYYY-MM-DD") : "None"}`
-    );
-    setDate(value);
-  };
   return (
     <div
       className={
@@ -51,8 +26,27 @@ export default function TabsLugar() {
       </div>
       <Tabs
         defaultActiveKey="1"
-        items={tabs}
-        className="bg-white p-4 rounded-md h-full"
+        tabPosition={width < 700 ? "top" : "left"}
+        items={[
+          {
+            key: "1",
+            label: `Información`,
+            children: <TabLugarInformacion />,
+          },
+          {
+            key: "2",
+            label: `Servicios`,
+            children: `Content of Tab Pane 2`,
+            disabled: modo === "nuevo",
+          },
+          {
+            key: "3",
+            label: `Periodos inactivos`,
+            children: `Content of Tab Pane 3`,
+            disabled: modo === "nuevo",
+          },
+        ]}
+        className="bg-white p-4 rounded-md h-full overflow-auto"
       />
     </div>
   );
