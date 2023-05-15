@@ -1,4 +1,4 @@
-# Instala dependencias
+## Instala dependencias
 
 Se utilizo pnpm, pero puedes utilizar npm o yarn, si elijes uno diferente a pnpm solo sustituyelo en los siguiente comandos
 En la consola ejecuta, para instalar todas las dependencias
@@ -7,7 +7,7 @@ En la consola ejecuta, para instalar todas las dependencias
 pnpm i
 ```
 
-# Correr en modo desarrollo
+## Correr en modo desarrollo
 
 ```
 pnpm run dev --base reservaciones/views
