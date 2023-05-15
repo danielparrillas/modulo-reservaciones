@@ -1,4 +1,4 @@
-import { Divider, Button, Popconfirm, Card, InputNumber } from "antd";
+import { Button, Popconfirm, Card, InputNumber } from "antd";
 import { SaveFilled } from "@ant-design/icons";
 
 interface FormDisponibilidadProps {
@@ -12,7 +12,7 @@ export default function FormDisponibilidad({
   cantidad,
 }: FormDisponibilidadProps) {
   return (
-    <Card title={nombre}>
+    <Card title={nombre + " " + id}>
       <div className="flex gap-4">
         <InputNumber
           size="large"
@@ -24,7 +24,7 @@ export default function FormDisponibilidad({
         <Popconfirm
           title={"Confirmación"}
           description="¿Desea guardar esta disponibilidad?"
-          onConfirm={(e) => {}}
+          onConfirm={() => {}}
           okText="Si"
           cancelText="No"
         >
