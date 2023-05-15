@@ -1,4 +1,4 @@
-import { Input, Switch, Divider, Checkbox, Button } from "antd";
+import { Input, Switch, Divider, Checkbox, Button, Popconfirm } from "antd";
 import {
   SaveFilled,
   PlusOutlined,
@@ -9,20 +9,12 @@ import { useLugarStore } from "../../hooks/lugarStore";
 
 export default function TabLugarInformacion() {
   const { modo, setModo } = useLugarStore();
-  const handleSubmit = (
-    e:
-      | React.FormEvent<HTMLFormElement>
-      | React.MouseEvent<HTMLButtonElement, MouseEvent>
-      | React.MouseEvent<HTMLAnchorElement, MouseEvent>
-  ) => {
-    e.preventDefault();
+  const handleConfirmSave = () => {
     setModo("guardando");
-
-    console.log(e);
   };
   return (
     <form
-      onSubmit={handleSubmit}
+      onSubmit={(e) => e.preventDefault()}
       className="grid grid-cols-5 gap-4 p-4 text-slate-600"
     >
       <div className="col-span-5 text-center mb-6">
@@ -69,15 +61,30 @@ export default function TabLugarInformacion() {
         <Switch defaultChecked disabled={modo === "guardando"} />
       </div>
       <div className="col-span-5 flex justify-end">
-        <Button
-          type="primary"
-          icon={<SaveFilled />}
-          size="large"
-          onClick={handleSubmit}
-          loading={modo === "guardando"}
+        <Popconfirm
+          title={"Confirmación"}
+          description={
+            modo === "edicion"
+              ? "¿Desea guardar los nuevos cambios para este lugar?"
+              : "¿Desea crear un nuevo lugar?"
+          }
+          onConfirm={handleConfirmSave}
+          okText="Si"
+          cancelText="No"
         >
-          {modo === "guardando" ? "Guardando" : "Guardar"}
-        </Button>
+          <Button
+            type="primary"
+            icon={<SaveFilled />}
+            size="large"
+            loading={modo === "guardando"}
+          >
+            {modo === "guardando"
+              ? "Guardando"
+              : modo === "edicion"
+              ? "Guardar"
+              : "Crear"}
+          </Button>
+        </Popconfirm>
       </div>
     </form>
   );

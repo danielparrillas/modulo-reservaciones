@@ -41,7 +41,7 @@ export default function TabPeriodosDeshabilitados() {
         />
         <Popconfirm
           title="Agregar periodo deshabilitado"
-          description="¿Estas seguro de que quieras deshabilitar el lugar en este periodo?"
+          description="¿Estas seguro de que quieres deshabilitar el lugar en este periodo?"
           onConfirm={confirm}
           onCancel={cancel}
           okText="Si"

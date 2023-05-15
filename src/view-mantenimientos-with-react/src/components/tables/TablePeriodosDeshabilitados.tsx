@@ -20,9 +20,10 @@ const colums: ColumnsType<any> = [
       return (
         <Popconfirm
           title="Eliminar periodo deshabilitado"
-          description="Al eliminar el periodo deshabilitado el lugar volvera a estar disponible para estas fechas"
+          description="Al eliminar el periodo deshabilitado el lugar volvera a estar disponible para estas fechas. ¿Quieres eliminarlo?"
           okText="Si"
           cancelText="No"
+          overlayClassName="w-64"
         >
           <Tag color="error" icon={<DeleteFilled />} className="cursor-pointer">
             Eliminar

@@ -1,6 +1,6 @@
 import { useAppStore } from "../../hooks/appStore";
 import { UnorderedListOutlined } from "@ant-design/icons";
-import { Button, Tabs } from "antd";
+import { Button, Tabs, Tooltip } from "antd";
 import { useLugarStore } from "../../hooks/lugarStore";
 import TabLugarInformacion from "./TabLugarInformacion";
 import TabLugarDisponibilidades from "./TabLugarDisponibilidades";
