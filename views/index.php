@@ -1,30 +1,16 @@
 <!DOCTYPE html>
-<html lang="es">
-
+<html lang="en">
 
 <head>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <script type="module">
-    import RefreshRuntime from "http://localhost:5173/reservaciones/views/@react-refresh"
-    RefreshRuntime.injectIntoGlobalHook(window)
-    window.$RefreshReg$ = () => {}
-    window.$RefreshSig$ = () => (type) => type
-    window.__vite_plugin_react_preamble_installed__ = true
-  </script>
-
-  <script type="module" src="http://localhost:5173/reservaciones/views/@vite/client"></script>
-
-  <meta charset="UTF-8">
-  <link rel="icon" type="image/svg+xml" href="http://localhost:5173/reservaciones/views/vite.svg">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Reservaciones</title>
-
+  <script type="module" crossorigin src="/reservaciones/views/assets/index-b8ecd4a0.js"></script>
+  <link rel="stylesheet" href="/reservaciones/views/assets/index-16134a42.css">
 </head>
 
 <body>
-  <div id="root">
-  </div>
-  <script type="module" src="http://localhost:5173/reservaciones/views/src/main.tsx"></script>
+  <div id="root"></div>
 </body>
 
 </html>

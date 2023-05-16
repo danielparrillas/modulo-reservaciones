@@ -12,6 +12,8 @@ RewriteCond %{REQUEST_FILENAME} !-d
 RewriteCond %{REQUEST_FILENAME}.html -f
 RewriteRule ^(.*)$ $1.html
 
-# Se redirige todo al index.html
-RewriteRule . index.php
+# No afectar a los archivos JavaScript y CSS
+RewriteCond %{REQUEST_URI} !\.(js|css)$
 
+# Redirigir todo lo demás al index.php
+RewriteRule ^(.*)$ index.php [L]

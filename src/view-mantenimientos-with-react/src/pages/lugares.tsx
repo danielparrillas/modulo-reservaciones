@@ -10,7 +10,6 @@ import { ColumnsType } from "antd/es/table";
 import { useEffect, useState } from "react";
 import axios from "axios";
 // Componentes y funciones propias
-import Layout from "../components/layout/Layout";
 import { useLugarStore } from "../hooks/lugarStore";
 
 interface Lugar {
