@@ -1,4 +1,4 @@
-import { useAppStore } from "../../hooks/appStore";
+import { useLayoutStore } from "../../hooks/layoutStore";
 import { UnorderedListOutlined } from "@ant-design/icons";
 import { Button, Tabs } from "antd";
 import { useLugarStore } from "../../hooks/lugarStore";
@@ -7,7 +7,7 @@ import TabLugarDisponibilidades from "./TabLugarDisponibilidades";
 import TabPeriodosDeshabilitados from "./TabPeriodosDeshabilitados";
 
 export default function TabsLugar() {
-  const { width, setVista } = useAppStore();
+  const { width } = useLayoutStore();
   const { modo } = useLugarStore();
 
   return (
@@ -16,7 +16,9 @@ export default function TabsLugar() {
         <Button
           type="default"
           icon={<UnorderedListOutlined />}
-          onClick={() => setVista("table")}
+          onClick={() => {
+            //setVista("table"); //! corregir
+          }}
           disabled={modo === "guardando"}
         >
           Ver todos los lugares

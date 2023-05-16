@@ -12,8 +12,6 @@ RewriteCond %{REQUEST_FILENAME} !-d
 RewriteCond %{REQUEST_FILENAME}.html -f
 RewriteRule ^(.*)$ $1.html
 
-#Modo produccion
-RewriteRule . index.html
+# Se redirige todo al index.html
+RewriteRule . index.php
 
-#Modo desarrollo
-#RewriteRule . index-dev.html 

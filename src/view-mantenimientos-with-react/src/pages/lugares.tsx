@@ -1,14 +1,17 @@
-import { useEffect, useState } from "react";
-import axios from "axios";
+// AntDesign
 import {
   CheckCircleOutlined,
   ExclamationCircleOutlined,
   PlusOutlined,
 } from "@ant-design/icons";
 import { Table, Tag, Modal, Space, Button } from "antd";
-import { useAppStore } from "../../hooks/appStore";
-import { useLugarStore } from "../../hooks/lugarStore";
 import { ColumnsType } from "antd/es/table";
+// Librerias de terceros
+import { useEffect, useState } from "react";
+import axios from "axios";
+// Componentes y funciones propias
+import Layout from "../components/layout/Layout";
+import { useLugarStore } from "../hooks/lugarStore";
 
 interface Lugar {
   key: string;
@@ -60,10 +63,9 @@ const columns: ColumnsType<any> = [
   },
 ];
 
-export default function TableLugares() {
+export default function LugaresPage() {
   const [lugares, setLugares] = useState<Lugar[]>([]);
   const { setLugar, setModo } = useLugarStore();
-  const { setVista } = useAppStore();
 
   const getLugares = async () => {
     await axios
@@ -100,7 +102,7 @@ export default function TableLugares() {
           type="primary"
           icon={<PlusOutlined />}
           onClick={() => {
-            setVista("tabs");
+            //setVista("tabs"); //! corregir
             setModo("nuevo");
           }}
         >
@@ -116,7 +118,7 @@ export default function TableLugares() {
           onRow={(record) => {
             return {
               onClick: () => {
-                setVista("tabs");
+                //setVista("tabs"); //! corregir
                 setLugar(record);
                 setModo("edicion");
               },
