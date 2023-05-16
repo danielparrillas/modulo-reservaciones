@@ -21,7 +21,7 @@ const router = createBrowserRouter([
     errorElement: <ErrorPage />,
   },
   {
-    path: "/reservaciones/views/lugares/:lugarId",
+    path: "/reservaciones/views/lugares/:lugar",
     element: <LugarPage />,
     errorElement: <ErrorPage />,
   },

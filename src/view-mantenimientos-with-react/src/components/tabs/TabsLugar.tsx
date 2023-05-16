@@ -17,7 +17,7 @@ export default function TabsLugar() {
           type="default"
           icon={<UnorderedListOutlined />}
           onClick={() => {
-            //setVista("table"); //! corregir
+            //ysetVista("table"); //! corregir
           }}
           disabled={modo === "guardando"}
         >

@@ -1,16 +1,17 @@
-// AntDesign
+// 🖌️ AntDesign
 import {
   CheckCircleOutlined,
   ExclamationCircleOutlined,
   PlusOutlined,
+  ArrowRightOutlined,
 } from "@ant-design/icons";
 import { Table, Tag, Modal, Space, Button } from "antd";
 import { ColumnsType } from "antd/es/table";
-// Librerias de terceros
+// 🌐 Librerias de terceros
 import { useEffect, useState } from "react";
 import axios from "axios";
-// Componentes y funciones propias
-import { useLugarStore } from "../hooks/lugarStore";
+import { Link, useNavigate } from "react-router-dom";
+// 😁 Componentes y funciones propias
 
 interface Lugar {
   key: string;
@@ -60,11 +61,22 @@ const columns: ColumnsType<any> = [
       }
     },
   },
+  {
+    title: "",
+    dataIndex: "id",
+    key: "actions",
+    align: "center",
+    render: (id: number) => (
+      <Link to={`${id}`}>
+        <ArrowRightOutlined className="w-full" />
+      </Link>
+    ),
+  },
 ];
 
 export default function LugaresPage() {
   const [lugares, setLugares] = useState<Lugar[]>([]);
-  const { setLugar, setModo } = useLugarStore();
+  const navigate = useNavigate();
 
   const getLugares = async () => {
     await axios
@@ -100,10 +112,7 @@ export default function LugaresPage() {
         <Button
           type="primary"
           icon={<PlusOutlined />}
-          onClick={() => {
-            //setVista("tabs"); //! corregir
-            setModo("nuevo");
-          }}
+          onClick={() => navigate("nuevo")}
         >
           Agregar nuevo
         </Button>
@@ -114,16 +123,6 @@ export default function LugaresPage() {
           columns={columns}
           pagination={false}
           scroll={{ y: window.innerHeight - 160 }}
-          onRow={(record) => {
-            return {
-              onClick: () => {
-                //setVista("tabs"); //! corregir
-                setLugar(record);
-                setModo("edicion");
-              },
-            };
-          }}
-          rowClassName="cursor-pointer"
         />
       </div>
     </div>
