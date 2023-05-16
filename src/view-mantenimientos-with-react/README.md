@@ -21,3 +21,11 @@ Con esto queremos lograr correr esta aplicacion react en el mismo servidor de la
 Revisa los archivos en la carpeta views del proyecto en php
 Alliencontaras 2 versiones, la desarrollo que llama a los scripts expuestos en (http://localhost:5173/reservaciones/views)
 Y la version de produccion que llama a los scripts ya compilados con vite (nuestro proyecto en react)
+
+```mermaid
+graph TD;
+    A-->B;
+    A-->C;
+    B-->D;
+    C-->D;
+```

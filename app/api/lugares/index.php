@@ -29,7 +29,9 @@ if (count($uri) === 1 && $uri[0] === "") { // api/lugares
     $id = $uri[0];
     switch ($_SERVER["REQUEST_METHOD"]) {
       case "GET":
-        echo "id";
+        $result = $controller->obtenerPorId($id);
+        if (isset($result["error"])) http_response_code(404);
+        echo json_encode($result);
         break;
       default:
         http_response_code(405);

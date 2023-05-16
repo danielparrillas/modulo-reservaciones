@@ -14,4 +14,11 @@ class LugarController
   {
     return $this->model_lugar->obtenerTodos();
   }
+
+  public function obtenerPorId($id)
+  {
+    $id_valid = intval($id);
+    if ($id_valid > 0) return $this->model_lugar->obtenerPorIdSimple($id);
+    else return ["error" => ["message" => "El id debe ser un numero valido"]];
+  }
 }

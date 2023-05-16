@@ -128,6 +128,8 @@ class Lugar
       $result["error"]["details"][] = ["database" => $e];
     }
     $conn = null;
+    echo json_encode($result);
+    exit;
     return $result;
   }
 }

@@ -1,16 +1,16 @@
 // 🖌️ AntDesign
 import { UnorderedListOutlined } from "@ant-design/icons";
-import { Button, Tabs, message } from "antd";
+import { Button, Tabs, Modal, message } from "antd";
 // 🌐 Librerias de terceros
-import { useLocation } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import axios from "axios";
 // 😁 Componentes y funciones propias
 import { useLayoutStore } from "../hooks/layoutStore";
 import { useLugarStore } from "../hooks/lugarStore";
 import TabLugarInformacion from "../components/tabs/TabLugarInformacion";
 import TabLugarDisponibilidades from "../components/tabs/TabLugarDisponibilidades";
 import TabPeriodosDeshabilitados from "../components/tabs/TabPeriodosDeshabilitados";
-import { useEffect, useState } from "react";
 
 export default function LugarPage() {
   const { width } = useLayoutStore();
@@ -27,10 +27,25 @@ export default function LugarPage() {
     if (urlLast === "nuevo") setModo("nuevo");
     else {
       let id = parseInt(urlLast);
-      if (Number.isInteger(id)) setModo("edicion");
-      else message.error("Formato de id incompatible");
+      if (Number.isInteger(id)) {
+        setModo("edicion");
+        getLugar(id);
+      } else message.error("Formato de id incompatible");
     }
   }, []);
+
+  const getLugar = async (id: number) => {
+    await axios
+      .get(`/reservaciones/app/api/lugares/${id}`)
+      .then((response) => console.log(response))
+      .catch((error) => {
+        console.error(error);
+        Modal.error({
+          title: "Error al llamar los datos",
+          content: error.message,
+        });
+      });
+  };
 
   return (
     <div className=" flex flex-col gap-4 h-full">
@@ -45,7 +60,6 @@ export default function LugarPage() {
         >
           Ver todos los lugares
         </Button>
-        {path}
       </div>
       <Tabs
         defaultActiveKey="1"
