@@ -10,7 +10,7 @@ pnpm i
 ## Correr en modo desarrollo
 
 ```
-pnpm run dev --base reservaciones/views/mantenimientos
+pnpm run dev --base reservaciones/views
 ```
 
 Esto hara que se corra en el puerto 5173 (http://localhost:5173/reservaciones/views)
