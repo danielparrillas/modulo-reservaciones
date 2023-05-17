@@ -79,7 +79,7 @@ export default function LugaresPage() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    //getLugares();
+    getLugares();
     guardar();
   }, []);
 

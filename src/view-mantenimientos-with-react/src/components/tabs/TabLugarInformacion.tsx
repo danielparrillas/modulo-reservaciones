@@ -39,25 +39,8 @@ export default function TabLugarInformacion({
 
   const handleConfirmSave = () => {
     setModo("guardando");
-    if (!!lugarId) {
-    } else {
-      guardar();
-    }
-  };
 
-  const getById = async () => {
-    console.log("put");
-    await axios
-      .put(`/reservaciones/app/api/lugares/${lugarId}`, lugar)
-      .then((response) => {
-        // Modal.info(JSON.stringify(response));
-        console.log(response);
-        setModo("nuevo");
-      })
-      .catch((error) => {
-        Modal.error({ title: error.message });
-        setModo("nuevo");
-      });
+    guardar();
   };
 
   const guardar = async () => {
