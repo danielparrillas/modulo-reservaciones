@@ -1,17 +1,95 @@
-import { Input, Switch, Divider, Checkbox, Button, Popconfirm } from "antd";
+// 🖌️ AntDesign
+import {
+  Input,
+  Switch,
+  Divider,
+  Checkbox,
+  Button,
+  Popconfirm,
+  Modal,
+  message,
+} from "antd";
 import {
   SaveFilled,
   PlusOutlined,
   LoadingOutlined,
   EditFilled,
 } from "@ant-design/icons";
+// 🌐 Librerias de terceros
+import axios from "axios";
+import { useEffect, useState } from "react";
+// 😁 Componentes y funciones propias
 import { useLugarStore } from "../../hooks/lugarStore";
 
-export default function TabLugarInformacion() {
+interface Lugar {
+  id?: number;
+  nombre?: string;
+  permiteAcampar?: boolean;
+  activo?: boolean;
+}
+
+interface TabLugarInformacionProps {
+  lugarId?: number;
+}
+export default function TabLugarInformacion({
+  lugarId,
+}: TabLugarInformacionProps) {
+  const [lugar, setLugar] = useState<Lugar>({});
   const { modo, setModo } = useLugarStore();
+
   const handleConfirmSave = () => {
     setModo("guardando");
+    if (!!lugarId) {
+    } else {
+      guardar();
+    }
   };
+
+  const getById = async () => {
+    console.log("put");
+    await axios
+      .put(`/reservaciones/app/api/lugares/${lugarId}`, lugar)
+      .then((response) => {
+        // Modal.info(JSON.stringify(response));
+        console.log(response);
+        setModo("nuevo");
+      })
+      .catch((error) => {
+        Modal.error({ title: error.message });
+        setModo("nuevo");
+      });
+  };
+
+  const guardar = async () => {
+    axios
+      .post("http://localhost/reservaciones/app/api/lugares/", {
+        nombre: 1,
+        permiteAcampar: true,
+        activo: "f ",
+      })
+      .then((response) => console.log(response));
+  };
+
+  useEffect(() => {
+    if (!!lugarId) getLugar(lugarId);
+  }, [lugarId]);
+
+  const getLugar = async (id: number) => {
+    await axios
+      .get(`/reservaciones/app/api/lugares/${id}`)
+      .then((response) => {
+        console.log(response);
+        setLugar(response.data.data);
+      })
+      .catch((error) => {
+        console.error(error);
+        Modal.error({
+          title: "Error al llamar los datos",
+          content: error.message,
+        });
+      });
+  };
+
   return (
     <form
       onSubmit={(e) => e.preventDefault()}
@@ -41,6 +119,8 @@ export default function TabLugarInformacion() {
           placeholder="nombre del lugar..."
           className="w-full"
           disabled={modo === "guardando"}
+          value={lugar.nombre}
+          onChange={(e) => setLugar({ ...lugar, nombre: e.target.value })}
           required
         />
       </div>
@@ -50,7 +130,13 @@ export default function TabLugarInformacion() {
         <p>Los turistas podrán quedarse mas de un día en el lugar</p>
       </div>
       <div className="col-span-3 lg:col-span-4">
-        <Checkbox disabled={modo === "guardando"} />
+        <Checkbox
+          disabled={modo === "guardando"}
+          checked={lugar.permiteAcampar}
+          onChange={(e) =>
+            setLugar({ ...lugar, permiteAcampar: e.target.checked })
+          }
+        />
       </div>
       <Divider className="col-span-5" />
       <div className="col-span-2 lg:col-span-1">
@@ -58,7 +144,12 @@ export default function TabLugarInformacion() {
         <p>Permite recibir visitas de turistas</p>
       </div>
       <div className="col-span-3 lg:col-span-4">
-        <Switch defaultChecked disabled={modo === "guardando"} />
+        <Switch
+          defaultChecked
+          disabled={modo === "guardando"}
+          checked={lugar.activo}
+          onChange={(checked) => setLugar({ ...lugar, activo: checked })}
+        />
       </div>
       <div className="col-span-5 flex justify-end">
         <Popconfirm

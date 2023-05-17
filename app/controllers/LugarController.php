@@ -10,6 +10,59 @@ class LugarController
     $this->model_lugar = new Lugar($db);
   }
 
+  public function crear($data)
+  {
+    $result = [];
+    //📝 validacion de nombre
+    if (isset($data["nombre"])) {
+      if (!is_string($data["nombre"])) {
+        $result["error"]["details"][] = "Nombre debe ser texto";
+      }
+    } else {
+      $result["error"]["details"][] = "Debe enviarse el nombre";
+    }
+    //📝 validacion de permite acampar
+    if (isset($data["permiteAcampar"])) {
+      if (!is_bool($data["permiteAcampar"])) {
+        $result["error"]["details"][] = "Permite acampar debe ser un valor booleano";
+      }
+    } else {
+      $result["error"]["details"][] = "Debe enviarse el campo permite acampar";
+    }
+    //📝 validacion de activo
+    if (isset($data["activo"])) {
+      if (!is_bool($data["activo"])) {
+        $result["error"]["details"][] = "El campo activo debe ser un valor booleano";
+      }
+    } else {
+      $result["error"]["details"][] = "Debe enviarse el campo activo";
+    }
+    //📝 validacion de id municipio
+    if (isset($data["municipioId"])) {
+      if (!is_int($data["municipioId"])) {
+        $result["error"]["details"][] = "El id del municipio debe ser un número";
+      }
+    } else {
+      $result["error"]["details"][] = "Debe enviarse el municipio";
+    }
+    //📝 validacion de id anp
+    if (isset($data["anpId"])) {
+      if (!is_int($data["anpId"])) {
+        $result["error"]["details"][] = "El id del anp debe ser un número";
+      }
+    } else {
+      $result["error"]["details"][] = "Debe enviarse la anp";
+    }
+    //❌ En caso de error retornamos los mensajes de error
+    if (isset($data["error"])) {
+      $data["error"]["message"] = "Error en los parámetros";
+      return $data;
+    }
+    //✅ Realizamos la inserccion en la base de datos
+    $result = $this->model_lugar->crear($data);
+    return $result;
+  }
+
   public function obtenerTodos()
   {
     return $this->model_lugar->obtenerTodos();

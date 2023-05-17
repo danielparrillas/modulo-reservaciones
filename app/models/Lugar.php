@@ -6,12 +6,41 @@ class Lugar
   public function __construct(private Database $db)
   {
   }
+
+  public function crear(array $data)
+  {
+    $result = [];
+    try {
+      $conn = $this->db->conectar();
+      $sql = "INSERT INTO lugares
+                (anp_id, municipio, nombre, permite_acampar, activo)
+              VALUES (:anp, :mun, :nom, :pa, :activo)";
+      $stmt = $conn->prepare($sql);
+      $stmt->bindParam(':anp', $data['anpId'], PDO::PARAM_INT);
+      $stmt->bindParam(':mun', $data['munipicioId'], PDO::PARAM_INT);
+      $stmt->bindParam(':nom', $data['nombre'], PDO::PARAM_STR);
+      $stmt->bindParam(':pa', $data['permiteAcampar'], PDO::PARAM_BOOL);
+      $stmt->bindParam(':activo', $data['activo'], PDO::PARAM_BOOL);
+      $stmt->execute();
+
+      $result["data"] = [
+        "id" => (int) $conn->lastInsertId(),
+      ];
+    } catch (Exception $e) {
+      $conn = null;
+      $result["error"]["status"] = true;
+      $result["error"]["message"] = $e->getMessage();
+      $result["error"]["details"][] = ["database" => $e];
+    }
+    $conn = null;
+    return $result;
+  }
   public function obtenerPorIdSimple(int $lugarId): array
   {
     $result = [];
     try {
       $conn = $this->db->conectar();
-      $sql = "SELECT id AS lugarId, nombre AS lugar, permite_acampar AS permiteAcampar, activo FROM lugares_turisticos
+      $sql = "SELECT id, nombre, permite_acampar AS permiteAcampar, activo FROM lugares_turisticos
               WHERE eliminado = 0 AND id = :lugarId";
       $stmt = $conn->prepare($sql);
       $stmt->bindParam(':lugarId', $lugarId);
@@ -19,6 +48,7 @@ class Lugar
       if ($stmt->rowCount() > 0) {
         $result["data"] = $stmt->fetch(PDO::FETCH_ASSOC);
         $result["data"]["activo"] = $result["data"]["activo"] === 1 ? true : false;
+        $result["data"]["permiteAcampar"] = $result["data"]["permiteAcampar"] === 1 ? true : false;
       } else {
         $result["error"]["status"] = true;
         $result["error"]["message"] = "No se encontro ningun lugar con el id " . $lugarId;

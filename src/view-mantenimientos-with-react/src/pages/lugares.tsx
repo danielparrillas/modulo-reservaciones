@@ -26,13 +26,13 @@ const columns: ColumnsType<any> = [
     title: "Lugar",
     dataIndex: "nombre",
     key: "lugarnombre",
-    width: "40%",
     sorter: (a: any, b: any) => a.nombre.localeCompare(b.nombre),
   },
   {
     title: "Acampar",
     dataIndex: "acampar",
     key: "acampar",
+    responsive: ["md"],
     render: (permitido: boolean) => {
       if (permitido) {
         return <Tag color="processing">Permitido</Tag>;
@@ -78,10 +78,28 @@ export default function LugaresPage() {
   const [lugares, setLugares] = useState<Lugar[]>([]);
   const navigate = useNavigate();
 
+  useEffect(() => {
+    //getLugares();
+    guardar();
+  }, []);
+
+  const guardar = async () => {
+    axios
+      .post("http://localhost/reservaciones/app/api/lugares/", {
+        nombre: 1,
+        permiteAcampar: true,
+        activo: "f ",
+      })
+      .then((response) => console.log(response));
+  };
+
   const getLugares = async () => {
     await axios
       .get("/reservaciones/app/api/lugares")
-      .then((response) => setLugares(convertirDataLugares(response.data.data)))
+      .then((response) => {
+        console.log(response);
+        setLugares(convertirDataLugares(response.data.data));
+      })
       .catch((error) => {
         console.error(error);
         Modal.error({
@@ -92,7 +110,7 @@ export default function LugaresPage() {
   };
 
   const convertirDataLugares = (lugares: any[]) => {
-    // console.log(lugares);
+    console.log(lugares);
     return lugares.map((lugar) => ({
       key: `row-lugar-${lugar.lugarId}`,
       id: lugar.lugarId,
@@ -101,10 +119,6 @@ export default function LugaresPage() {
       acampar: lugar.permiteAcampar,
     }));
   };
-
-  useEffect(() => {
-    getLugares();
-  }, []);
 
   return (
     <div className="flex flex-col gap-4 h-full">
