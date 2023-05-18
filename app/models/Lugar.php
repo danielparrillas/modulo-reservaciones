@@ -79,7 +79,28 @@ class Lugar
       }
     } catch (Exception $e) {
       $conn = null;
-      $result["error"]["status"] = true;
+      $result["error"]["message"] = $e->getMessage();
+      $result["error"]["details"][] = ["database" => $e];
+    }
+    $conn = null;
+    return $result;
+  }
+
+  public function obtenerDisponibilidades($lugar_id): array
+  {
+    $result = [];
+    try {
+      $conn = $this->db->conectar();
+      $sql = "SELECT id, lugar_id AS lugarId, grupo_id AS grupoId, cantidad_maxima AS cantidadMaxima
+              FROM disponibilidades_lugares_gruposservicios WHERE lugar_id = :lugar_id AND eliminado = 0";
+      $stmt = $conn->prepare($sql);
+      $stmt->bindParam(":lugar_id", $lugar_id, PDO::PARAM_INT);
+      $stmt->execute();
+      while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $result[] = $row;
+      }
+    } catch (Exception $e) {
+      $conn = null;
       $result["error"]["message"] = $e->getMessage();
       $result["error"]["details"][] = ["database" => $e];
     }

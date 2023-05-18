@@ -27,7 +27,7 @@ model detalles_reservaciones {
 model lugares_turisticos {
   id                                       Int                                        @id @default(autoincrement())
   anp_id                                   Int
-  municipio                                Int
+  municipio_id                             Int
   nombre                                   String                                     @db.VarChar(255)
   permite_acampar                          Int                                        @default(1) @db.TinyInt
   activo                                   Int                                        @default(1) @db.TinyInt

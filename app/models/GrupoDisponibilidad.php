@@ -16,7 +16,7 @@ class GrupoDisponibilidad
       $stmt = $conn->prepare($sql);
       $stmt->execute();
       while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-        $result["data"][] = $row;
+        $result[] = $row;
       }
     } catch (Exception $e) {
       $conn = null;

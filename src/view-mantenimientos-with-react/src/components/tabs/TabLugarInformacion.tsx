@@ -65,7 +65,7 @@ export default function TabLugarInformacion({
           activo: lugar.activo,
         })
         .then((response) => {
-          console.log(response);
+          // console.log(response); //👀
           navigate(`/reservaciones/views/lugares/${response.data.data.id}`);
           Modal.success({ title: "Nuevo lugar creado" });
         })
@@ -94,7 +94,7 @@ export default function TabLugarInformacion({
     await axios
       .get(`/reservaciones/app/api/lugares/${id}`)
       .then((response) => {
-        console.log(response);
+        // console.log(response); //👀
         setLugar(response.data.data);
       })
       .catch((error) => {

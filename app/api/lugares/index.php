@@ -45,6 +45,19 @@ if (count($uri) === 1 && $uri[0] === "") { // api/lugares
       header("Allow: GET");
       break;
   }
+} else if (count($uri) === 2 && $uri[1] === "disponibilidades") {
+  $id = $uri[0];
+  switch ($_SERVER["REQUEST_METHOD"]) {
+    case "GET":
+      $result = $controller->obtenerDisponibilidadesPorLugar($id);
+      if (isset($result["error"])) http_response_code(404);
+      echo json_encode($result);
+      break;
+    default:
+      http_response_code(405);
+      header("Allow: GET");
+      break;
+  }
 } else {
   http_response_code(404);
   exit;

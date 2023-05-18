@@ -82,4 +82,9 @@ class LugarController
     if ($id_valid > 0) return $this->model_lugar->obtenerPorIdSimple($id);
     else return ["error" => ["message" => "El id debe ser un numero valido"]];
   }
+
+  public function obtenerDisponibilidadesPorLugar($lugar_id)
+  {
+    return $this->model_lugar->obtenerDisponibilidades($lugar_id);
+  }
 }

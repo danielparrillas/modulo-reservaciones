@@ -1,6 +1,6 @@
 // 🖌️ AntDesign
 import { UnorderedListOutlined } from "@ant-design/icons";
-import { Button, Tabs, message } from "antd";
+import { Button, Tabs, message, Empty } from "antd";
 // 🌐 Librerias de terceros
 import { useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
@@ -58,7 +58,12 @@ export default function LugarPage() {
           {
             key: "2",
             label: `Disponibilidades`,
-            children: <TabLugarDisponibilidades />,
+            children:
+              lugarId !== undefined ? (
+                <TabLugarDisponibilidades lugarId={lugarId} />
+              ) : (
+                <Empty />
+              ),
             disabled: modo === "nuevo" || modo === "guardando",
           },
           {
