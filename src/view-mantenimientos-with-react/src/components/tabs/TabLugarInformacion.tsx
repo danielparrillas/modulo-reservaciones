@@ -56,10 +56,37 @@ export default function TabLugarInformacion({
   const guardar = async () => {
     setModo("guardando");
     if (!!lugarId) {
-      Modal.info({ title: "Actualizacion sin implementar" });
+      axios
+        .put(`/reservaciones/app/api/lugares/${lugarId}`, {
+          nombre: lugar.nombre,
+          permiteAcampar: lugar.permiteAcampar,
+          activo: lugar.activo,
+        })
+        .then((response) => {
+          console.log(response); //👀
+          Modal.success({ title: "Lugar actualizado" });
+        })
+        .catch((error) => {
+          console.error(error);
+          Modal.error({
+            title: error.message,
+            content: (
+              <Collapse>
+                <Panel header={error.response.data.error.message} key={1}>
+                  {error.response.data.error.details.map(
+                    (detail: string, index: number) => (
+                      <p key={`detail-${index}`}>{detail}</p>
+                    )
+                  )}
+                </Panel>
+              </Collapse>
+            ),
+          });
+        })
+        .finally(() => setModo(!!lugarId ? "edicion" : "nuevo"));
     } else {
       axios
-        .post("http://localhost/reservaciones/app/api/lugares/", {
+        .post("/reservaciones/app/api/lugares/", {
           nombre: lugar.nombre,
           permiteAcampar: lugar.permiteAcampar,
           activo: lugar.activo,

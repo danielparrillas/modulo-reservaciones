@@ -6,11 +6,6 @@ import axios from "axios";
 // 😁 Componentes y funciones propias
 import FormDisponibilidad from "../form/FormDisponibilidad";
 
-const gruposServicios = [
-  { id: 1, nombre: "Entradas", cantidad: 123 },
-  { id: 2, nombre: "Parqueos" },
-];
-
 interface Disponibilidad {
   id: number;
   nombre: string;
