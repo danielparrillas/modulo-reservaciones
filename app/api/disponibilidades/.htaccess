@@ -1,0 +1,3 @@
+RewriteEngine On
+# Hacemos que desde aqui index.php gestione todas las solicitudes
+RewriteRule . index.php

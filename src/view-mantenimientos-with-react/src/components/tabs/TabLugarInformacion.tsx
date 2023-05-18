@@ -7,7 +7,7 @@ import {
   Button,
   Popconfirm,
   Modal,
-  message,
+  Collapse,
 } from "antd";
 import {
   SaveFilled,
@@ -15,9 +15,11 @@ import {
   LoadingOutlined,
   EditFilled,
 } from "@ant-design/icons";
+const { Panel } = Collapse;
 // 🌐 Librerias de terceros
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 // 😁 Componentes y funciones propias
 import { useLugarStore } from "../../hooks/lugarStore";
 
@@ -34,8 +36,16 @@ interface TabLugarInformacionProps {
 export default function TabLugarInformacion({
   lugarId,
 }: TabLugarInformacionProps) {
-  const [lugar, setLugar] = useState<Lugar>({});
+  const navigate = useNavigate();
+  const [lugar, setLugar] = useState<Lugar>({
+    activo: true,
+    permiteAcampar: false,
+  });
   const { modo, setModo } = useLugarStore();
+
+  useEffect(() => {
+    if (!!lugarId) getLugar(lugarId);
+  }, [lugarId]);
 
   const handleConfirmSave = () => {
     setModo("guardando");
@@ -44,18 +54,41 @@ export default function TabLugarInformacion({
   };
 
   const guardar = async () => {
-    axios
-      .post("http://localhost/reservaciones/app/api/lugares/", {
-        nombre: 1,
-        permiteAcampar: true,
-        activo: "f ",
-      })
-      .then((response) => console.log(response));
+    setModo("guardando");
+    if (!!lugarId) {
+      Modal.info({ title: "Actualizacion sin implementar" });
+    } else {
+      axios
+        .post("http://localhost/reservaciones/app/api/lugares/", {
+          nombre: lugar.nombre,
+          permiteAcampar: lugar.permiteAcampar,
+          activo: lugar.activo,
+        })
+        .then((response) => {
+          console.log(response);
+          navigate(`/reservaciones/views/lugares/${response.data.data.id}`);
+          Modal.success({ title: "Nuevo lugar creado" });
+        })
+        .catch((error) => {
+          console.error(error);
+          Modal.error({
+            title: error.message,
+            content: (
+              <Collapse>
+                <Panel header={error.response.data.error.message} key={1}>
+                  {error.response.data.error.details.map(
+                    (detail: string, index: number) => (
+                      <p key={`detail-${index}`}>{detail}</p>
+                    )
+                  )}
+                </Panel>
+              </Collapse>
+            ),
+          });
+        })
+        .finally(() => setModo(!!lugarId ? "edicion" : "nuevo"));
+    }
   };
-
-  useEffect(() => {
-    if (!!lugarId) getLugar(lugarId);
-  }, [lugarId]);
 
   const getLugar = async (id: number) => {
     await axios

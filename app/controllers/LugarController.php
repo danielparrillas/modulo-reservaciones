@@ -17,6 +17,10 @@ class LugarController
     if (isset($data["nombre"])) {
       if (!is_string($data["nombre"])) {
         $result["error"]["details"][] = "Nombre debe ser texto";
+      } else {
+        if (trim($data["nombre"]) === "") {
+          $result["error"]["details"][] = "Nombre no debe ser un texto vacío";
+        }
       }
     } else {
       $result["error"]["details"][] = "Debe enviarse el nombre";
@@ -53,13 +57,17 @@ class LugarController
     } else {
       $result["error"]["details"][] = "Debe enviarse la anp";
     }
+
     //❌ En caso de error retornamos los mensajes de error
-    if (isset($data["error"])) {
-      $data["error"]["message"] = "Error en los parámetros";
-      return $data;
+    if (isset($result["error"])) {
+      $result["error"]["message"] = "Error en los parámetros";
+      // echo json_encode($result); //!
+      return $result;
     }
     //✅ Realizamos la inserccion en la base de datos
     $result = $this->model_lugar->crear($data);
+    // echo json_encode($result); //!
+
     return $result;
   }
 

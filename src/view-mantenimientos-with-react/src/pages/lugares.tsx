@@ -80,24 +80,13 @@ export default function LugaresPage() {
 
   useEffect(() => {
     getLugares();
-    guardar();
   }, []);
-
-  const guardar = async () => {
-    axios
-      .post("http://localhost/reservaciones/app/api/lugares/", {
-        nombre: 1,
-        permiteAcampar: true,
-        activo: "f ",
-      })
-      .then((response) => console.log(response));
-  };
 
   const getLugares = async () => {
     await axios
       .get("/reservaciones/app/api/lugares")
       .then((response) => {
-        console.log(response);
+        // console.log(response);
         setLugares(convertirDataLugares(response.data.data));
       })
       .catch((error) => {
@@ -110,7 +99,7 @@ export default function LugaresPage() {
   };
 
   const convertirDataLugares = (lugares: any[]) => {
-    console.log(lugares);
+    // console.log(lugares);
     return lugares.map((lugar) => ({
       key: `row-lugar-${lugar.lugarId}`,
       id: lugar.lugarId,

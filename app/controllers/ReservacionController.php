@@ -192,13 +192,13 @@ class ReservacionController
   {
     $result = [];
     $result["data"]["clienteId"] = $this->cliente_id;
-    // validacion del cliente id
+    //📝 validacion del cliente id
     if ($result["data"]["clienteId"] === null) {
       $result["error"]["status"] = true;
       $result["error"]["details"]["cliente"][] = "No hay cliente relacionado al api key. Error interno.";
     }
 
-    // validacion de reservacionId
+    //📝 validacion de reservacionId
     if (!isset($data["reservacionId"])) {
       $result["data"]["reservacionId"] = null;
       $result["error"]["status"] = true;
@@ -215,7 +215,7 @@ class ReservacionController
       }
     }
 
-    // validacion de clave de acceso
+    //📝 validacion de clave de acceso
     if (!isset($data["claveAcceso"])) {
       $result["data"]["claveAcceso"] = null;
       $result["error"]["status"] = true;
@@ -229,7 +229,7 @@ class ReservacionController
       }
     }
 
-    // validacion del lugar id
+    //📝 validacion del lugar id
     if (isset($data["lugarId"])) {
       $result["data"]["lugarId"] = $data["lugarId"];
       if (is_int($data["lugarId"])) {
@@ -253,7 +253,7 @@ class ReservacionController
       }
     }
 
-    //validacion nombres
+    //📝 validacion nombres
     if (isset($data["nombres"])) {
       $result["data"]["nombres"] = $data["nombres"];
       if (!is_string($data["nombres"])) {
@@ -266,7 +266,7 @@ class ReservacionController
         }
       }
     }
-    //validacion apellidos
+    //📝 validacion apellidos
     if (isset($data["apellidos"])) {
       $result["data"]["apellidos"] = $data["apellidos"];
       if (!is_string($data["apellidos"])) {
@@ -279,7 +279,7 @@ class ReservacionController
         }
       }
     }
-    //validacion de dui
+    //📝 validacion de dui
     if (isset($data["dui"])) {
       $result["data"]["dui"] = $data["dui"];
       if (!is_string($data["dui"])) {
@@ -297,7 +297,7 @@ class ReservacionController
       }
     }
 
-    //validacion pagada
+    //📝 validacion pagada
     if (isset($data["pagada"])) {
       $result["data"]["pagada"] = $data["pagada"];
       if (!is_bool($data["pagada"])) {
@@ -307,7 +307,7 @@ class ReservacionController
     }
 
     $fecha_inicio = false;
-    //validacion de inicio de fecha
+    //📝 validacion de inicio de fecha
     if (isset($data["inicio"])) {
       $result["data"]["inicio"] = $data["inicio"];
       if (is_string($data["inicio"])) {
@@ -323,7 +323,7 @@ class ReservacionController
         $result["error"]["details"]["inicio"][] = "Debe ser una fecha en texto";
       }
     }
-    //validacion de fin de fecha
+    //📝 validacion de fin de fecha
     $fecha_fin = false;
     if (isset($data["fin"])) {
       $result["data"]["fin"] = $data["fin"];
@@ -353,7 +353,7 @@ class ReservacionController
         $result["error"]["details"]["inicio"][] = "Debe enviar tambien este parametro para actualizar la fecha de fin";
       }
     }
-    //validacion de diferencia de fechas
+    //📝 validacion de diferencia de fechas
     if ($fecha_inicio !== false && $fecha_fin !== false) {
       $fecha_diferencia = $fecha_inicio->diff($fecha_fin);
       $fecha_actual = new DateTime();
@@ -373,7 +373,7 @@ class ReservacionController
       }
     }
 
-    // validacion del detalle
+    //📝 validacion del detalle
     //si no esta nulo
     if (isset($data["detalles"])) {
       //que sea de tipo arreglo
@@ -423,13 +423,13 @@ class ReservacionController
   {
     $result = [];
     $result["data"]["clienteId"] = $this->cliente_id;
-    // validacion del cliente id
+    //📝 validacion del cliente id
     if ($result["data"]["clienteId"] === null) {
       $result["error"]["status"] = true;
       $result["error"]["details"]["cliente"][] = "No hay cliente relacionado al api key. Error interno.";
     }
 
-    // validacion del lugar id
+    //📝  validacion del lugar id
     if (!isset($data["lugarId"])) {
       $result["data"]["lugarId"] = null;
       $result["error"]["status"] = true;
@@ -458,7 +458,7 @@ class ReservacionController
       }
     }
 
-    //validacion nombres
+    //📝 validacion nombres
     if (!isset($data["nombres"])) {
       $result["data"]["nombres"] = null;
       $result["error"]["status"] = true;
@@ -477,7 +477,7 @@ class ReservacionController
         }
       }
     }
-    //validacion apellidos
+    //📝 validacion apellidos
     if (!isset($data["apellidos"])) {
       $result["data"]["apellidos"] = null;
       $result["error"]["status"] = true;
@@ -496,7 +496,7 @@ class ReservacionController
         }
       }
     }
-    //validacion de dui
+    //📝 validacion de dui
     if (!isset($data["dui"])) {
       $result["data"]["dui"] = null;
       $result["error"]["status"] = true;
@@ -520,7 +520,7 @@ class ReservacionController
       }
     }
 
-    //validacion pagada
+    //📝 validacion pagada
     if (!isset($data["pagada"])) {
       $result["data"]["pagada"] = null;
       $result["error"]["status"] = true;
@@ -535,7 +535,7 @@ class ReservacionController
     }
 
     $fecha_inicio = false;
-    //validacion de inicio de fecha
+    //📝 validacion de inicio de fecha
     if (!isset($data["inicio"])) {
       $result["data"]["inicio"] = null;
       $result["error"]["status"] = true;
@@ -557,7 +557,7 @@ class ReservacionController
         $result["error"]["details"]["inicio"][] = "Debe ser una fecha en texto";
       }
     }
-    //validacion de fin de fecha
+    //📝 validacion de fin de fecha
     $fecha_fin = false;
     if (!isset($data["fin"])) {
       $result["data"]["fin"] = null;
@@ -580,7 +580,7 @@ class ReservacionController
         $result["error"]["details"]["fin"][] = "Debe ser una fecha en texto";
       }
     }
-    //validacion de diferencia de fechas
+    //📝 validacion de diferencia de fechas
     if ($fecha_inicio !== false && $fecha_fin !== false) {
       $fecha_diferencia = $fecha_inicio->diff($fecha_fin);
       $fecha_actual = new DateTime();
@@ -600,7 +600,7 @@ class ReservacionController
       }
     }
 
-    // validacion del detalle
+    //📝 validacion del detalle
     //que no este nulo
     if (!isset($data["detalles"])) {
       $result["data"]["detalles"] = null;

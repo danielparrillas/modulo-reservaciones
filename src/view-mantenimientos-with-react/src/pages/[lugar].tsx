@@ -30,7 +30,7 @@ export default function LugarPage() {
         setModo("edicion");
       } else message.error("Formato de id incompatible");
     }
-  }, []);
+  }, [pathname]);
 
   return (
     <div className=" flex flex-col gap-4 h-full">

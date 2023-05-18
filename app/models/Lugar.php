@@ -12,12 +12,12 @@ class Lugar
     $result = [];
     try {
       $conn = $this->db->conectar();
-      $sql = "INSERT INTO lugares
-                (anp_id, municipio, nombre, permite_acampar, activo)
+      $sql = "INSERT INTO lugares_turisticos
+                (anp_id, municipio_id, nombre, permite_acampar, activo)
               VALUES (:anp, :mun, :nom, :pa, :activo)";
       $stmt = $conn->prepare($sql);
       $stmt->bindParam(':anp', $data['anpId'], PDO::PARAM_INT);
-      $stmt->bindParam(':mun', $data['munipicioId'], PDO::PARAM_INT);
+      $stmt->bindParam(':mun', $data['municipioId'], PDO::PARAM_INT);
       $stmt->bindParam(':nom', $data['nombre'], PDO::PARAM_STR);
       $stmt->bindParam(':pa', $data['permiteAcampar'], PDO::PARAM_BOOL);
       $stmt->bindParam(':activo', $data['activo'], PDO::PARAM_BOOL);
