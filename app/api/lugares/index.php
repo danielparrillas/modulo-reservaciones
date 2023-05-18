@@ -6,12 +6,10 @@ $uri = explode("/", explode("reservaciones/app/api/lugares/", $_SERVER["REQUEST_
 
 // se instancia un objeto que pueda manejar la solicitudes del cliente
 $controller = new LugarController($DB_RESERVACIONES);
+// obtenemos los datos enviados por el cliente
+$request = json_decode(file_get_contents("php://input"), true);
 
 if (count($uri) === 1 && $uri[0] === "") { // api/lugares
-
-  // obtenemos los datos enviados por el cliente
-  $request = json_decode(file_get_contents("php://input"), true);
-
   switch ($_SERVER["REQUEST_METHOD"]) {
     case "POST":
       //⚠️ Por falta de integracion con la base de munipios y anp se agregaran valores por default
@@ -40,9 +38,15 @@ if (count($uri) === 1 && $uri[0] === "") { // api/lugares
       if (isset($result["error"])) http_response_code(404);
       echo json_encode($result);
       break;
+    case "PUT":
+      $request["id"] = $id;
+      $result = $controller->actualizar($request);
+      if (isset($result["error"])) http_response_code(404);
+      echo json_encode($result);
+      break;
     default:
       http_response_code(405);
-      header("Allow: GET");
+      header("Allow: GET, PUT");
       break;
   }
 } else if (count($uri) === 2 && $uri[1] === "disponibilidades") {

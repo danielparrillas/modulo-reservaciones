@@ -35,15 +35,43 @@ class Lugar
     $conn = null;
     return $result;
   }
-  public function obtenerPorIdSimple(int $lugarId): array
+
+  public function actualizar(array $data)
   {
     $result = [];
     try {
       $conn = $this->db->conectar();
-      $sql = "SELECT id, nombre, permite_acampar AS permiteAcampar, activo FROM lugares_turisticos
-              WHERE eliminado = 0 AND id = :lugarId";
+      $sql = "UPDATE lugares_turisticos
+              SET anp_id = :anp, municipio_id = :mun, nombre = :nom, permite_acampar = :pa, activo = :activo
+              WHERE id = :id";
       $stmt = $conn->prepare($sql);
-      $stmt->bindParam(':lugarId', $lugarId);
+      $stmt->bindParam(':id', $data['id'], PDO::PARAM_INT);
+      $stmt->bindParam(':anp', $data['anpId'], PDO::PARAM_INT);
+      $stmt->bindParam(':mun', $data['municipioId'], PDO::PARAM_INT);
+      $stmt->bindParam(':nom', $data['nombre'], PDO::PARAM_STR);
+      $stmt->bindParam(':pa', $data['permiteAcampar'], PDO::PARAM_BOOL);
+      $stmt->bindParam(':activo', $data['activo'], PDO::PARAM_BOOL);
+      $stmt->execute();
+
+      $result["filasAfectadas"] = $stmt->rowCount();
+    } catch (Exception $e) {
+      $conn = null;
+      $result["error"]["status"] = true;
+      $result["error"]["message"] = $e->getMessage();
+      $result["error"]["details"][] = ["database" => $e];
+    }
+    $conn = null;
+    return $result;
+  }
+  public function obtenerPorId(int $lugarId): array
+  {
+    $result = [];
+    try {
+      $conn = $this->db->conectar();
+      $sql = "SELECT id,municipio_id AS municipioId ,anp_id AS anpId , nombre,permite_acampar AS permiteAcampar, activo FROM lugares_turisticos
+              WHERE id = :lugarId AND eliminado = 0";
+      $stmt = $conn->prepare($sql);
+      $stmt->bindParam(':lugarId', $lugarId, PDO::PARAM_INT);
       $stmt->execute();
       if ($stmt->rowCount() > 0) {
         $result["data"] = $stmt->fetch(PDO::FETCH_ASSOC);
