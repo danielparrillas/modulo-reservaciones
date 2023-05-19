@@ -13,6 +13,17 @@ $result = [];
 // echo json_encode($request); //👀
 // exit; //👀
 
+//❌ si la peticion no viene del mismo origen
+// echo json_encode(getallheaders()["Sec-Fetch-Site"]); //👀
+if (isset(getallheaders()["Sec-Fetch-Site"])) {
+  if (getallheaders()["Sec-Fetch-Site"] !== "same-origin") {
+    http_response_code(401);
+    exit;
+  }
+} else {
+  http_response_code(401);
+  exit;
+}
 //1️⃣ /reservaciones/app/api/lugares
 if (count($uri) === 1 && $uri[0] === "") {
   switch ($_SERVER["REQUEST_METHOD"]) {
