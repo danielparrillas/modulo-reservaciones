@@ -140,6 +140,61 @@ class LugarController
     $result = $this->model_lugar->actualizar($data);
     return $result;
   }
+  public function upsertDisponibilidad($data)
+  {
+    $result = [];
+    $disponibilidad = [];
+    $lugar = [];
+    //📝 validacion de id
+    if (isset($data["id"])) {
+      if (!intval($data["id"]) > 0) {
+        $result["error"]["details"] = "El id debe ser un número entero";
+      }
+    } else {
+      $result["error"]["details"][] = "Debe enviarse el id del lugar";
+    }
+    //📝 validacion de grupoId
+    if (isset($data["grupoId"])) {
+      if (!intval($data["grupoId"]) > 0) {
+        $result["error"]["details"] = "El id del grupo debe ser un número entero";
+      }
+    } else {
+      $result["error"]["details"][] = "Debe enviarse el id del grupo de disponibilidad";
+    }
+    //📝 validacion de cantidad maxima
+    if (isset($data["cantidadMaxima"])) {
+      if (!intval($data["cantidadMaxima"]) > 0) {
+        $result["error"]["details"] = "La cantidad debe ser un número entero";
+      }
+    } else {
+      $result["error"]["details"][] = "Debe enviarse la cantidad maxima";
+    }
+    //❌ En caso de que exista error retornamos
+    if (isset($result["error"])) {
+      return $result;
+    }
+    //1️⃣ Buscamos el lugar para saber si existe
+    $lugar = $this->model_lugar->obtenerPorId($data["id"]);
+    //❌ En caso de que exista error retornamos
+    if (isset($lugar["error"])) {
+      return $lugar;
+    }
+    //2️⃣ Buscamos una disponibilidad con ese id (lugarId) y grupoId
+    $disponibilidad = $this->model_lugar->obtenerDisponibilidad($data);
+    //❌ En caso de que exista error retornamos
+    if (isset($disponibilidad["error"])) {
+      return $disponibilidad;
+    }
+    //3️⃣ upsert
+    //Si disponbilidad da falso es porque no existe una fila con ese lugarId y ese grupo
+    if ($disponibilidad["data"] === false) {
+      $result = $this->model_lugar->crearDisponibilidad($data);
+    } else {
+      $result = $this->model_lugar->actualizarDisponibilidad($data);
+    }
+    //4️⃣ mandamos el resultado (puede contener errores)
+    return $result;
+  }
 
   public function obtenerTodos()
   {

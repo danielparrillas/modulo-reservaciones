@@ -63,7 +63,7 @@ export default function TabLugarInformacion({
           activo: lugar.activo,
         })
         .then((response) => {
-          console.log(response); //👀
+          // console.log(response); //👀
           Modal.success({ title: "Lugar actualizado" });
         })
         .catch((error) => {

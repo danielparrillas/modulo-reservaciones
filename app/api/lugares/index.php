@@ -8,61 +8,85 @@ $uri = explode("/", explode("reservaciones/app/api/lugares/", $_SERVER["REQUEST_
 $controller = new LugarController($DB_RESERVACIONES);
 // obtenemos los datos enviados por el cliente
 $request = json_decode(file_get_contents("php://input"), true);
+$result = [];
 
-if (count($uri) === 1 && $uri[0] === "") { // api/lugares
+// echo json_encode($request); //👀
+// exit; //👀
+
+//1️⃣ /reservaciones/app/api/lugares
+if (count($uri) === 1 && $uri[0] === "") {
   switch ($_SERVER["REQUEST_METHOD"]) {
     case "POST":
       //⚠️ Por falta de integracion con la base de munipios y anp se agregaran valores por default
       $result = $controller->crear(array_merge($request, ["anpId" => 0, "municipioId" => 0]));
-      //❌ si hay error establecemos el codigo
-      if (isset($result["error"])) http_response_code(404);
-      echo json_encode($result);
       break;
     case "GET":
-      $get_lugares = $controller->obtenerTodos();
-      if (isset($get_lugares["error"])) http_response_code(404);
-      echo json_encode($get_lugares);
+      $result = $controller->obtenerTodos();
       break;
     default:
       http_response_code(405);
       header("Allow: GET, POST");
       break;
   };
-} else if ( // api/lugares/[id]
+}
+//2️⃣ /reservaciones/app/api/lugares/[id]
+else if (
   count($uri) === 1 && $uri[0] !== ""
 ) {
   $id = $uri[0];
   switch ($_SERVER["REQUEST_METHOD"]) {
     case "GET":
       $result = $controller->obtenerPorId($id);
-      if (isset($result["error"])) http_response_code(404);
-      echo json_encode($result);
       break;
     case "PUT":
       $request["id"] = $id;
       $result = $controller->actualizar($request);
-      if (isset($result["error"])) http_response_code(404);
-      echo json_encode($result);
       break;
     default:
       http_response_code(405);
       header("Allow: GET, PUT");
       break;
   }
-} else if (count($uri) === 2 && $uri[1] === "disponibilidades") {
+}
+//3️⃣ /reservaciones/app/api/lugares/[id]/disponibilidades
+else if (count($uri) === 2 && $uri[1] === "disponibilidades") {
   $id = $uri[0];
   switch ($_SERVER["REQUEST_METHOD"]) {
     case "GET":
       $result = $controller->obtenerDisponibilidadesPorLugar($id);
-      if (isset($result["error"])) http_response_code(404);
-      echo json_encode($result);
       break;
     default:
       http_response_code(405);
       header("Allow: GET");
       break;
   }
-} else {
+}
+//4️⃣ /reservaciones/app/api/lugares/[id]/disponibilidades/[grupoDisponbilidadId]
+else if (count($uri) ===  3 && $uri[1] === "disponibilidades") {
+  $id = $uri[0];
+  $grupoDisponibilidad = $uri[2];
+  switch ($_SERVER["REQUEST_METHOD"]) {
+    case "PUT":
+      if ($request === null) {
+        http_response_code(404);
+        $result = ["error" => ["message" => "Debe enviar parametros"]];
+        break;
+      }
+      $result = $controller->upsertDisponibilidad(array_merge($request, ["id" => $id, "grupoId" => $grupoDisponibilidad]));
+      break;
+    default:
+      http_response_code(405);
+      header("Allow: PUT");
+      break;
+  }
+}
+//❌ si la uri no se encuentra
+else {
   http_response_code(404);
   exit;
 }
+
+//❌ si hay error en el resultado establecemos el codigo para indicarle al cliente
+if (isset($result["error"])) http_response_code(404);
+// mandamos la respuesta 
+echo json_encode($result);
