@@ -69,7 +69,7 @@ else if (count($uri) ===  3 && $uri[1] === "disponibilidades") {
     case "PUT":
       if ($request === null) {
         http_response_code(404);
-        $result = ["error" => ["message" => "Debe enviar parametros"]];
+        $result = ["error" => ["message" => "Debe enviar parametros", "details" => []]];
         break;
       }
       $result = $controller->upsertDisponibilidad(array_merge($request, ["id" => $id, "grupoId" => $grupoDisponibilidad]));

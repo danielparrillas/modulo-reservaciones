@@ -54,6 +54,7 @@ export default function LugarPage() {
             key: "1",
             label: `Información`,
             children: <TabLugarInformacion lugarId={lugarId} />,
+            disabled: modo === "guardando",
           },
           {
             key: "2",

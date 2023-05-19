@@ -1,7 +1,18 @@
 // 🖌️ AntDesign
-import { Button, Popconfirm, Card, InputNumber } from "antd";
 import { SaveFilled } from "@ant-design/icons";
+import {
+  Button,
+  Popconfirm,
+  Card,
+  InputNumber,
+  Modal,
+  Collapse,
+  message,
+} from "antd";
+const { Panel } = Collapse;
 // 🌐 Librerias de terceros
+import axios from "axios";
+import { useState } from "react";
 // 😁 Componentes y funciones propias
 import { useLugarStore } from "../../hooks/lugarStore";
 
@@ -17,8 +28,40 @@ export default function FormDisponibilidad({
   cantidadMaxima,
   lugarId,
 }: FormDisponibilidadProps) {
-  const { setModo } = useLugarStore();
+  const [value, setValue] = useState(cantidadMaxima);
+  const { modo, setModo } = useLugarStore();
   // console.log(id, nombre, cantidad, lugarId); //👀
+  const handleConfirmSave = () => {
+    setModo("guardando");
+    guardar();
+  };
+  const guardar = async () => {
+    await axios
+      .put(`/reservaciones/app/api/lugares/${lugarId}/disponibilidades/${id}`, {
+        cantidadMaxima: value,
+      })
+      .then((response) => {
+        // console.log(response); //👀
+      })
+      .catch((error) => {
+        console.error(error);
+        Modal.error({
+          title: error.message,
+          content: (
+            <Collapse>
+              <Panel header={error.response.data.error.message} key={1}>
+                {error.response.data.error.details.map(
+                  (detail: string, index: number) => (
+                    <p key={`detail-${index}`}>{detail}</p>
+                  )
+                )}
+              </Panel>
+            </Collapse>
+          ),
+        });
+      })
+      .finally(() => setModo("edicion"));
+  };
   return (
     <Card title={nombre}>
       <div className="flex gap-4">
@@ -27,18 +70,25 @@ export default function FormDisponibilidad({
           min={0}
           className="w-60"
           placeholder="Digita un número"
-          value={cantidadMaxima}
+          value={value}
+          disabled={modo === "guardando"}
+          onChange={(value) => setValue(!!value ? value : undefined)}
         />
         <Popconfirm
           title={"Confirmación"}
           description="¿Desea guardar esta disponibilidad?"
-          onConfirm={() => {
-            setModo("guardando");
-          }}
+          onConfirm={() => handleConfirmSave()}
           okText="Si"
           cancelText="No"
+          disabled={!value}
         >
-          <Button type="primary" size="large" icon={<SaveFilled />}>
+          <Button
+            type="primary"
+            size="large"
+            icon={<SaveFilled />}
+            loading={modo === "guardando"}
+            disabled={!value}
+          >
             Guardar
           </Button>
         </Popconfirm>
