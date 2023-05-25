@@ -63,8 +63,8 @@ export default function TabLugarInformacion({
           permiteAcampar: lugar.permiteAcampar,
           activo: lugar.activo,
         })
-        .then((response) => {
-          // console.log(response); //👀
+        .then(() => {
+          // console.log(response); //👀 cambiar ".then((response) => {"
           notification.success({ message: "Lugar guardado" });
         })
         .catch((error) => {

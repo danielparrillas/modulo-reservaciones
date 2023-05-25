@@ -90,8 +90,8 @@ export default function TabPeriodosDeshabilitados({
       .delete(
         `/reservaciones/app/api/lugares/${lugarId}/periodosDeshabilitados/${periodoId}`
       )
-      .then((response) => {
-        // console.log(response); //👀
+      .then(() => {
+        // console.log(response); //👀 cambiar ".then((response) => {"
         notification.info({ message: "Se elimino el periodo" });
         getAllPeriodosDeshabilitados();
       })
@@ -115,8 +115,8 @@ export default function TabPeriodosDeshabilitados({
               fin: range[1].format("YYYY-MM-DD"),
             }
           )
-          .then((response) => {
-            // console.log(response); //👀
+          .then(() => {
+            // console.log(response); //👀 cambiar ".then((response) => {"
             notification.success({ message: "Periodo agregado" });
             getAllPeriodosDeshabilitados();
           })

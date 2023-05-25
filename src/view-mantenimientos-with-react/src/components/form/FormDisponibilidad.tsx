@@ -40,8 +40,8 @@ export default function FormDisponibilidad({
       .put(`/reservaciones/app/api/lugares/${lugarId}/disponibilidades/${id}`, {
         cantidadMaxima: value,
       })
-      .then((response) => {
-        // console.log(response); //👀
+      .then(() => {
+        // console.log(response); //👀 cambiar ".then((response) => {"
         notification.success({ message: `${nombre} disponibilidad guardada` });
       })
       .catch((error) => {
