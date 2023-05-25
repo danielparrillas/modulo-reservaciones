@@ -1,11 +1,11 @@
 {
   "databases": {
     "reservaciones": {
-      "host": "localhost",
+      "host": "192.168.6.41",
       "port": 3306,
-      "user": "php_user",
-      "password": "12345678",
-      "name": "reservaciones_anp",
+      "user": "mysqladmin",
+      "password": "cljnDsCxe4",
+      "name": "mapas",
       "charset": "utf8",
       "driver": "mysql"
     }
