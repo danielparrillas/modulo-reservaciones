@@ -1,27 +1,62 @@
-import { DatePicker, Divider, Button, message, Popconfirm } from "antd";
+// 🖌️ AntDesign
+import { DatePicker, Divider, Button, message, Popconfirm, Modal } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
-import { useState } from "react";
 import { RangePickerProps } from "antd/es/date-picker";
-
+//📅 necesarios para que funcione las fechas
 import "dayjs/locale/es";
 import locale from "antd/es/date-picker/locale/es_ES";
-
+// 🌐 Librerias de terceros
+import axios from "axios";
+import { useState } from "react";
+// 😁 Componentes y funciones propias
 import TablePeriodosDeshabilitados from "../tables/TablePeriodosDeshabilitados";
-
+import { useLugarStore } from "../../hooks/lugarStore";
+//🖌️ AntDesign subcomponentes
 const { RangePicker } = DatePicker;
 
-export default function TabPeriodosDeshabilitados() {
+interface TabPeriodosDeshabilitadosProps {
+  lugarId: number;
+}
+export default function TabPeriodosDeshabilitados({
+  lugarId,
+}: TabPeriodosDeshabilitadosProps) {
   const [range, setRange] = useState<RangePickerProps["value"]>();
+  const { modo, setModo } = useLugarStore();
 
   const handleChangeRangePicker = (values: RangePickerProps["value"]) => {
     setRange(values);
   };
 
   const confirm = () => {
-    message.info(range ? range[0]?.format("YYYY-MM-DD") : "No seleccionado");
-    message.info(range ? range[1]?.format("YYYY-MM-DD") : "No seleccionado");
+    guardarPeriodoDeshabilitado();
   };
 
+  const guardarPeriodoDeshabilitado = async () => {
+    setModo("guardando");
+    if (!!range) {
+      if (!!range[0] && !!range[1]) {
+        await axios
+          .post(
+            `/reservaciones/app/api/lugares/${lugarId}/periodosDeshabilitados`,
+            {
+              inicio: range[0].format("YYYY-MM-DD"),
+              fin: range[1].format("YYYY-MM-DD"),
+            }
+          )
+          .then((response) => {
+            console.log(response); //👀
+          })
+          .catch((error) => {
+            console.error(error);
+            Modal.error({
+              title: "Error al guardar",
+              content: error.message,
+            });
+          });
+      } else message.warning("Debe indicar el rango");
+    } else message.warning("Debe indicar el rango");
+    setModo("edicion");
+  };
   const cancel = () => {
     // setRange(undefined);
   };
@@ -38,6 +73,7 @@ export default function TabPeriodosDeshabilitados() {
           value={range}
           onChange={handleChangeRangePicker}
           locale={locale}
+          disabled={modo === "guardando"}
         />
         <Popconfirm
           title="Agregar periodo deshabilitado"
@@ -46,17 +82,18 @@ export default function TabPeriodosDeshabilitados() {
           onCancel={cancel}
           okText="Si"
           cancelText="No"
-          disabled={!range}
+          disabled={!range || modo === "guardando"}
         >
           <Button
             icon={<PlusOutlined />}
             type="primary"
             disabled={!range}
+            loading={modo === "guardando"}
           ></Button>
         </Popconfirm>
       </form>
       <Divider className="col-span-5" />
-      <TablePeriodosDeshabilitados />
+      <TablePeriodosDeshabilitados lugarId={lugarId} />
     </div>
   );
 }

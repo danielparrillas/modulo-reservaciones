@@ -91,6 +91,22 @@ else if (count($uri) ===  3 && $uri[1] === "disponibilidades") {
       break;
   }
 }
+//5️⃣ /reservaciones/app/api/lugares/[id]/periodosDeshabilitados
+else if (count($uri) === 2 && $uri[1] === "periodosDeshabilitados") {
+  $id = $uri[0];
+  switch ($_SERVER["REQUEST_METHOD"]) {
+    case "POST":
+      $result = $controller->crearPeriodoDeshabilitado(array_merge($request, ["id" => $id]));
+      break;
+    case "GET":
+      $result = $controller->obtenerPeriodosDeshabilitados($id);
+      break;
+    default:
+      http_response_code(405);
+      header("Allow: GET, POST");
+      break;
+  }
+}
 //❌ si la uri no se encuentra
 else {
   http_response_code(404);

@@ -233,7 +233,7 @@ class ReservacionController
     if (isset($data["lugarId"])) {
       $result["data"]["lugarId"] = $data["lugarId"];
       if (is_int($data["lugarId"])) {
-        $lugar_data = $this->model_lugar->obtenerPorIdSimple($data["lugarId"]);
+        $lugar_data = $this->model_lugar->obtenerPorId($data["lugarId"]);
         if (!isset($lugar_data["error"])) {
           if ($lugar_data["data"]["activo"]) {
             $result["data"]["lugarId"] = $lugar_data["data"]["lugarId"];
@@ -438,7 +438,7 @@ class ReservacionController
     if (isset($data["lugarId"])) {
       $result["data"]["lugarId"] = $data["lugarId"];
       if (is_int($data["lugarId"])) {
-        $lugar_data = $this->model_lugar->obtenerPorIdSimple($data["lugarId"]);
+        $lugar_data = $this->model_lugar->obtenerPorId($data["lugarId"]);
         if (!isset($lugar_data["error"])) {
           if ($lugar_data["data"]["activo"]) {
             $result["data"]["lugarId"] = $lugar_data["data"]["lugarId"];
@@ -534,8 +534,8 @@ class ReservacionController
       }
     }
 
-    $fecha_inicio = false;
     //📝 validacion de inicio de fecha
+    $fecha_inicio = false;
     if (!isset($data["inicio"])) {
       $result["data"]["inicio"] = null;
       $result["error"]["status"] = true;

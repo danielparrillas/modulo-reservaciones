@@ -1,7 +1,16 @@
+// 🖌️ AntDesign
 import { Table, Tag, Popconfirm } from "antd";
 import { DeleteFilled } from "@ant-design/icons";
 import { ColumnsType } from "antd/es/table";
+// 🌐 Librerias de terceros
+import axios from "axios";
+import { useEffect, useState } from "react";
 
+type PeriodoDeshabilitados = {
+  id: number;
+  inicio: string;
+  fin: string;
+};
 const colums: ColumnsType<any> = [
   {
     title: "Inicio",
@@ -33,25 +42,39 @@ const colums: ColumnsType<any> = [
     },
   },
 ];
-
-const dataSource = [
-  { key: "pd-1", inicio: "1970-01-01", fin: "2023-01-01" },
-  { key: "pd-2", inicio: "1980-01-01", fin: "2023-02-01" },
-  { key: "pd-3", inicio: "1990-01-01", fin: "2023-03-01" },
-  { key: "pd-4", inicio: "2000-01-01", fin: "2023-04-01" },
-  { key: "pd-5", inicio: "2001-01-01", fin: "2023-05-01" },
-  { key: "pd-6", inicio: "2003-01-01", fin: "2023-06-01" },
-  { key: "pd-7", inicio: "2004-01-01", fin: "2023-07-01" },
-  { key: "pd-8", inicio: "2005-01-01", fin: "2023-08-01" },
-];
-
-export default function TablePeriodosDeshabilitados() {
+interface TablePeriodosDeshabilitadosProps {
+  lugarId: number;
+}
+export default function TablePeriodosDeshabilitados({
+  lugarId,
+}: TablePeriodosDeshabilitadosProps) {
+  const [periodos, setPeriodos] = useState<PeriodoDeshabilitados[]>([]);
+  useEffect(() => {
+    getAllPeriodosDeshabilitados();
+  }, []);
+  const getAllPeriodosDeshabilitados = async () => {
+    await axios
+      .get(`/reservaciones/app/api/lugares/${lugarId}/periodosDeshabilitados`)
+      .then((response) => {
+        console.log(response); //👀
+        let data = response.data.map((item: PeriodoDeshabilitados) => ({
+          key: `pd-${item.id}`,
+          id: item.id,
+          inicio: item.inicio,
+          fin: item.fin,
+        }));
+        setPeriodos(data);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
   return (
     <Table
       columns={colums}
-      dataSource={dataSource}
+      dataSource={periodos}
       pagination={false}
-      scroll={{ y: window.innerHeight - 420 }}
+      scroll={{ y: window.innerHeight - 430 }}
       size="middle"
     />
   );

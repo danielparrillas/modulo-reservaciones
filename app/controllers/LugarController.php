@@ -1,15 +1,19 @@
 <?php
-
 include_once(dirname(__DIR__) . '/models/Lugar.php');
-
+include_once(dirname(__DIR__) . '/models/PeriodoDeshabilitado.php');
+include_once(dirname(__DIR__) . '/models/Disponibilidad.php');
 class LugarController
 {
   private $model_lugar;
+  private $model_disponibilidad;
+  private $model_periodo_deshabilitado;
   public function __construct(Database $db)
   {
     $this->model_lugar = new Lugar($db);
+    $this->model_periodo_deshabilitado = new PeriodoDeshabilitado($db);
+    $this->model_disponibilidad = new Disponibilidad($db);
   }
-
+  //1️⃣ Lugares
   public function crear($data)
   {
     $result = [];
@@ -70,7 +74,6 @@ class LugarController
 
     return $result;
   }
-
   public function actualizar($data)
   {
     $result = [];
@@ -140,6 +143,17 @@ class LugarController
     $result = $this->model_lugar->actualizar($data);
     return $result;
   }
+  public function obtenerTodos()
+  {
+    return $this->model_lugar->obtenerTodos();
+  }
+  public function obtenerPorId($id)
+  {
+    $id_valid = intval($id);
+    if ($id_valid > 0) return $this->model_lugar->obtenerPorId($id);
+    else return ["error" => ["message" => "El id debe ser un numero valido"]];
+  }
+  //2️⃣ Disponibilidades de lugares
   public function upsertDisponibilidad($data)
   {
     $result = [];
@@ -180,7 +194,7 @@ class LugarController
       return $lugar;
     }
     //2️⃣ Buscamos una disponibilidad con ese id (lugarId) y grupoId
-    $disponibilidad = $this->model_lugar->obtenerDisponibilidad($data);
+    $disponibilidad = $this->model_disponibilidad->obtenerDisponibilidadDeUnLugar($data);
     //❌ En caso de que exista error retornamos
     if (isset($disponibilidad["error"])) {
       return $disponibilidad;
@@ -188,28 +202,86 @@ class LugarController
     //3️⃣ upsert
     //Si disponbilidad da falso es porque no existe una fila con ese lugarId y ese grupo
     if ($disponibilidad["data"] === false) {
-      $result = $this->model_lugar->crearDisponibilidad($data);
+      $result = $this->model_disponibilidad->crearDisponibilidadParaUnLugar($data);
     } else {
-      $result = $this->model_lugar->actualizarDisponibilidad($data);
+      $result = $this->model_disponibilidad->actualizarDisponibilidadDeUnLugar($data);
     }
     //4️⃣ mandamos el resultado (puede contener errores)
     return $result;
   }
-
-  public function obtenerTodos()
-  {
-    return $this->model_lugar->obtenerTodos();
-  }
-
-  public function obtenerPorId($id)
-  {
-    $id_valid = intval($id);
-    if ($id_valid > 0) return $this->model_lugar->obtenerPorId($id);
-    else return ["error" => ["message" => "El id debe ser un numero valido"]];
-  }
-
   public function obtenerDisponibilidadesPorLugar($lugar_id)
   {
-    return $this->model_lugar->obtenerDisponibilidades($lugar_id);
+    return $this->model_disponibilidad->obtenerDisponibilidadesDeUnLugar($lugar_id);
+  }
+  //3️⃣ Periodos deshabilitados de lugares
+  public function crearPeriodoDeshabilitado($data)
+  {
+    $result = [];
+    $lugar = [];
+    $fecha_fin = false;
+    $fecha_inicio = false;
+    //📝 validacion de inicio de fecha
+    if (!isset($data["inicio"])) {
+      $result["error"]["details"][] = "Debe indicar el inicio";
+    }
+    if (isset($data["inicio"])) {
+      if (is_string($data["inicio"])) {
+        $fecha_inicio = DateTime::createFromFormat('Y-m-d', $data["inicio"]);
+        if ($fecha_inicio === false) {
+          $result["error"]["details"][] = "Fecha de inicio tiene formato erróneo (YYYY-MM-DD)";
+        }
+      } else {
+        $result["error"]["details"][] = "Fecha de inicio debe ser una fecha en texto";
+      }
+    }
+    //📝 validacion de fin de fecha
+    if (!isset($data["fin"])) {
+      $result["error"]["details"]["fin"][] = "Debe indicar el fin";
+    }
+    if (isset($data["fin"])) {
+      if (is_string($data["fin"])) {
+        $fecha_fin = DateTime::createFromFormat('Y-m-d', $data["fin"]);
+        if ($fecha_fin === false) {
+          $result["error"]["details"][] = "Fecha de fin tiene formato erróneo (YYYY-MM-DD)";
+        }
+      } else {
+        $result["error"]["details"][] = "Fecha de fin debe ser una fecha en texto";
+      }
+    }
+    //📝 validacion de diferencia de fechas
+    if ($fecha_inicio !== false && $fecha_fin !== false) {
+      $fecha_diferencia = $fecha_inicio->diff($fecha_fin);
+      if ($fecha_diferencia->invert === 1 && $fecha_diferencia->days > 0) {
+        $result["error"]["details"][] = "La fecha de inicio debe ser despues de la fecha de fin";
+      }
+    }
+    //❌ En caso de que devuelva error
+    if (isset($result["error"])) {
+      $result["data"] = $data; //👀
+      return $result;
+    }
+    //1️⃣ validacion de lugarId
+    if (isset($data["id"])) {
+      if (intval($data["id"]) > 0) {
+        $lugar = $this->model_lugar->obtenerPorId($data["id"]);
+        //❌ En caso de que devuelva error
+        if (isset($lugar["error"])) {
+          return $lugar;
+        }
+      } else $result["error"]["details"][] = "El id debe ser un número entero";
+    } else {
+      $result["error"]["details"][] = "Debe enviarse el id";
+    }
+    //2️⃣ enviamos el resultado
+    $result = $this->model_periodo_deshabilitado->crearPeriodoDeshabilitadoParaUnLugar($data);
+    return $result;
+  }
+  public function obtenerPeriodosDeshabilitados($lugar_id)
+  {
+    //❌ retornar en caso de id invalido
+    if (intval($lugar_id) < 1) {
+      return ["error" => ["message" => "El id del lugar no es valido"]];
+    }
+    return $this->model_periodo_deshabilitado->obtenerPeriodosDeshabilitadosDeLugar($lugar_id);
   }
 }

@@ -70,7 +70,12 @@ export default function LugarPage() {
           {
             key: "3",
             label: `Periodos inactivos`,
-            children: <TabPeriodosDeshabilitados />,
+            children:
+              lugarId !== undefined ? (
+                <TabPeriodosDeshabilitados lugarId={lugarId} />
+              ) : (
+                <Empty />
+              ),
             disabled: modo === "nuevo" || modo === "guardando",
           },
         ]}
