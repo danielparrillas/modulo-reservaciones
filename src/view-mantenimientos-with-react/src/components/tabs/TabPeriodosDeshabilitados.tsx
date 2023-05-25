@@ -92,7 +92,7 @@ export default function TabPeriodosDeshabilitados({
       )
       .then((response) => {
         // console.log(response); //👀
-        notification.info({ message: "Se elimino el perido" });
+        notification.info({ message: "Se elimino el periodo" });
         getAllPeriodosDeshabilitados();
       })
       .catch((error) => {
