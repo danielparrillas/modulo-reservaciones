@@ -59,11 +59,11 @@ class PeriodoDeshabilitado
     try {
       $conn = $this->db->conectar();
       $sql = "UPDATE periodos_deshabilitados
-              SET eliminado = 0;
+              SET eliminado = 1
               WHERE lugar_id = :li AND id = :pId";
       $stmt = $conn->prepare($sql);
       $stmt->bindParam(":li", $data["id"], PDO::PARAM_INT);
-      $stmt->bindParam(":pId", $data["peridoId"], PDO::PARAM_INT);
+      $stmt->bindParam(":pId", $data["periodoId"], PDO::PARAM_INT);
       $stmt->execute();
       $result["filasAfectadas"] = $stmt->rowCount();
     } catch (Exception $e) {

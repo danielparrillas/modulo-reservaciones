@@ -284,4 +284,11 @@ class LugarController
     }
     return $this->model_periodo_deshabilitado->obtenerPeriodosDeshabilitadosDeLugar($lugar_id);
   }
+  public function eliminarPeriodoDeshabilitado($data)
+  {
+    $result = $this->model_periodo_deshabilitado->eliminarPeriodoDeshabilitadoDeUnLugar($data);
+    if ($result["filasAfectadas"] === 0) $result["error"]["message"] =  "No se elimino ningun periodo";
+
+    return $result;
+  }
 }

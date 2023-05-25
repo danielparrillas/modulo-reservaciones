@@ -86,7 +86,7 @@ export default function LugaresPage() {
     await axios
       .get("/reservaciones/app/api/lugares")
       .then((response) => {
-        console.log(response); //👀
+        // console.log(response); //👀
         setLugares(convertirDataLugares(response.data.data));
       })
       .catch((error) => {

@@ -44,25 +44,6 @@ const colums: ColumnsType<any> = [
     dataIndex: "fin",
     sorter: (a: any, b: any) => a.fin.localeCompare(b.fin),
   },
-  {
-    title: "",
-    className: "text-center",
-    render: () => {
-      return (
-        <Popconfirm
-          title="Eliminar periodo deshabilitado"
-          description="Al eliminar el periodo deshabilitado el lugar volvera a estar disponible para estas fechas. ¿Quieres eliminarlo?"
-          okText="Si"
-          cancelText="No"
-          overlayClassName="w-64"
-        >
-          <Tag color="error" icon={<DeleteFilled />} className="cursor-pointer">
-            Eliminar
-          </Tag>
-        </Popconfirm>
-      );
-    },
-  },
 ];
 export default function TabPeriodosDeshabilitados({
   lugarId,
@@ -85,6 +66,7 @@ export default function TabPeriodosDeshabilitados({
           fin: item.fin,
         }));
         setPeriodos(data);
+        setRange(undefined);
       })
       .catch((error) => {
         console.error(error);
@@ -103,6 +85,24 @@ export default function TabPeriodosDeshabilitados({
     guardarPeriodoDeshabilitado();
   };
 
+  const eliminarPeriodoDeshabilitado = async (periodoId: number) => {
+    await axios
+      .delete(
+        `/reservaciones/app/api/lugares/${lugarId}/periodosDeshabilitados/${periodoId}`
+      )
+      .then((response) => {
+        // console.log(response); //👀
+        notification.info({ message: "Se elimino el perido" });
+        getAllPeriodosDeshabilitados();
+      })
+      .catch((error) => {
+        console.error(error);
+        Modal.error({
+          title: error.message,
+          content: "Ocurrio un error al intentar eliminar el periodo",
+        });
+      });
+  };
   const guardarPeriodoDeshabilitado = async () => {
     setModo("guardando");
     if (!!range) {
@@ -124,23 +124,20 @@ export default function TabPeriodosDeshabilitados({
             console.error(error);
             Modal.error({
               title: "Error al guardar",
-              content: error.message,
+              content: error.response.data.error.message,
             });
           });
       } else message.warning("Debe indicar el rango");
     } else message.warning("Debe indicar el rango");
     setModo("edicion");
   };
-  const cancel = () => {
-    // setRange(undefined);
-  };
 
   return (
     <div className="gap-4 md:p-4 text-slate-600">
       <h2 className="text-center  mb-6">Periodos deshabilitados</h2>
       <p>
-        Agrega o quita periodos en el que lugar turístico estara cerrado para
-        las visitas de turístas
+        Agrega o quita periodos en el que lugar turístico estara cerrado las
+        visitas de turístas
       </p>
       <form className="flex gap-2">
         <RangePicker
@@ -153,7 +150,6 @@ export default function TabPeriodosDeshabilitados({
           title="Agregar periodo deshabilitado"
           description="¿Estas seguro de que quieres deshabilitar el lugar en este periodo?"
           onConfirm={confirm}
-          onCancel={cancel}
           okText="Si"
           cancelText="No"
           disabled={!range || modo === "guardando"}
@@ -168,7 +164,33 @@ export default function TabPeriodosDeshabilitados({
       </form>
       <Divider className="col-span-5" />
       <Table
-        columns={colums}
+        columns={[
+          ...colums,
+          {
+            title: "",
+            className: "text-center",
+            render: (_, record) => {
+              return (
+                <Popconfirm
+                  title="Eliminar periodo deshabilitado"
+                  description="Al eliminar el periodo deshabilitado el lugar volvera a estar disponible para estas fechas. ¿Quieres eliminarlo?"
+                  okText="Si"
+                  cancelText="No"
+                  overlayClassName="w-64"
+                  onConfirm={() => eliminarPeriodoDeshabilitado(record.id)}
+                >
+                  <Tag
+                    color="error"
+                    icon={<DeleteFilled />}
+                    className="cursor-pointer"
+                  >
+                    Eliminar
+                  </Tag>
+                </Popconfirm>
+              );
+            },
+          },
+        ]}
         dataSource={periodos}
         pagination={false}
         scroll={{ y: window.innerHeight - 430 }}

@@ -107,6 +107,20 @@ else if (count($uri) === 2 && $uri[1] === "periodosDeshabilitados") {
       break;
   }
 }
+//6️⃣ /reservaciones/app/api/lugares/[id]/periodosDeshabilitados/[periodoDeshabilitadoId]
+else if (count($uri) === 3 && $uri[1] === "periodosDeshabilitados") {
+  $id = $uri[0];
+  $periodoDeshabilitadoId = $uri[2];
+  switch ($_SERVER["REQUEST_METHOD"]) {
+    case "DELETE":
+      $result = $controller->eliminarPeriodoDeshabilitado(array_merge(["id" => $id, "periodoId" => $periodoDeshabilitadoId]));
+      break;
+    default:
+      http_response_code(405);
+      header("Allow: DELETE");
+      break;
+  }
+}
 //❌ si la uri no se encuentra
 else {
   http_response_code(404);
