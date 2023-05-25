@@ -8,6 +8,7 @@ import {
   Popconfirm,
   Modal,
   Collapse,
+  notification,
 } from "antd";
 import {
   SaveFilled,
@@ -64,7 +65,7 @@ export default function TabLugarInformacion({
         })
         .then((response) => {
           // console.log(response); //👀
-          Modal.success({ title: "Lugar actualizado" });
+          notification.success({ message: "Lugar guardado" });
         })
         .catch((error) => {
           console.error(error);

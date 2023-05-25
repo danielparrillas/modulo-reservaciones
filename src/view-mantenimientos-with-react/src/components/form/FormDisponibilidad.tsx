@@ -7,7 +7,7 @@ import {
   InputNumber,
   Modal,
   Collapse,
-  message,
+  notification,
 } from "antd";
 const { Panel } = Collapse;
 // 🌐 Librerias de terceros
@@ -42,6 +42,7 @@ export default function FormDisponibilidad({
       })
       .then((response) => {
         // console.log(response); //👀
+        notification.success({ message: `${nombre} disponibilidad guardada` });
       })
       .catch((error) => {
         console.error(error);

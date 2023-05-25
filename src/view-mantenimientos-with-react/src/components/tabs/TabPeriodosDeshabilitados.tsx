@@ -1,15 +1,25 @@
 // 🖌️ AntDesign
-import { DatePicker, Divider, Button, message, Popconfirm, Modal } from "antd";
-import { PlusOutlined } from "@ant-design/icons";
+import {
+  DatePicker,
+  Divider,
+  Button,
+  message,
+  Popconfirm,
+  Modal,
+  notification,
+  Tag,
+  Table,
+} from "antd";
+import { PlusOutlined, DeleteFilled } from "@ant-design/icons";
 import { RangePickerProps } from "antd/es/date-picker";
+import { ColumnsType } from "antd/es/table";
 //📅 necesarios para que funcione las fechas
 import "dayjs/locale/es";
 import locale from "antd/es/date-picker/locale/es_ES";
 // 🌐 Librerias de terceros
 import axios from "axios";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 // 😁 Componentes y funciones propias
-import TablePeriodosDeshabilitados from "../tables/TablePeriodosDeshabilitados";
 import { useLugarStore } from "../../hooks/lugarStore";
 //🖌️ AntDesign subcomponentes
 const { RangePicker } = DatePicker;
@@ -17,11 +27,73 @@ const { RangePicker } = DatePicker;
 interface TabPeriodosDeshabilitadosProps {
   lugarId: number;
 }
+
+type PeriodoDeshabilitados = {
+  id: number;
+  inicio: string;
+  fin: string;
+};
+const colums: ColumnsType<any> = [
+  {
+    title: "Inicio",
+    dataIndex: "inicio",
+    sorter: (a: any, b: any) => a.inicio.localeCompare(b.inicio),
+  },
+  {
+    title: "Fin",
+    dataIndex: "fin",
+    sorter: (a: any, b: any) => a.fin.localeCompare(b.fin),
+  },
+  {
+    title: "",
+    className: "text-center",
+    render: () => {
+      return (
+        <Popconfirm
+          title="Eliminar periodo deshabilitado"
+          description="Al eliminar el periodo deshabilitado el lugar volvera a estar disponible para estas fechas. ¿Quieres eliminarlo?"
+          okText="Si"
+          cancelText="No"
+          overlayClassName="w-64"
+        >
+          <Tag color="error" icon={<DeleteFilled />} className="cursor-pointer">
+            Eliminar
+          </Tag>
+        </Popconfirm>
+      );
+    },
+  },
+];
 export default function TabPeriodosDeshabilitados({
   lugarId,
 }: TabPeriodosDeshabilitadosProps) {
   const [range, setRange] = useState<RangePickerProps["value"]>();
   const { modo, setModo } = useLugarStore();
+  const [periodos, setPeriodos] = useState<PeriodoDeshabilitados[]>([]);
+  useEffect(() => {
+    getAllPeriodosDeshabilitados();
+  }, []);
+  const getAllPeriodosDeshabilitados = async () => {
+    await axios
+      .get(`/reservaciones/app/api/lugares/${lugarId}/periodosDeshabilitados`)
+      .then((response) => {
+        // console.log(response); //👀
+        let data = response.data.map((item: PeriodoDeshabilitados) => ({
+          key: `pd-${item.id}`,
+          id: item.id,
+          inicio: item.inicio,
+          fin: item.fin,
+        }));
+        setPeriodos(data);
+      })
+      .catch((error) => {
+        console.error(error);
+        Modal.error({
+          title: error.message,
+          content: "No se pudo traer los periodos deshabilitados del lugar",
+        });
+      });
+  };
 
   const handleChangeRangePicker = (values: RangePickerProps["value"]) => {
     setRange(values);
@@ -44,7 +116,9 @@ export default function TabPeriodosDeshabilitados({
             }
           )
           .then((response) => {
-            console.log(response); //👀
+            // console.log(response); //👀
+            notification.success({ message: "Periodo agregado" });
+            getAllPeriodosDeshabilitados();
           })
           .catch((error) => {
             console.error(error);
@@ -93,7 +167,13 @@ export default function TabPeriodosDeshabilitados({
         </Popconfirm>
       </form>
       <Divider className="col-span-5" />
-      <TablePeriodosDeshabilitados lugarId={lugarId} />
+      <Table
+        columns={colums}
+        dataSource={periodos}
+        pagination={false}
+        scroll={{ y: window.innerHeight - 430 }}
+        size="middle"
+      />
     </div>
   );
 }
