@@ -206,12 +206,14 @@ export default function TabLugarInformacion({
           onConfirm={handleConfirmSave}
           okText="Si"
           cancelText="No"
+          disabled={!lugar.nombre?.trim()}
         >
           <Button
             type="primary"
             icon={<SaveFilled />}
             size="large"
             loading={modo === "guardando"}
+            disabled={!lugar.nombre?.trim()}
           >
             {modo === "guardando"
               ? "Guardando"

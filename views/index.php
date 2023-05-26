@@ -1,29 +1,9 @@
-<!DOCTYPE html>
-<html lang="es">
+<?php require_once $_SERVER['DOCUMENT_ROOT'] . "/vista/header.php"; ?>
 
+<script type="module" crossorigin src="/reservaciones/views/assets/index.js"></script>
+<link rel="stylesheet" href="/reservaciones/views/assets/index.css">
 
-<head>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <script type="module">
-    import RefreshRuntime from "http://localhost:5173/reservaciones/views/@react-refresh"
-    RefreshRuntime.injectIntoGlobalHook(window)
-    window.$RefreshReg$ = () => {}
-    window.$RefreshSig$ = () => (type) => type
-    window.__vite_plugin_react_preamble_installed__ = true
-  </script>
-
-  <script type="module" src="http://localhost:5173/reservaciones/views/@vite/client"></script>
-
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Reservaciones</title>
-
-</head>
-
-<body>
-  <div id="root">
-  </div>
-  <script type="module" src="http://localhost:5173/reservaciones/views/src/main.tsx"></script>
+<div id="root"></div>
 </body>
 
 </html>

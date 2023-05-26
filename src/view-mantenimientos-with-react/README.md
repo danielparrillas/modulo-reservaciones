@@ -11,6 +11,7 @@ pnpm i
 
 ```
 pnpm run dev --base reservaciones/views
+pnpm run dev --base vista/reservaciones
 ```
 
 Esto hara que se corra en el puerto 5173 (http://localhost:5173/reservaciones/views)
