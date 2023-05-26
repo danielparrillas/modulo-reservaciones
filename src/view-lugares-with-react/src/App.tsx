@@ -3,7 +3,6 @@ import "antd/dist/reset.css";
 import { useAppStore } from "./hooks/appStore";
 import LugaresPage from "./pages/lugares";
 import LugarPage from "./pages/lugar";
-import { useLugarStore } from "./hooks/lugarStore";
 
 function App() {
   const { vista, setHeight, setWidth } = useAppStore();

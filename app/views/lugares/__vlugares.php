@@ -14,9 +14,30 @@
 <script src="/vista/recursos/plugins/datatables/extensions/Responsive/js/dataTables.responsive.min.js"></script>
 <script src="/vista/dist/js/app.min.js"></script>
 
-<!-- Vista para produccion -->
-<script type="module" crossorigin src="/reservaciones/views/lugares/index.js"></script>
-<link rel="stylesheet" href="/reservaciones/views/lugares/index.css">
+<!-- ⚠️ Descomentar para version en desarrollo -->
+<!-- <script type="module">
+  import RefreshRuntime from "http://localhost:5173/vista/@react-refresh"
+  RefreshRuntime.injectIntoGlobalHook(window)
+  window.$RefreshReg$ = () => {}
+  window.$RefreshSig$ = () => (type) => type
+  window.__vite_plugin_react_preamble_installed__ = true
+</script>
+
+<script type="module" src="http://localhost:5173/vista/@vite/client"></script>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<div id="root">
+</div>
+<script type="module" src="http://localhost:5173/vista/src/main.tsx"></script>
+</body>
+
+</html> -->
+
+<!-- ✅ Desconmentar para version en produccion -->
+<script type="module" crossorigin src="/reservaciones/app/views/lugares/index.js"></script>
+<link rel="stylesheet" href="/reservaciones/app/views/lugares/index.css">
 
 <div id="root"></div>
 </body>

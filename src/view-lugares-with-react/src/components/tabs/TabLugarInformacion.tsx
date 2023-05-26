@@ -91,8 +91,8 @@ export default function TabLugarInformacion({
           permiteAcampar: lugar.permiteAcampar,
           activo: lugar.activo,
         })
-        .then((response) => {
-          // console.log(response); //👀
+        .then(() => {
+          // console.log(response); //👀 cambiar a .then((response) => {
           // navigate(`/reservaciones/views/lugares/${response.data.data.id}`); //⚠️⚠️
           Modal.success({ title: "Nuevo lugar creado" });
         })

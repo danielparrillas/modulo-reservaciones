@@ -1,6 +1,6 @@
 // 🖌️ AntDesign
 import { UnorderedListOutlined } from "@ant-design/icons";
-import { Button, Tabs, message, Empty } from "antd";
+import { Button, Tabs, Empty } from "antd";
 // 🌐 Librerias de terceros
 import { useEffect, useState } from "react";
 // 😁 Componentes y funciones propias
@@ -14,7 +14,7 @@ export default function LugarPage() {
   const { setVista, width } = useAppStore();
   const { modo, setModo } = useLugarStore();
   const [lugarId, setLugarId] = useState<number>();
-  const { lugarSeleccionado, tab, setTab } = useLugarStore();
+  const { lugarSeleccionado, setTab } = useLugarStore();
 
   useEffect(() => {
     if (!lugarSeleccionado) setModo("nuevo");

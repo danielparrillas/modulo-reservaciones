@@ -5,7 +5,7 @@ import {
   PlusOutlined,
   ArrowRightOutlined,
 } from "@ant-design/icons";
-import { Table, Tag, Modal, Space, Button } from "antd";
+import { Table, Tag, Modal, Button } from "antd";
 import { ColumnsType } from "antd/es/table";
 // 🌐 Librerias de terceros
 import { useEffect, useState } from "react";
@@ -122,7 +122,7 @@ export default function LugaresPage() {
               dataIndex: "id",
               key: "actions",
               align: "center",
-              render: (id: number, record) => (
+              render: (_, record) => (
                 <ArrowRightOutlined
                   className="w-full"
                   onClick={() => {
