@@ -10,6 +10,8 @@ import { ColumnsType } from "antd/es/table";
 // 🌐 Librerias de terceros
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { useLugarStore } from "../hooks/lugarStore";
+import { useAppStore } from "../hooks/appStore";
 // 😁 Componentes y funciones propias
 
 interface Lugar {
@@ -60,17 +62,12 @@ const columns: ColumnsType<any> = [
       }
     },
   },
-  {
-    title: "",
-    dataIndex: "id",
-    key: "actions",
-    align: "center",
-    render: (id: number) => <ArrowRightOutlined className="w-full" />,
-  },
 ];
 
 export default function LugaresPage() {
   const [lugares, setLugares] = useState<Lugar[]>([]);
+  const { setLugar } = useLugarStore();
+  const { setVista } = useAppStore();
 
   useEffect(() => {
     getLugares();
@@ -78,7 +75,7 @@ export default function LugaresPage() {
 
   const getLugares = async () => {
     await axios
-      .get("/reservaciones/app/api/lugares")
+      .get("/reservaciones/app/services/lugares")
       .then((response) => {
         // console.log(response); //👀
         setLugares(convertirDataLugares(response.data.data));
@@ -105,7 +102,8 @@ export default function LugaresPage() {
 
   return (
     <div className="flex flex-col gap-4 h-full">
-      <Space wrap>
+      <div className="flex gap-8">
+        <h2 className="font-semibold">Lugares</h2>
         <Button
           type="primary"
           icon={<PlusOutlined />}
@@ -113,11 +111,28 @@ export default function LugaresPage() {
         >
           Agregar nuevo
         </Button>
-      </Space>
+      </div>
       <div className="h-full bg-white rounded-md">
         <Table
           dataSource={lugares}
-          columns={columns}
+          columns={[
+            ...columns,
+            {
+              title: "",
+              dataIndex: "id",
+              key: "actions",
+              align: "center",
+              render: (id: number, record) => (
+                <ArrowRightOutlined
+                  className="w-full"
+                  onClick={() => {
+                    setVista("detalle");
+                    setLugar(record.id);
+                  }}
+                />
+              ),
+            },
+          ]}
           pagination={false}
           scroll={{ y: window.innerHeight - 200 }}
         />

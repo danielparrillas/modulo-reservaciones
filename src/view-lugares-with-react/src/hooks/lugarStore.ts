@@ -4,13 +4,17 @@ type Modo = "edicion" | "nuevo" | "guardando";
 
 interface useLugarProps {
   modo: Modo;
-  lugar: any;
+  lugarSeleccionado?: number;
+  tab: number | string;
   setModo: (modo: Modo) => void;
   setLugar: (lugar: any) => void;
+  setTab: (tab: number | string) => void;
 }
 export const useLugarStore = create<useLugarProps>()((set) => ({
   modo: "nuevo",
-  lugar: null,
+  lugarSeleccionado: undefined,
+  tab: "1",
   setModo: (modo) => set(() => ({ modo: modo })),
-  setLugar: (lugar) => set(() => ({ lugar: lugar })),
+  setLugar: (lugar) => set(() => ({ lugarSeleccionado: lugar })),
+  setTab: (tab) => set(() => ({ tab: tab })),
 }));

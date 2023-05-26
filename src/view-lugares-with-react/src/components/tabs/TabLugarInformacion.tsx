@@ -40,11 +40,12 @@ export default function TabLugarInformacion({
     activo: true,
     permiteAcampar: false,
   });
-  const { modo, setModo } = useLugarStore();
+  const { tab, modo, setModo } = useLugarStore();
 
+  //Se mandara a llamar cada vez que se seleccione un lugar o se cambie de tab
   useEffect(() => {
     if (!!lugarId) getLugar(lugarId);
-  }, [lugarId]);
+  }, [lugarId, tab]);
 
   const handleConfirmSave = () => {
     setModo("guardando");
@@ -56,7 +57,7 @@ export default function TabLugarInformacion({
     setModo("guardando");
     if (!!lugarId) {
       axios
-        .put(`/reservaciones/app/api/lugares/${lugarId}`, {
+        .put(`/reservaciones/app/services/lugares/${lugarId}`, {
           nombre: lugar.nombre,
           permiteAcampar: lugar.permiteAcampar,
           activo: lugar.activo,
@@ -85,7 +86,7 @@ export default function TabLugarInformacion({
         .finally(() => setModo(!!lugarId ? "edicion" : "nuevo"));
     } else {
       axios
-        .post("/reservaciones/app/api/lugares/", {
+        .post("/reservaciones/app/services/lugares/", {
           nombre: lugar.nombre,
           permiteAcampar: lugar.permiteAcampar,
           activo: lugar.activo,
@@ -118,7 +119,7 @@ export default function TabLugarInformacion({
 
   const getLugar = async (id: number) => {
     await axios
-      .get(`/reservaciones/app/api/lugares/${id}`)
+      .get(`/reservaciones/app/services/lugares/${id}`)
       .then((response) => {
         // console.log(response); //👀
         setLugar(response.data.data);

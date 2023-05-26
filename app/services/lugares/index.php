@@ -2,7 +2,7 @@
 include_once(dirname(__DIR__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'index.php');
 include_once($PATH_CONTROLADORES . 'LugarController.php');
 
-$uri = explode("/", explode("reservaciones/app/api/lugares/", $_SERVER["REQUEST_URI"])[1]);
+$uri = explode("/", explode("reservaciones/app/services/lugares/", $_SERVER["REQUEST_URI"])[1]);
 
 // se instancia un objeto que pueda manejar la solicitudes del cliente
 $controller = new LugarController($DB_RESERVACIONES);
@@ -24,7 +24,7 @@ if (isset(getallheaders()["Sec-Fetch-Site"])) {
   http_response_code(401);
   exit;
 }
-//1️⃣ /reservaciones/app/api/lugares
+//1️⃣ /reservaciones/app/services/lugares
 if (count($uri) === 1 && $uri[0] === "") {
   switch ($_SERVER["REQUEST_METHOD"]) {
     case "POST":
@@ -40,7 +40,7 @@ if (count($uri) === 1 && $uri[0] === "") {
       break;
   };
 }
-//2️⃣ /reservaciones/app/api/lugares/[id]
+//2️⃣ /reservaciones/app/services/lugares/[id]
 else if (
   count($uri) === 1 && $uri[0] !== ""
 ) {
@@ -59,7 +59,7 @@ else if (
       break;
   }
 }
-//3️⃣ /reservaciones/app/api/lugares/[id]/disponibilidades
+//3️⃣ /reservaciones/app/services/lugares/[id]/disponibilidades
 else if (count($uri) === 2 && $uri[1] === "disponibilidades") {
   $id = $uri[0];
   switch ($_SERVER["REQUEST_METHOD"]) {
@@ -72,7 +72,7 @@ else if (count($uri) === 2 && $uri[1] === "disponibilidades") {
       break;
   }
 }
-//4️⃣ /reservaciones/app/api/lugares/[id]/disponibilidades/[grupoDisponbilidadId]
+//4️⃣ /reservaciones/app/services/lugares/[id]/disponibilidades/[grupoDisponbilidadId]
 else if (count($uri) ===  3 && $uri[1] === "disponibilidades") {
   $id = $uri[0];
   $grupoDisponibilidad = $uri[2];
@@ -91,7 +91,7 @@ else if (count($uri) ===  3 && $uri[1] === "disponibilidades") {
       break;
   }
 }
-//5️⃣ /reservaciones/app/api/lugares/[id]/periodosDeshabilitados
+//5️⃣ /reservaciones/app/services/lugares/[id]/periodosDeshabilitados
 else if (count($uri) === 2 && $uri[1] === "periodosDeshabilitados") {
   $id = $uri[0];
   switch ($_SERVER["REQUEST_METHOD"]) {
@@ -107,7 +107,7 @@ else if (count($uri) === 2 && $uri[1] === "periodosDeshabilitados") {
       break;
   }
 }
-//6️⃣ /reservaciones/app/api/lugares/[id]/periodosDeshabilitados/[periodoDeshabilitadoId]
+//6️⃣ /reservaciones/app/services/lugares/[id]/periodosDeshabilitados/[periodoDeshabilitadoId]
 else if (count($uri) === 3 && $uri[1] === "periodosDeshabilitados") {
   $id = $uri[0];
   $periodoDeshabilitadoId = $uri[2];

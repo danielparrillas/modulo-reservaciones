@@ -56,7 +56,9 @@ export default function TabPeriodosDeshabilitados({
   }, []);
   const getAllPeriodosDeshabilitados = async () => {
     await axios
-      .get(`/reservaciones/app/api/lugares/${lugarId}/periodosDeshabilitados`)
+      .get(
+        `/reservaciones/app/services/lugares/${lugarId}/periodosDeshabilitados`
+      )
       .then((response) => {
         // console.log(response); //👀
         let data = response.data.map((item: PeriodoDeshabilitados) => ({
@@ -88,7 +90,7 @@ export default function TabPeriodosDeshabilitados({
   const eliminarPeriodoDeshabilitado = async (periodoId: number) => {
     await axios
       .delete(
-        `/reservaciones/app/api/lugares/${lugarId}/periodosDeshabilitados/${periodoId}`
+        `/reservaciones/app/services/lugares/${lugarId}/periodosDeshabilitados/${periodoId}`
       )
       .then(() => {
         // console.log(response); //👀 cambiar ".then((response) => {"
@@ -109,7 +111,7 @@ export default function TabPeriodosDeshabilitados({
       if (!!range[0] && !!range[1]) {
         await axios
           .post(
-            `/reservaciones/app/api/lugares/${lugarId}/periodosDeshabilitados`,
+            `/reservaciones/app/services/lugares/${lugarId}/periodosDeshabilitados`,
             {
               inicio: range[0].format("YYYY-MM-DD"),
               fin: range[1].format("YYYY-MM-DD"),

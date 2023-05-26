@@ -12,7 +12,7 @@ import {
 const { Panel } = Collapse;
 // 🌐 Librerias de terceros
 import axios from "axios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 // 😁 Componentes y funciones propias
 import { useLugarStore } from "../../hooks/lugarStore";
 
@@ -29,17 +29,21 @@ export default function FormDisponibilidad({
   lugarId,
 }: FormDisponibilidadProps) {
   const [value, setValue] = useState(cantidadMaxima);
-  const { modo, setModo } = useLugarStore();
+  const { tab, modo, setModo } = useLugarStore();
   // console.log(id, nombre, cantidad, lugarId); //👀
+  useEffect(() => {}, [tab]);
   const handleConfirmSave = () => {
     setModo("guardando");
     guardar();
   };
   const guardar = async () => {
     await axios
-      .put(`/reservaciones/app/api/lugares/${lugarId}/disponibilidades/${id}`, {
-        cantidadMaxima: value,
-      })
+      .put(
+        `/reservaciones/app/services/lugares/${lugarId}/disponibilidades/${id}`,
+        {
+          cantidadMaxima: value,
+        }
+      )
       .then(() => {
         // console.log(response); //👀 cambiar ".then((response) => {"
         notification.success({ message: `${nombre} disponibilidad guardada` });

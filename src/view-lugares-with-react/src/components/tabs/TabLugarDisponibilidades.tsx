@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 // 😁 Componentes y funciones propias
 import FormDisponibilidad from "../form/FormDisponibilidad";
+import { useLugarStore } from "../../hooks/lugarStore";
 
 interface Disponibilidad {
   id: number;
@@ -22,10 +23,15 @@ export default function TabLugarDisponibilidades({
   const [disponibilidades, setDisponibilidades] = useState<Disponibilidad[]>(
     []
   );
+  const { tab } = useLugarStore();
 
   useEffect(() => {
     if (!!lugarId) transformarData();
   }, [lugarId]);
+
+  useEffect(() => {
+    transformarData();
+  }, [tab]);
 
   const transformarData = async () => {
     const disponibilidades = await getDisponibilidades();
@@ -50,7 +56,7 @@ export default function TabLugarDisponibilidades({
   const getDisponibilidades = async () => {
     let disponibilidades: any[] = [];
     await axios
-      .get("/reservaciones/app/api/disponibilidades")
+      .get("/reservaciones/app/services/disponibilidades")
       .then(async (response) => {
         // console.log(response); //👀
         disponibilidades = response.data;
@@ -64,7 +70,7 @@ export default function TabLugarDisponibilidades({
   const getDisponibilidadesDelLugar = async () => {
     let disponibilidadesDelLugar: any[] = [];
     await axios
-      .get(`/reservaciones/app/api/lugares/${lugarId}/disponibilidades`)
+      .get(`/reservaciones/app/services/lugares/${lugarId}/disponibilidades`)
       .then((response) => {
         // console.log(response); //👀
         disponibilidadesDelLugar = response.data;

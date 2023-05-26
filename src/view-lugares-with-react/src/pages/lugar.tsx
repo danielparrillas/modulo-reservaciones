@@ -2,45 +2,36 @@
 import { UnorderedListOutlined } from "@ant-design/icons";
 import { Button, Tabs, message, Empty } from "antd";
 // 🌐 Librerias de terceros
-import { useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 // 😁 Componentes y funciones propias
-import { useLayoutStore } from "../hooks/layoutStore";
+import { useAppStore } from "../hooks/appStore";
 import { useLugarStore } from "../hooks/lugarStore";
 import TabLugarInformacion from "../components/tabs/TabLugarInformacion";
 import TabLugarDisponibilidades from "../components/tabs/TabLugarDisponibilidades";
 import TabPeriodosDeshabilitados from "../components/tabs/TabPeriodosDeshabilitados";
 
 export default function LugarPage() {
-  const { width } = useLayoutStore();
+  const { setVista, width } = useAppStore();
   const { modo, setModo } = useLugarStore();
-  const { pathname } = useLocation();
   const [lugarId, setLugarId] = useState<number>();
-  const navigate = useNavigate();
+  const { lugarSeleccionado, tab, setTab } = useLugarStore();
 
   useEffect(() => {
-    let url = pathname.split("/");
-    let urlLast = url[url.length - 1];
-
-    if (urlLast === "nuevo") setModo("nuevo");
+    if (!lugarSeleccionado) setModo("nuevo");
     else {
-      let id = parseInt(urlLast);
-      setLugarId(id);
-      if (Number.isInteger(id)) {
-        setModo("edicion");
-      } else message.error("Formato de id incompatible");
+      setLugarId(lugarSeleccionado);
+      setModo("edicion");
     }
-  }, [pathname]);
+  }, [lugarSeleccionado]);
 
   return (
     <div className=" flex flex-col gap-4 h-full">
-      <div className="flex gap-3">
+      <div className="flex gap-4">
+        <h2 className="font-semibold">Lugares</h2>
         <Button
           type="default"
           icon={<UnorderedListOutlined />}
-          onClick={() => {
-            navigate("/reservaciones/views/lugares");
-          }}
+          onClick={() => setVista("lista")}
           disabled={modo === "guardando"}
         >
           Ver todos los lugares
@@ -80,6 +71,10 @@ export default function LugarPage() {
           },
         ]}
         className="bg-white p-4 rounded-md h-full overflow-auto"
+        onChange={(key) => {
+          console.log(key);
+          setTab(key);
+        }}
       />
     </div>
   );
