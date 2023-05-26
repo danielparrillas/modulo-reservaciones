@@ -10,7 +10,6 @@ import { ColumnsType } from "antd/es/table";
 // 🌐 Librerias de terceros
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { Link, useNavigate } from "react-router-dom";
 // 😁 Componentes y funciones propias
 
 interface Lugar {
@@ -66,17 +65,12 @@ const columns: ColumnsType<any> = [
     dataIndex: "id",
     key: "actions",
     align: "center",
-    render: (id: number) => (
-      <Link to={`${id}`}>
-        <ArrowRightOutlined className="w-full" />
-      </Link>
-    ),
+    render: (id: number) => <ArrowRightOutlined className="w-full" />,
   },
 ];
 
 export default function LugaresPage() {
   const [lugares, setLugares] = useState<Lugar[]>([]);
-  const navigate = useNavigate();
 
   useEffect(() => {
     getLugares();
@@ -115,7 +109,7 @@ export default function LugaresPage() {
         <Button
           type="primary"
           icon={<PlusOutlined />}
-          onClick={() => navigate("nuevo")}
+          // onClick={() => navigate("nuevo")} //⚠️⚠️⚠️
         >
           Agregar nuevo
         </Button>
@@ -125,7 +119,7 @@ export default function LugaresPage() {
           dataSource={lugares}
           columns={columns}
           pagination={false}
-          scroll={{ y: window.innerHeight - 160 }}
+          scroll={{ y: window.innerHeight - 200 }}
         />
       </div>
     </div>

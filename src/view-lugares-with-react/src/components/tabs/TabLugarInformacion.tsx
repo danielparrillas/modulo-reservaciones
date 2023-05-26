@@ -36,7 +36,6 @@ interface TabLugarInformacionProps {
 export default function TabLugarInformacion({
   lugarId,
 }: TabLugarInformacionProps) {
-  const navigate = useNavigate();
   const [lugar, setLugar] = useState<Lugar>({
     activo: true,
     permiteAcampar: false,
@@ -93,7 +92,7 @@ export default function TabLugarInformacion({
         })
         .then((response) => {
           // console.log(response); //👀
-          navigate(`/reservaciones/views/lugares/${response.data.data.id}`);
+          // navigate(`/reservaciones/views/lugares/${response.data.data.id}`); //⚠️⚠️
           Modal.success({ title: "Nuevo lugar creado" });
         })
         .catch((error) => {
