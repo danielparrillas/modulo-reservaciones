@@ -20,7 +20,7 @@ Los archivos de producción finales son los de siempre (html, css y javascript),
 
 #### Backend
 
-Se utilizó php sin frameworks para las conexiones a la base de datos en MySQL, validaciones y la programación de los servicios que consume el cliente.<br>
+Se utilizó php sin frameworks para las conexiones a la base de datos en MySQL, validaciones y la programación de los servicios que consume el frontend.<br>
 
 > ![PHP](https://img.shields.io/badge/php-%23777BB4.svg?style=for-the-badge&logo=php&logoColor=white) ![MySQL](https://img.shields.io/badge/mysql-%2300f.svg?style=for-the-badge&logo=mysql&logoColor=white) ![Apache](https://img.shields.io/badge/apache-%23D42029.svg?style=for-the-badge&logo=apache&logoColor=white)<br>
 
