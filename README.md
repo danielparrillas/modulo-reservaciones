@@ -30,7 +30,7 @@ portaldev
 └── reservaciones           # carpeta que contiene este módulo
     ├── api                 # servicios para terceros
     ├── app                 # archivos fuentes del módulo
-    ├── src                 # codigos de base de datos y proyecto del fronted
+    ├── src                 # codigos de base de datos y proyecto del fronted del modulo
     ├── lugares-dev.php     # vista de lugares en modo desarrollo
     ├── lugares.php
     ├── servicios-dev.php   # vista de lugares en modo desarrollo
