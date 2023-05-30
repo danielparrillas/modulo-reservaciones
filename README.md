@@ -45,10 +45,10 @@ portaldev
 
 ## Comentarios
 
-> Dar un vistazo a estos puntos para facilitar la comprension de la estructura de este proyecto.
+> Se recomientda dar un vistazo a estos puntos para facilitar la comprension de la estructura de este proyecto.
 
 - Puedes encontrar un archivo `README.md` en cada nivel de carpeta que documenta y explica específica y detalladamente cada sección.
-- Este módulo se trata como monorepositorio ya que cuenta con un proyecto con React.js o Typescript.
+- Este módulo se trata como monorepositorio ya que cuenta con un proyecto con React.js o Typescript. En el `README.md` se encuentra como se integra a PHP tanton en modo desarrollo y producción.
 
 ```
 portaldev
@@ -63,7 +63,7 @@ portaldev
 
 > Entender este proyecto como un generador de vistas (html, css, js)
 
-- Otra carpeta muy importante es la que contiene el código de la base de datos. Esta contiene no solo el código SQL de los que se ha agregado a la base de datos con la que ya cuenta el sistema PortalDEB, si no que también incluye el archivo `README.md` que contiene un paso a paso para instalar los nuevos cambios.
+- Otra carpeta muy importante es la que contiene el código de la base de datos. Esta contiene no solo el código SQL de lo que se ha agregado y cambiado a la base de datos con la que ya cuenta el sistema PortalDEB, si no que también incluye el archivo `README.md` que contiene un paso a paso para instalar los nuevos cambios.
 
 ```
 portaldev
