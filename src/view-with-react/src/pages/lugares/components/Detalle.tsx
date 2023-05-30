@@ -6,11 +6,11 @@ import { useEffect, useState } from "react";
 // 😁 Componentes y funciones propias
 import { useAppStore } from "../hooks/appStore";
 import { useLugarStore } from "../hooks/lugarStore";
-import TabLugarInformacion from "../components/tabs/TabLugarInformacion";
-import TabLugarDisponibilidades from "../components/tabs/TabLugarDisponibilidades";
-import TabPeriodosDeshabilitados from "../components/tabs/TabPeriodosDeshabilitados";
+import TabLugarInformacion from "./tabs/TabLugarInformacion";
+import TabLugarDisponibilidades from "./tabs/TabLugarDisponibilidades";
+import TabPeriodosDeshabilitados from "./tabs/TabPeriodosDeshabilitados";
 
-export default function LugarPage() {
+export default function Detalle() {
   const { setVista, width } = useAppStore();
   const { modo, setModo } = useLugarStore();
   const [lugarId, setLugarId] = useState<number>();

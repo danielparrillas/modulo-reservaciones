@@ -64,7 +64,7 @@ const columns: ColumnsType<any> = [
   },
 ];
 
-export default function LugaresPage() {
+export default function Lista() {
   const [lugares, setLugares] = useState<Lugar[]>([]);
   const { setLugar } = useLugarStore();
   const { setVista } = useAppStore();

@@ -1,5 +1,5 @@
 <?php
-include_once(dirname(__DIR__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'index.php');
+include_once(dirname(__DIR__) .  '/../config/index.php');
 include_once($PATH_CONTROLADORES . 'DisponibilidadController.php');
 
 $uri = explode("/", explode("reservaciones/app/services/disponibilidades/", $_SERVER["REQUEST_URI"])[1]);
