@@ -4,6 +4,8 @@ Sistema PortalDEB
 
 Este desarrollo forma parte del sistema PortalDEB de la Dirección General de Ecosistemas y Biodiversidad del Ministerio del Medio Ambiente y Recursos Naturales.
 
+![Alt text](/src/assets/vista-lugares.png "Vista lugares")
+
 ## Tecnologias utilizadas
 
 El proyecto cuenta con un desarrollo de backend y frontend. La lógica principal de este proyecto consiste en un backend que proporciona servicios para ser consumidos por el frontend.
