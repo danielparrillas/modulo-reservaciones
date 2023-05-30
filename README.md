@@ -26,7 +26,7 @@ Se utilizó php sin frameworks para las conexiones a la base de datos en MySQL, 
 
 ## Estructura del proyecto
 
-El proyecto es un mono repositorio, este módulo se recomienda añadirse en la carpeta raíz del proyecto del sistema.
+> El proyecto es un mono repositorio, este módulo se recomienda añadirse en la carpeta raíz del proyecto del sistema.
 
 ```
 portaldev
@@ -39,8 +39,39 @@ portaldev
     ├── lugares.php
     ├── servicios-dev.php   # vista de lugares en modo desarrollo
     ├── servicios.php
-    └── README.md
+    └── README.mdd
 
 ```
 
-### Carpeta api
+## Comentarios
+
+> Dar un vistazo a estos puntos para facilitar la comprension de la estructura de este proyecto.
+
+- Puedes encontrar un archivo `README.md` en cada nivel de carpeta que documenta y explica específica y detalladamente cada sección.
+- Se trata como monorepositorio ya que cuenta con un proyecto con React.js o Typescript.
+
+```
+portaldev
+├── ...
+└── reservaciones
+    ├── ...
+    └── src                   # codigos de base de datos y proyecto del
+        ├── ...
+        └── view-with-react   # carpeta que contiene un proyecto en React
+
+```
+
+> Entender este proyecto como un generador de vistas (html, css, js)
+
+- Otra carpeta muy importante es la que contiene el código de la base de datos. Esta contiene no solo el código SQL de los que se ha agregado a la base de datos con la que ya cuenta el sistema PortalDEB, si no que también incluye el archivo `README.md` que contiene un paso a paso para instalar los nuevos cambios.
+
+```
+portaldev
+├── ...
+└── reservaciones
+    ├── ...
+    └── src                   # codigos de base de datos y proyecto del
+        ├── ...
+        └── database          # carpeta de los codigos sql
+
+```
