@@ -48,14 +48,14 @@ portaldev
 > Dar un vistazo a estos puntos para facilitar la comprension de la estructura de este proyecto.
 
 - Puedes encontrar un archivo `README.md` en cada nivel de carpeta que documenta y explica específica y detalladamente cada sección.
-- Se trata como monorepositorio ya que cuenta con un proyecto con React.js o Typescript.
+- Este módulo se trata como monorepositorio ya que cuenta con un proyecto con React.js o Typescript.
 
 ```
 portaldev
 ├── ...
 └── reservaciones
     ├── ...
-    └── src                   # codigos de base de datos y proyecto del
+    └── src                   # codigos extra
         ├── ...
         └── view-with-react   # carpeta que contiene un proyecto en React
 
@@ -70,7 +70,7 @@ portaldev
 ├── ...
 └── reservaciones
     ├── ...
-    └── src                   # codigos de base de datos y proyecto del
+    └── src                   # codigos extra
         ├── ...
         └── database          # carpeta de los codigos sql
 
