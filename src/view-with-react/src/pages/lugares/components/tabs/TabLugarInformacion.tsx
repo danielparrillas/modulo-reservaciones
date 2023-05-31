@@ -24,6 +24,7 @@ import axios from "axios";
 import { useLugarStore } from "../../hooks/lugarStore";
 import SelectAnp from "../form/SelectAnp";
 import { useAppStore } from "../../hooks/appStore";
+import TextArea from "antd/es/input/TextArea";
 
 interface Lugar {
   id?: number;
@@ -156,6 +157,7 @@ export default function TabLugarInformacion({
           </h2>
         )}
       </div>
+      <Divider className="m-0 pb-2" />
       <div
         className="grid grid-cols-5 overflow-auto px-4"
         style={{ height: height - 300 }}
@@ -174,7 +176,6 @@ export default function TabLugarInformacion({
             required
           />
         </div>
-        <Divider className="col-span-5 m-0" />
         <div className="col-span-2">
           <label className="font-bold">ANP</label>
           <p>Área protegida en la que se encuentra</p>
@@ -182,8 +183,13 @@ export default function TabLugarInformacion({
         <div className="col-span-3 flex items-center">
           <SelectAnp />
         </div>
-        <div className="col-span-3"></div>
-        <Divider className="col-span-5 m-0" />
+        <div className="col-span-2">
+          <label className="font-bold">Descripción</label>
+          <p></p>
+        </div>
+        <div className="col-span-3 flex items-center">
+          <TextArea maxLength={500} showCount className="mb-7 w-full" />
+        </div>
         <div className="col-span-2">
           <label className="font-bold">Permite acampar</label>
           <p>Los turistas podrán quedarse mas de un día en el lugar</p>
@@ -197,7 +203,6 @@ export default function TabLugarInformacion({
             }
           />
         </div>
-        <Divider className="col-span-5 m-0" />
         <div className="col-span-2">
           <label className="font-bold">Activo</label>
           <p>Permite recibir visitas de turistas</p>
