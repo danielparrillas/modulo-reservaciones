@@ -27,6 +27,7 @@ const columns: ColumnsType<any> = [
     title: "Lugar",
     dataIndex: "nombre",
     key: "lugarnombre",
+    className: "w-10",
     sorter: (a: any, b: any) => a.nombre.localeCompare(b.nombre),
   },
   {
@@ -34,6 +35,7 @@ const columns: ColumnsType<any> = [
     dataIndex: "acampar",
     key: "acampar",
     responsive: ["md"],
+    width: 200,
     render: (permitido: boolean) => {
       if (permitido) {
         return <Tag color="processing">Permitido</Tag>;
@@ -46,6 +48,7 @@ const columns: ColumnsType<any> = [
     title: "Activo",
     dataIndex: "activo",
     key: "activo",
+    width: 200,
     render: (estado: boolean) => {
       if (estado) {
         return (
@@ -122,9 +125,10 @@ export default function Lista() {
               dataIndex: "id",
               key: "actions",
               align: "center",
+              width: 100,
               render: (_, record) => (
                 <ArrowRightOutlined
-                  className="w-full"
+                  className="w-full hover:text-blue-500"
                   onClick={() => {
                     setVista("detalle");
                     setLugar(record.id);

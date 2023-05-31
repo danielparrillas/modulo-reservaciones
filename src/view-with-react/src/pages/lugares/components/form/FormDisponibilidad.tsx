@@ -12,7 +12,7 @@ import {
 const { Panel } = Collapse;
 // 🌐 Librerias de terceros
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 // 😁 Componentes y funciones propias
 import { useLugarStore } from "../../hooks/lugarStore";
 
@@ -92,7 +92,7 @@ export default function FormDisponibilidad({
             size="large"
             icon={<SaveFilled />}
             loading={modo === "guardando"}
-            disabled={!value}
+            disabled={!value || value === cantidadMaxima}
           >
             Guardar
           </Button>
