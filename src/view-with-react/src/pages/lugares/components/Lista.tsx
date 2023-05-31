@@ -134,7 +134,7 @@ export default function Lista() {
             },
           ]}
           pagination={false}
-          scroll={{ y: window.innerHeight - 200 }}
+          scroll={{ y: window.innerHeight - 230 }}
         />
       </div>
     </div>

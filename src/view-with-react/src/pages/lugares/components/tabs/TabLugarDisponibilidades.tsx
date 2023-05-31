@@ -90,7 +90,10 @@ export default function TabLugarDisponibilidades({
       </p>
       <form className="flex gap-2"></form>
       <Divider className="col-span-5" />
-      <section className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+      <section
+        className="grid grid-cols-1 lg:grid-cols-2 gap-4 overflow-auto"
+        style={{ height: window.innerHeight - 400 }}
+      >
         {disponibilidades.map((grupo) => (
           <FormDisponibilidad
             key={`grupo-servicio-${grupo.id}`}

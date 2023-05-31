@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 // 🖌️ AntDesign
 import {
   Input,
@@ -19,9 +20,10 @@ import {
 const { Panel } = Collapse;
 // 🌐 Librerias de terceros
 import axios from "axios";
-import { useEffect, useState } from "react";
 // 😁 Componentes y funciones propias
 import { useLugarStore } from "../../hooks/lugarStore";
+import SelectAnp from "../form/SelectAnp";
+import { useAppStore } from "../../hooks/appStore";
 
 interface Lugar {
   id?: number;
@@ -33,14 +35,16 @@ interface Lugar {
 interface TabLugarInformacionProps {
   lugarId?: number;
 }
+
 export default function TabLugarInformacion({
   lugarId,
 }: TabLugarInformacionProps) {
+  const { height } = useAppStore();
+  const { tab, modo, setModo } = useLugarStore();
   const [lugar, setLugar] = useState<Lugar>({
     activo: true,
     permiteAcampar: false,
   });
-  const { tab, modo, setModo } = useLugarStore();
 
   //Se mandara a llamar cada vez que se seleccione un lugar o se cambie de tab
   useEffect(() => {
@@ -52,7 +56,6 @@ export default function TabLugarInformacion({
 
     guardar();
   };
-
   const guardar = async () => {
     setModo("guardando");
     if (!!lugarId) {
@@ -136,9 +139,9 @@ export default function TabLugarInformacion({
   return (
     <form
       onSubmit={(e) => e.preventDefault()}
-      className="grid grid-cols-5 gap-4 p-4 text-slate-600"
+      className="text-slate-600 flex flex-col"
     >
-      <div className="col-span-5 text-center mb-6">
+      <div className="col-span-5 text-center p-4">
         {modo === "edicion" ? (
           <h2>
             <EditFilled /> Editar lugar turístico
@@ -153,46 +156,60 @@ export default function TabLugarInformacion({
           </h2>
         )}
       </div>
-      <div className="col-span-2 lg:col-span-1">
-        <label className="font-bold">Nombre</label>
-        <p>Utilizado para identificar el lugar</p>
-      </div>
-      <div className="col-span-3 lg:col-span-4">
-        <Input
-          placeholder="nombre del lugar..."
-          className="w-full"
-          disabled={modo === "guardando"}
-          value={lugar.nombre}
-          onChange={(e) => setLugar({ ...lugar, nombre: e.target.value })}
-          required
-        />
-      </div>
-      <Divider className="col-span-5" />
-      <div className="col-span-2 lg:col-span-1">
-        <label className="font-bold">Permite acampar</label>
-        <p>Los turistas podrán quedarse mas de un día en el lugar</p>
-      </div>
-      <div className="col-span-3 lg:col-span-4">
-        <Checkbox
-          disabled={modo === "guardando"}
-          checked={lugar.permiteAcampar}
-          onChange={(e) =>
-            setLugar({ ...lugar, permiteAcampar: e.target.checked })
-          }
-        />
-      </div>
-      <Divider className="col-span-5" />
-      <div className="col-span-2 lg:col-span-1">
-        <label className="font-bold">Activo</label>
-        <p>Permite recibir visitas de turistas</p>
-      </div>
-      <div className="col-span-3 lg:col-span-4">
-        <Switch
-          defaultChecked
-          disabled={modo === "guardando"}
-          checked={lugar.activo}
-          onChange={(checked) => setLugar({ ...lugar, activo: checked })}
-        />
+      <div
+        className="grid grid-cols-5 overflow-auto px-4"
+        style={{ height: height - 300 }}
+      >
+        <div className="col-span-2">
+          <label className="font-bold">Nombre</label>
+          <p>Utilizado para identificar el lugar</p>
+        </div>
+        <div className="col-span-3 flex items-center">
+          <Input
+            placeholder="nombre del lugar..."
+            className="w-full"
+            disabled={modo === "guardando"}
+            value={lugar.nombre}
+            onChange={(e) => setLugar({ ...lugar, nombre: e.target.value })}
+            required
+          />
+        </div>
+        <Divider className="col-span-5 m-0" />
+        <div className="col-span-2">
+          <label className="font-bold">ANP</label>
+          <p>Área protegida en la que se encuentra</p>
+        </div>
+        <div className="col-span-3 flex items-center">
+          <SelectAnp />
+        </div>
+        <div className="col-span-3"></div>
+        <Divider className="col-span-5 m-0" />
+        <div className="col-span-2">
+          <label className="font-bold">Permite acampar</label>
+          <p>Los turistas podrán quedarse mas de un día en el lugar</p>
+        </div>
+        <div className="col-span-3 flex items-center">
+          <Checkbox
+            disabled={modo === "guardando"}
+            checked={lugar.permiteAcampar}
+            onChange={(e) =>
+              setLugar({ ...lugar, permiteAcampar: e.target.checked })
+            }
+          />
+        </div>
+        <Divider className="col-span-5 m-0" />
+        <div className="col-span-2">
+          <label className="font-bold">Activo</label>
+          <p>Permite recibir visitas de turistas</p>
+        </div>
+        <div className="col-span-3 flex items-center">
+          <Switch
+            defaultChecked
+            disabled={modo === "guardando"}
+            checked={lugar.activo}
+            onChange={(checked) => setLugar({ ...lugar, activo: checked })}
+          />
+        </div>
       </div>
       <div className="col-span-5 flex justify-end">
         <Popconfirm

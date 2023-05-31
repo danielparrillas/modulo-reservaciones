@@ -14,7 +14,12 @@ function App() {
     setWidth(window.innerWidth);
   };
   return (
-    <div className="flex flex-col p-2 md:p-6 bg-transparent w-full h-full overflow-auto text-slate-600">
+    <div
+      className="flex flex-col p-2 md:p-6 bg-transparent w-full overflow-auto text-slate-600"
+      style={{
+        height: window.innerHeight - 50,
+      }}
+    >
       {vista === "lista" ? <Lista /> : <Detalle />}
     </div>
   );
