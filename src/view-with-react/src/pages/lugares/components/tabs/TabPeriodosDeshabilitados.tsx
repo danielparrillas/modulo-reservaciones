@@ -171,6 +171,7 @@ export default function TabPeriodosDeshabilitados({
           {
             title: "",
             className: "text-center",
+            width: 100,
             render: (_, record) => {
               return (
                 <Popconfirm

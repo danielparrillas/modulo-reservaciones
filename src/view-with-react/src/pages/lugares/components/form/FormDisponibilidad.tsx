@@ -12,7 +12,7 @@ import {
 const { Panel } = Collapse;
 // 🌐 Librerias de terceros
 import axios from "axios";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 // 😁 Componentes y funciones propias
 import { useLugarStore } from "../../hooks/lugarStore";
 
@@ -28,7 +28,7 @@ export default function FormDisponibilidad({
   cantidadMaxima,
   lugarId,
 }: FormDisponibilidadProps) {
-  const [value, setValue] = useState(cantidadMaxima);
+  const [value, setValue] = useState<null | undefined | number>(cantidadMaxima);
   const { tab, modo, setModo } = useLugarStore();
   // console.log(id, nombre, cantidad, lugarId); //👀
   useEffect(() => {}, [tab]);
@@ -77,7 +77,7 @@ export default function FormDisponibilidad({
           placeholder="Digita un número"
           value={value}
           disabled={modo === "guardando"}
-          onChange={(value) => setValue(!!value ? value : undefined)}
+          onChange={(value) => setValue(value)}
         />
         <Popconfirm
           title={"Confirmación"}
@@ -85,14 +85,18 @@ export default function FormDisponibilidad({
           onConfirm={() => handleConfirmSave()}
           okText="Si"
           cancelText="No"
-          disabled={!value}
+          disabled={
+            value === undefined || value === null || value === cantidadMaxima
+          }
         >
           <Button
             type="primary"
             size="large"
             icon={<SaveFilled />}
             loading={modo === "guardando"}
-            disabled={!value || value === cantidadMaxima}
+            disabled={
+              value === undefined || value === null || value === cantidadMaxima
+            }
           >
             Guardar
           </Button>
