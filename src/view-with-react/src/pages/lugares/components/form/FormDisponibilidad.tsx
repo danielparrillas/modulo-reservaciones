@@ -1,5 +1,5 @@
 // 🖌️ AntDesign
-import { SaveFilled } from "@ant-design/icons";
+import { SaveFilled, UndoOutlined } from "@ant-design/icons";
 import {
   Button,
   Popconfirm,
@@ -29,11 +29,11 @@ export default function FormDisponibilidad({
   lugarId,
 }: FormDisponibilidadProps) {
   const [value, setValue] = useState<null | undefined | number>(cantidadMaxima);
-  const { tab, modo, setModo } = useLugarStore();
+  const { tab, estaGuardando, setGuardando } = useLugarStore();
   // console.log(id, nombre, cantidad, lugarId); //👀
   useEffect(() => {}, [tab]);
   const handleConfirmSave = () => {
-    setModo("guardando");
+    setGuardando(true);
     guardar();
   };
   const guardar = async () => {
@@ -47,6 +47,7 @@ export default function FormDisponibilidad({
       .then(() => {
         // console.log(response); //👀 cambiar ".then((response) => {"
         notification.success({ message: `${nombre} disponibilidad guardada` });
+        setGuardando(false);
       })
       .catch((error) => {
         console.error(error);
@@ -64,19 +65,18 @@ export default function FormDisponibilidad({
             </Collapse>
           ),
         });
-      })
-      .finally(() => setModo("edicion"));
+      });
   };
   return (
-    <Card title={nombre}>
-      <div className="flex gap-4">
+    <Card title={nombre} className="h-min">
+      <div className="flex flex-wrap gap-4">
         <InputNumber
           size="large"
           min={0}
           className="w-60"
           placeholder="Digita un número"
           value={value}
-          disabled={modo === "guardando"}
+          disabled={estaGuardando}
           onChange={(value) => setValue(value)}
         />
         <Popconfirm
@@ -93,7 +93,7 @@ export default function FormDisponibilidad({
             type="primary"
             size="large"
             icon={<SaveFilled />}
-            loading={modo === "guardando"}
+            loading={estaGuardando}
             disabled={
               value === undefined || value === null || value === cantidadMaxima
             }
@@ -101,6 +101,12 @@ export default function FormDisponibilidad({
             Guardar
           </Button>
         </Popconfirm>
+        <Button
+          icon={<UndoOutlined />}
+          size="large"
+          onClick={() => setValue(cantidadMaxima)}
+          disabled={value === cantidadMaxima}
+        />
       </div>
     </Card>
   );

@@ -15,7 +15,7 @@ function App() {
   };
   return (
     <div
-      className="flex flex-col p-2 md:p-6 bg-transparent w-full overflow-auto text-slate-600"
+      className="flex flex-col p-2 md:p-6 bg-transparent w-full overflow-auto text-neutral-700"
       style={{
         height: window.innerHeight - 50,
       }}

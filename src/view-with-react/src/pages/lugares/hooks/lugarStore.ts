@@ -1,23 +1,22 @@
 import { create } from "zustand";
 
-type Modo = "edicion" | "nuevo" | "guardando";
-
 interface useLugarProps {
-  modo: Modo;
+  estaGuardando: boolean;
   lugarSeleccionado?: number;
   anpId?: number;
   tab: number | string;
-  setModo: (modo: Modo) => void;
-  setLugar: (lugar: any) => void;
+  setGuardando: (guardando: boolean) => void;
+  setLugarSeleccionado: (lugar: any) => void;
   setTab: (tab: number | string) => void;
   setAnpId: (id: number) => void;
 }
 export const useLugarStore = create<useLugarProps>()((set) => ({
-  modo: "nuevo",
+  estaGuardando: false,
   lugarSeleccionado: undefined,
   tab: "1",
   setAnpId: (id) => set(() => ({ anpId: id })),
-  setModo: (modo) => set(() => ({ modo: modo })),
-  setLugar: (lugar) => set(() => ({ lugarSeleccionado: lugar })),
+  setGuardando: (estaGuardando) =>
+    set(() => ({ estaGuardando: estaGuardando })),
+  setLugarSeleccionado: (lugar) => set(() => ({ lugarSeleccionado: lugar })),
   setTab: (tab) => set(() => ({ tab: tab })),
 }));

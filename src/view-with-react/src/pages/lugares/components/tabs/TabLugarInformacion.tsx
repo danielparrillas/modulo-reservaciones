@@ -33,35 +33,34 @@ interface Lugar {
   activo?: boolean;
 }
 
-interface TabLugarInformacionProps {
-  lugarId?: number;
-}
-
-export default function TabLugarInformacion({
-  lugarId,
-}: TabLugarInformacionProps) {
+export default function TabLugarInformacion() {
   const { height } = useAppStore();
-  const { tab, modo, setModo } = useLugarStore();
+  const {
+    tab,
+    lugarSeleccionado,
+    estaGuardando,
+    setGuardando,
+    setLugarSeleccionado,
+  } = useLugarStore();
   const [lugar, setLugar] = useState<Lugar>({
     activo: true,
     permiteAcampar: false,
   });
-
   //Se mandara a llamar cada vez que se seleccione un lugar o se cambie de tab
   useEffect(() => {
-    if (!!lugarId) getLugar(lugarId);
-  }, [lugarId, tab]);
+    if (!!lugarSeleccionado) {
+      getLugar(lugarSeleccionado);
+    }
+  }, [lugarSeleccionado, tab]);
 
   const handleConfirmSave = () => {
-    setModo("guardando");
-
+    // setGuardando(true);
     guardar();
   };
   const guardar = async () => {
-    setModo("guardando");
-    if (!!lugarId) {
+    if (!!lugarSeleccionado) {
       axios
-        .put(`/reservaciones/app/services/lugares/${lugarId}`, {
+        .put(`/reservaciones/app/services/lugares/${lugarSeleccionado}`, {
           nombre: lugar.nombre,
           permiteAcampar: lugar.permiteAcampar,
           activo: lugar.activo,
@@ -69,6 +68,7 @@ export default function TabLugarInformacion({
         .then(() => {
           // console.log(response); //👀 cambiar ".then((response) => {"
           notification.success({ message: "Lugar guardado" });
+          setGuardando(false);
         })
         .catch((error) => {
           console.error(error);
@@ -86,8 +86,7 @@ export default function TabLugarInformacion({
               </Collapse>
             ),
           });
-        })
-        .finally(() => setModo(!!lugarId ? "edicion" : "nuevo"));
+        });
     } else {
       axios
         .post("/reservaciones/app/services/lugares/", {
@@ -95,9 +94,10 @@ export default function TabLugarInformacion({
           permiteAcampar: lugar.permiteAcampar,
           activo: lugar.activo,
         })
-        .then(() => {
-          // console.log(response); //👀 cambiar a .then((response) => {
-          // navigate(`/reservaciones/views/lugares/${response.data.data.id}`); //⚠️⚠️
+        .then((response) => {
+          console.log(response.data.id); //👀 cambiar a .then((response) => {
+          setGuardando(false);
+          setLugarSeleccionado(response.data.id);
           Modal.success({ title: "Nuevo lugar creado" });
         })
         .catch((error) => {
@@ -116,8 +116,7 @@ export default function TabLugarInformacion({
               </Collapse>
             ),
           });
-        })
-        .finally(() => setModo(!!lugarId ? "edicion" : "nuevo"));
+        });
     }
   };
 
@@ -125,7 +124,7 @@ export default function TabLugarInformacion({
     await axios
       .get(`/reservaciones/app/services/lugares/${id}`)
       .then((response) => {
-        // console.log(response); //👀
+        console.log(response); //👀
         setLugar(response.data.data);
       })
       .catch((error) => {
@@ -140,20 +139,20 @@ export default function TabLugarInformacion({
   return (
     <form
       onSubmit={(e) => e.preventDefault()}
-      className="text-slate-600 flex flex-col"
+      className="text-neutral-600 flex flex-col"
     >
-      <div className="col-span-5 text-center p-4">
-        {modo === "edicion" ? (
+      <div className="col-span-5 p-4">
+        {!!lugarSeleccionado ? (
           <h2>
-            <EditFilled /> Editar lugar turístico
+            Editar lugar turístico <EditFilled />
           </h2>
-        ) : modo === "nuevo" ? (
+        ) : !lugarSeleccionado ? (
           <h2>
-            <PlusOutlined /> Nuevo lugar turístico
+            Nuevo lugar turístico <PlusOutlined />
           </h2>
         ) : (
           <h2 className="animate-pulse">
-            <LoadingOutlined /> Guardando lugar turístico
+            Guardando lugar turístico <LoadingOutlined />
           </h2>
         )}
       </div>
@@ -170,7 +169,7 @@ export default function TabLugarInformacion({
           <Input
             placeholder="nombre del lugar..."
             className="w-full"
-            disabled={modo === "guardando"}
+            disabled={estaGuardando}
             value={lugar.nombre}
             onChange={(e) => setLugar({ ...lugar, nombre: e.target.value })}
             required
@@ -196,7 +195,7 @@ export default function TabLugarInformacion({
         </div>
         <div className="col-span-3 flex items-center">
           <Checkbox
-            disabled={modo === "guardando"}
+            disabled={estaGuardando}
             checked={lugar.permiteAcampar}
             onChange={(e) =>
               setLugar({ ...lugar, permiteAcampar: e.target.checked })
@@ -210,7 +209,7 @@ export default function TabLugarInformacion({
         <div className="col-span-3 flex items-center">
           <Switch
             defaultChecked
-            disabled={modo === "guardando"}
+            disabled={estaGuardando}
             checked={lugar.activo}
             onChange={(checked) => setLugar({ ...lugar, activo: checked })}
           />
@@ -220,7 +219,7 @@ export default function TabLugarInformacion({
         <Popconfirm
           title={"Confirmación"}
           description={
-            modo === "edicion"
+            !!lugarSeleccionado
               ? "¿Desea guardar los nuevos cambios para este lugar?"
               : "¿Desea crear un nuevo lugar?"
           }
@@ -233,12 +232,12 @@ export default function TabLugarInformacion({
             type="primary"
             icon={<SaveFilled />}
             size="large"
-            loading={modo === "guardando"}
+            loading={estaGuardando}
             disabled={!lugar.nombre?.trim()}
           >
-            {modo === "guardando"
+            {estaGuardando
               ? "Guardando"
-              : modo === "edicion"
+              : !!lugarSeleccionado
               ? "Guardar"
               : "Crear"}
           </Button>

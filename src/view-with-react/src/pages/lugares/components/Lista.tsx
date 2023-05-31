@@ -69,7 +69,7 @@ const columns: ColumnsType<any> = [
 
 export default function Lista() {
   const [lugares, setLugares] = useState<Lugar[]>([]);
-  const { setLugar } = useLugarStore();
+  const { setLugarSeleccionado } = useLugarStore();
   const { setVista } = useAppStore();
 
   useEffect(() => {
@@ -110,7 +110,10 @@ export default function Lista() {
         <Button
           type="primary"
           icon={<PlusOutlined />}
-          // onClick={() => navigate("nuevo")} //⚠️⚠️⚠️
+          onClick={() => {
+            setVista("detalle");
+            setLugarSeleccionado(undefined);
+          }} //⚠️⚠️⚠️
         >
           Agregar nuevo
         </Button>
@@ -131,7 +134,7 @@ export default function Lista() {
                   className="w-full hover:text-blue-500"
                   onClick={() => {
                     setVista("detalle");
-                    setLugar(record.id);
+                    setLugarSeleccionado(record.id);
                   }}
                 />
               ),

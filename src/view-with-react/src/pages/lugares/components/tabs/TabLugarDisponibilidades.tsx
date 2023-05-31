@@ -82,8 +82,8 @@ export default function TabLugarDisponibilidades({
   };
 
   return (
-    <div className="gap-4 md:p-4 text-slate-600">
-      <h2 className="text-center  mb-6">Disponibilidades</h2>
+    <div className="gap-4 md:p-4 text-neutral-600">
+      <h2 className="mb-6">Disponibilidades</h2>
       <p>
         Indica la cantidad maxima diaria de estos servicios. Esta cantidad será
         utilizada en el sistema para validar las reservaciones.
@@ -91,7 +91,7 @@ export default function TabLugarDisponibilidades({
       <form className="flex gap-2"></form>
       <Divider className="col-span-5" />
       <section
-        className="grid grid-cols-1 lg:grid-cols-2 gap-4 overflow-auto"
+        className="grid grid-cols-1 xl:grid-cols-2 gap-4 overflow-auto"
         style={{ height: window.innerHeight - 400 }}
       >
         {disponibilidades.map((grupo) => (

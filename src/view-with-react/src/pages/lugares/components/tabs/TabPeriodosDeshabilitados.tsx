@@ -49,7 +49,7 @@ export default function TabPeriodosDeshabilitados({
   lugarId,
 }: TabPeriodosDeshabilitadosProps) {
   const [range, setRange] = useState<RangePickerProps["value"]>();
-  const { modo, setModo } = useLugarStore();
+  const { estaGuardando, setGuardando } = useLugarStore();
   const [periodos, setPeriodos] = useState<PeriodoDeshabilitados[]>([]);
   useEffect(() => {
     getAllPeriodosDeshabilitados();
@@ -106,7 +106,7 @@ export default function TabPeriodosDeshabilitados({
       });
   };
   const guardarPeriodoDeshabilitado = async () => {
-    setModo("guardando");
+    setGuardando(true);
     if (!!range) {
       if (!!range[0] && !!range[1]) {
         await axios
@@ -131,12 +131,12 @@ export default function TabPeriodosDeshabilitados({
           });
       } else message.warning("Debe indicar el rango");
     } else message.warning("Debe indicar el rango");
-    setModo("edicion");
+    setGuardando(false);
   };
 
   return (
-    <div className="gap-4 md:p-4 text-slate-600">
-      <h2 className="text-center  mb-6">Periodos deshabilitados</h2>
+    <div className="gap-4 md:p-4 text-neutral-600">
+      <h2 className="mb-6">Periodos deshabilitados</h2>
       <p>
         Agrega o quita periodos en el que lugar turístico estara cerrado las
         visitas de turístas
@@ -146,7 +146,7 @@ export default function TabPeriodosDeshabilitados({
           value={range}
           onChange={handleChangeRangePicker}
           locale={locale}
-          disabled={modo === "guardando"}
+          disabled={estaGuardando}
         />
         <Popconfirm
           title="Agregar periodo deshabilitado"
@@ -154,13 +154,13 @@ export default function TabPeriodosDeshabilitados({
           onConfirm={confirm}
           okText="Si"
           cancelText="No"
-          disabled={!range || modo === "guardando"}
+          disabled={!range || estaGuardando}
         >
           <Button
             icon={<PlusOutlined />}
             type="primary"
             disabled={!range}
-            loading={modo === "guardando"}
+            loading={estaGuardando}
           ></Button>
         </Popconfirm>
       </form>

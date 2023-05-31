@@ -22,9 +22,7 @@ class Lugar
       $stmt->bindParam(':activo', $data['activo'], PDO::PARAM_BOOL);
       $stmt->execute();
 
-      $result["data"] = [
-        "id" => (int) $conn->lastInsertId(),
-      ];
+      $result["id"] = (int) $conn->lastInsertId();
     } catch (Exception $e) {
       $conn = null;
       $result["error"]["message"] = $e->getMessage();

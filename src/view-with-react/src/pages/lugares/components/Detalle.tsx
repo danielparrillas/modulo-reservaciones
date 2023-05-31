@@ -2,7 +2,6 @@
 import { UnorderedListOutlined } from "@ant-design/icons";
 import { Button, Tabs, Empty } from "antd";
 // 🌐 Librerias de terceros
-import { useEffect, useState } from "react";
 // 😁 Componentes y funciones propias
 import { useAppStore } from "../hooks/appStore";
 import { useLugarStore } from "../hooks/lugarStore";
@@ -12,17 +11,8 @@ import TabPeriodosDeshabilitados from "./tabs/TabPeriodosDeshabilitados";
 
 export default function Detalle() {
   const { setVista, width } = useAppStore();
-  const { modo, setModo } = useLugarStore();
-  const [lugarId, setLugarId] = useState<number>();
-  const { lugarSeleccionado, setTab } = useLugarStore();
-
-  useEffect(() => {
-    if (!lugarSeleccionado) setModo("nuevo");
-    else {
-      setLugarId(lugarSeleccionado);
-      setModo("edicion");
-    }
-  }, [lugarSeleccionado]);
+  const {} = useLugarStore();
+  const { lugarSeleccionado, estaGuardando, setTab } = useLugarStore();
 
   return (
     <div className=" flex flex-col gap-4 h-full">
@@ -32,7 +22,7 @@ export default function Detalle() {
           type="default"
           icon={<UnorderedListOutlined />}
           onClick={() => setVista("lista")}
-          disabled={modo === "guardando"}
+          disabled={estaGuardando}
         >
           Ver todos los lugares
         </Button>
@@ -44,30 +34,32 @@ export default function Detalle() {
           {
             key: "1",
             label: `Información`,
-            children: <TabLugarInformacion lugarId={lugarId} />,
-            disabled: modo === "guardando",
+            children: <TabLugarInformacion />,
+            disabled: estaGuardando,
           },
           {
             key: "2",
             label: `Disponibilidades`,
             children:
-              lugarId !== undefined ? (
-                <TabLugarDisponibilidades lugarId={lugarId} />
+              lugarSeleccionado !== undefined ? (
+                <TabLugarDisponibilidades lugarId={lugarSeleccionado} />
               ) : (
                 <Empty />
               ),
-            disabled: modo === "nuevo" || modo === "guardando",
+            // disabled: modo === "nuevo" || modo === "guardando",
+            disabled: !lugarSeleccionado || estaGuardando,
           },
           {
             key: "3",
             label: `Periodos inactivos`,
             children:
-              lugarId !== undefined ? (
-                <TabPeriodosDeshabilitados lugarId={lugarId} />
+              lugarSeleccionado !== undefined ? (
+                <TabPeriodosDeshabilitados lugarId={lugarSeleccionado} />
               ) : (
                 <Empty />
               ),
-            disabled: modo === "nuevo" || modo === "guardando",
+            // disabled: modo === "nuevo" || modo === "guardando",
+            disabled: !lugarSeleccionado || estaGuardando,
           },
         ]}
         className="bg-white p-4 rounded-md h-full overflow-auto"
