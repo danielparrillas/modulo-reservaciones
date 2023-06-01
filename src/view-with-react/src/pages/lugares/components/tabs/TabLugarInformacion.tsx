@@ -34,7 +34,6 @@ interface Lugar {
 export default function TabLugarInformacion() {
   const { height } = useAppStore();
   const {
-    tab,
     lugarSeleccionado,
     estaGuardando,
     setGuardando,
@@ -44,12 +43,13 @@ export default function TabLugarInformacion() {
     activo: true,
     permiteAcampar: false,
   });
+  const [lugarCurrent, setLugarCurrent] = useState<Lugar>(lugar);
   //Se mandara a llamar cada vez que se seleccione un lugar o se cambie de tab
   useEffect(() => {
     if (!!lugarSeleccionado) {
       getLugar(lugarSeleccionado);
     }
-  }, [lugarSeleccionado, tab]);
+  }, [lugarSeleccionado]);
 
   const handleConfirmSave = () => {
     // setGuardando(true);
@@ -67,6 +67,7 @@ export default function TabLugarInformacion() {
           // console.log(response); //👀 cambiar ".then((response) => {"
           notification.success({ message: "Lugar guardado" });
           setGuardando(false);
+          setLugarCurrent(lugar);
         })
         .catch((error) => {
           console.error(error);
@@ -96,6 +97,7 @@ export default function TabLugarInformacion() {
           console.log(response.data.id); //👀 cambiar a .then((response) => {
           setGuardando(false);
           setLugarSeleccionado(response.data.id);
+          setLugarCurrent(lugar);
           Modal.success({ title: "Nuevo lugar creado" });
         })
         .catch((error) => {
@@ -124,6 +126,7 @@ export default function TabLugarInformacion() {
       .then((response) => {
         // console.log(response); //👀
         setLugar(response.data.data);
+        setLugarCurrent(response.data.data);
       })
       .catch((error) => {
         console.error(error);
@@ -134,7 +137,7 @@ export default function TabLugarInformacion() {
       });
   };
 
-  //tour
+  //😎 tour
   const ref1 = useRef(null);
   const ref2 = useRef(null);
   const ref3 = useRef(null);
@@ -194,7 +197,7 @@ export default function TabLugarInformacion() {
         <Tooltip title={"Restablecer cambios"}>
           <Button
             icon={<UndoOutlined />}
-            // onClick={() => setValue(currentValue)}
+            onClick={() => setLugar(lugarCurrent)}
             // disabled={value === currentValue}
           />
         </Tooltip>
@@ -213,7 +216,7 @@ export default function TabLugarInformacion() {
         style={{ height: height - 330 }}
       >
         <div className="col-span-1 flex items-center">
-          <label className="font-bold">Nombre</label>
+          <label>Nombre</label>
         </div>
         <div className="col-span-4 flex items-center" ref={ref1}>
           <Input
@@ -226,20 +229,20 @@ export default function TabLugarInformacion() {
           />
         </div>
         <div className="col-span-1 flex items-center">
-          <label className="font-bold">ANP</label>
+          <label>ANP</label>
         </div>
         <div className="col-span-4 flex items-center" ref={ref2}>
           <SelectAnp />
         </div>
         <div className="col-span-1 flex items-center">
-          <label className="font-bold">Descripción</label>
+          <label>Descripción</label>
           <p></p>
         </div>
         <div className="col-span-4 flex items-center" ref={ref3}>
           <TextArea maxLength={500} showCount className="mb-7 w-full" />
         </div>
         <div className="col-span-1 flex items-center">
-          <label className="font-bold">Permite acampar</label>
+          <label>Permite acampar</label>
         </div>
         <div className="col-span-4 flex items-center" ref={ref4}>
           <Checkbox
@@ -251,7 +254,7 @@ export default function TabLugarInformacion() {
           />
         </div>
         <div className="col-span-1 flex items-center">
-          <label className="font-bold">Activo</label>
+          <label>Activo</label>
         </div>
         <div className="col-span-4 flex items-center" ref={ref5}>
           <Switch
@@ -280,7 +283,7 @@ export default function TabLugarInformacion() {
             icon={<SaveFilled />}
             size="large"
             loading={estaGuardando}
-            disabled={!lugar.nombre?.trim()}
+            disabled={!lugar.nombre?.trim() || lugarCurrent === lugar}
           >
             {estaGuardando
               ? "Guardando"

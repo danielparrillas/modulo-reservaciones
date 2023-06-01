@@ -50,6 +50,12 @@ export default function Detalle() {
             disabled: !lugarSeleccionado || estaGuardando,
           },
           {
+            key: "4",
+            label: `Servicios`,
+            children: "Hola",
+            disabled: !lugarSeleccionado || estaGuardando,
+          },
+          {
             key: "3",
             label: `Periodos inactivos`,
             children:
