@@ -39,12 +39,9 @@ export default function FormDisponibilidad({
   };
   const guardar = async () => {
     await axios
-      .put(
-        `/reservaciones/app/services/lugares/${lugarId}/disponibilidades/${id}`,
-        {
-          cantidadMaxima: value,
-        }
-      )
+      .put(`/reservaciones/api/lugares/${lugarId}/disponibilidades/${id}`, {
+        cantidadMaxima: value,
+      })
       .then(() => {
         // console.log(response); //👀 cambiar ".then((response) => {"
         notification.success({ message: `${nombre} disponibilidad guardada` });

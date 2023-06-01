@@ -2,7 +2,7 @@
 include_once(dirname(__DIR__) .  '/../config/index.php');
 include_once($PATH_CONTROLADORES . 'DisponibilidadController.php');
 
-$uri = explode("/", explode("reservaciones/app/services/disponibilidades/", $_SERVER["REQUEST_URI"])[1]);
+$uri = explode("/", explode("api/disponibilidades/", $_SERVER["REQUEST_URI"])[1]);
 
 // se instancia un objeto que pueda manejar la solicitudes del cliente
 $controller = new DisponbilidadController($DB_RESERVACIONES);

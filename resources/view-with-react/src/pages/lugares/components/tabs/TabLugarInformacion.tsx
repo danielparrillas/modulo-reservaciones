@@ -58,7 +58,7 @@ export default function TabLugarInformacion() {
   const guardar = async () => {
     if (!!lugarSeleccionado) {
       axios
-        .put(`/reservaciones/app/services/lugares/${lugarSeleccionado}`, {
+        .put(`/reservaciones/api/lugares/${lugarSeleccionado}`, {
           nombre: lugar.nombre,
           permiteAcampar: lugar.permiteAcampar,
           activo: lugar.activo,
@@ -88,7 +88,7 @@ export default function TabLugarInformacion() {
         });
     } else {
       axios
-        .post("/reservaciones/app/services/lugares/", {
+        .post("/reservaciones/api/lugares/", {
           nombre: lugar.nombre,
           permiteAcampar: lugar.permiteAcampar,
           activo: lugar.activo,
@@ -122,7 +122,7 @@ export default function TabLugarInformacion() {
 
   const getLugar = async (id: number) => {
     await axios
-      .get(`/reservaciones/app/services/lugares/${id}`)
+      .get(`/reservaciones/api/lugares/${id}`)
       .then((response) => {
         // console.log(response); //👀
         setLugar(response.data.data);

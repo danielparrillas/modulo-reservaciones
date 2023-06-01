@@ -56,7 +56,7 @@ export default function TabLugarDisponibilidades({
   const getDisponibilidades = async () => {
     let disponibilidades: any[] = [];
     await axios
-      .get("/reservaciones/app/services/disponibilidades")
+      .get("/reservaciones/api/disponibilidades")
       .then(async (response) => {
         // console.log(response); //👀
         disponibilidades = response.data;
@@ -70,7 +70,7 @@ export default function TabLugarDisponibilidades({
   const getDisponibilidadesDelLugar = async () => {
     let disponibilidadesDelLugar: any[] = [];
     await axios
-      .get(`/reservaciones/app/services/lugares/${lugarId}/disponibilidades`)
+      .get(`/reservaciones/api/lugares/${lugarId}/disponibilidades`)
       .then((response) => {
         // console.log(response); //👀
         disponibilidadesDelLugar = response.data;

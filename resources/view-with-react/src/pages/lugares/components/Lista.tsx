@@ -78,7 +78,7 @@ export default function Lista() {
 
   const getLugares = async () => {
     await axios
-      .get("/reservaciones/app/services/lugares")
+      .get("/reservaciones/api/lugares")
       .then((response) => {
         // console.log(response); //👀
         setLugares(convertirDataLugares(response.data.data));
