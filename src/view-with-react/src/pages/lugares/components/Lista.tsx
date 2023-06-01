@@ -35,7 +35,7 @@ const columns: ColumnsType<any> = [
     dataIndex: "acampar",
     key: "acampar",
     responsive: ["md"],
-    width: 200,
+    width: 150,
     render: (permitido: boolean) => {
       if (permitido) {
         return <Tag color="processing">Permitido</Tag>;
@@ -48,7 +48,7 @@ const columns: ColumnsType<any> = [
     title: "Activo",
     dataIndex: "activo",
     key: "activo",
-    width: 200,
+    width: 150,
     render: (estado: boolean) => {
       if (estado) {
         return (
@@ -128,7 +128,7 @@ export default function Lista() {
               dataIndex: "id",
               key: "actions",
               align: "center",
-              width: 100,
+              width: 70,
               render: (_, record) => (
                 <ArrowRightOutlined
                   className="w-full hover:text-blue-500"

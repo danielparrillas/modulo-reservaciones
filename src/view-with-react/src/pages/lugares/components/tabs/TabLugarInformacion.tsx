@@ -124,7 +124,7 @@ export default function TabLugarInformacion() {
     await axios
       .get(`/reservaciones/app/services/lugares/${id}`)
       .then((response) => {
-        console.log(response); //👀
+        // console.log(response); //👀
         setLugar(response.data.data);
       })
       .catch((error) => {

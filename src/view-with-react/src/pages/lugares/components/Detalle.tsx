@@ -64,7 +64,7 @@ export default function Detalle() {
         ]}
         className="bg-white p-4 rounded-md h-full overflow-auto"
         onChange={(key) => {
-          console.log(key);
+          // console.log(key);
           setTab(key);
         }}
       />

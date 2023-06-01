@@ -12,9 +12,8 @@ import {
 const { Panel } = Collapse;
 // 🌐 Librerias de terceros
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 // 😁 Componentes y funciones propias
-import { useLugarStore } from "../../hooks/lugarStore";
 
 interface FormDisponibilidadProps {
   id: number;
@@ -29,9 +28,11 @@ export default function FormDisponibilidad({
   lugarId,
 }: FormDisponibilidadProps) {
   const [value, setValue] = useState<null | undefined | number>(cantidadMaxima);
-  const { tab, estaGuardando, setGuardando } = useLugarStore();
+  const [isSaving, setGuardando] = useState(false);
+  const [currentValue, setCurrentValue] = useState<null | undefined | number>(
+    cantidadMaxima
+  );
   // console.log(id, nombre, cantidad, lugarId); //👀
-  useEffect(() => {}, [tab]);
   const handleConfirmSave = () => {
     setGuardando(true);
     guardar();
@@ -44,10 +45,11 @@ export default function FormDisponibilidad({
           cantidadMaxima: value,
         }
       )
-      .then(() => {
+      .then((response) => {
         // console.log(response); //👀 cambiar ".then((response) => {"
         notification.success({ message: `${nombre} disponibilidad guardada` });
         setGuardando(false);
+        setCurrentValue(value);
       })
       .catch((error) => {
         console.error(error);
@@ -76,7 +78,7 @@ export default function FormDisponibilidad({
           className="w-60"
           placeholder="Digita un número"
           value={value}
-          disabled={estaGuardando}
+          disabled={isSaving}
           onChange={(value) => setValue(value)}
         />
         <Popconfirm
@@ -86,16 +88,16 @@ export default function FormDisponibilidad({
           okText="Si"
           cancelText="No"
           disabled={
-            value === undefined || value === null || value === cantidadMaxima
+            value === undefined || value === null || value === currentValue
           }
         >
           <Button
             type="primary"
             size="large"
             icon={<SaveFilled />}
-            loading={estaGuardando}
+            loading={isSaving}
             disabled={
-              value === undefined || value === null || value === cantidadMaxima
+              value === undefined || value === null || value === currentValue
             }
           >
             Guardar
@@ -104,8 +106,8 @@ export default function FormDisponibilidad({
         <Button
           icon={<UndoOutlined />}
           size="large"
-          onClick={() => setValue(cantidadMaxima)}
-          disabled={value === cantidadMaxima}
+          onClick={() => setValue(currentValue)}
+          disabled={value === currentValue}
         />
       </div>
     </Card>
