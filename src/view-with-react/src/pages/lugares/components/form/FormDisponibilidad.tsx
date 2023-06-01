@@ -45,7 +45,7 @@ export default function FormDisponibilidad({
           cantidadMaxima: value,
         }
       )
-      .then((response) => {
+      .then(() => {
         // console.log(response); //👀 cambiar ".then((response) => {"
         notification.success({ message: `${nombre} disponibilidad guardada` });
         setGuardando(false);

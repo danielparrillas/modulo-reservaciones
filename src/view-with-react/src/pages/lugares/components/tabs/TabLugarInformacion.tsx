@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 // 🖌️ AntDesign
 import {
   Input,
@@ -10,13 +10,11 @@ import {
   Modal,
   Collapse,
   notification,
+  Tooltip,
+  Tour,
 } from "antd";
-import {
-  SaveFilled,
-  PlusOutlined,
-  LoadingOutlined,
-  EditFilled,
-} from "@ant-design/icons";
+import type { TourProps } from "antd";
+import { SaveFilled, UndoOutlined, QuestionOutlined } from "@ant-design/icons";
 const { Panel } = Collapse;
 // 🌐 Librerias de terceros
 import axios from "axios";
@@ -136,36 +134,88 @@ export default function TabLugarInformacion() {
       });
   };
 
+  //tour
+  const ref1 = useRef(null);
+  const ref2 = useRef(null);
+  const ref3 = useRef(null);
+  const ref4 = useRef(null);
+  const ref5 = useRef(null);
+  const ref6 = useRef(null);
+  const [openTour, setOpenTour] = useState<boolean>(false);
+  const steps: TourProps["steps"] = [
+    {
+      title: "Escribe el nombre del lugar turistico",
+      description:
+        "Utilizado para identificar el lugar. Posiblemente tenga el mismo nombre que la ANP a la que pertenece.",
+      target: () => ref1.current,
+    },
+    {
+      title: "Selecciona la ANP",
+      description:
+        "Puedes escribir para filtrar la Área protegida en la que se encuentra el lugar.",
+      target: () => ref2.current,
+    },
+    {
+      title: "Agrega una descripción",
+      description: "Este es un campo abierto.",
+      target: () => ref3.current,
+    },
+    {
+      title: "Marca si se puede acampar",
+      description:
+        "Esto indica a los turistas si pueden quedarse mas de un día en el lugar.",
+      target: () => ref4.current,
+    },
+    {
+      title: "Indica si el lugar esta disponible a visitas",
+      description:
+        "Puedes activar o desactivar para indicarle al turista si este lugar esta abierto a visitas.",
+      target: () => ref5.current,
+    },
+    {
+      title: "Guarda los cambios",
+      target: () => ref6.current,
+    },
+  ];
+
   return (
     <form
       onSubmit={(e) => e.preventDefault()}
       className="text-neutral-600 flex flex-col"
     >
-      <div className="col-span-5 p-4">
+      <div className="col-span-5 p-4 flex gap-4">
         {!!lugarSeleccionado ? (
-          <h2>
-            Editar lugar turístico <EditFilled />
-          </h2>
+          <h2>Editar lugar turístico</h2>
         ) : !lugarSeleccionado ? (
-          <h2>
-            Nuevo lugar turístico <PlusOutlined />
-          </h2>
+          <h2>Nuevo lugar turístico</h2>
         ) : (
-          <h2 className="animate-pulse">
-            Guardando lugar turístico <LoadingOutlined />
-          </h2>
+          <h2 className="animate-pulse">Guardando lugar turístico</h2>
         )}
+        <Tooltip title={"Restablecer cambios"}>
+          <Button
+            icon={<UndoOutlined />}
+            // onClick={() => setValue(currentValue)}
+            // disabled={value === currentValue}
+          />
+        </Tooltip>
+        <Tooltip title={"Realizar tour de ayuda"}>
+          <Button
+            icon={<QuestionOutlined />}
+            onClick={() => setOpenTour(true)}
+            // onClick={() => setValue(currentValue)}
+            // disabled={value === currentValue}
+          />
+        </Tooltip>
       </div>
       <Divider className="m-0 pb-2" />
       <div
-        className="grid grid-cols-5 overflow-auto px-4"
-        style={{ height: height - 300 }}
+        className="grid grid-cols-5 overflow-auto px-4 gap-2"
+        style={{ height: height - 330 }}
       >
-        <div className="col-span-2">
+        <div className="col-span-1 flex items-center">
           <label className="font-bold">Nombre</label>
-          <p>Utilizado para identificar el lugar</p>
         </div>
-        <div className="col-span-3 flex items-center">
+        <div className="col-span-4 flex items-center" ref={ref1}>
           <Input
             placeholder="nombre del lugar..."
             className="w-full"
@@ -175,25 +225,23 @@ export default function TabLugarInformacion() {
             required
           />
         </div>
-        <div className="col-span-2">
+        <div className="col-span-1 flex items-center">
           <label className="font-bold">ANP</label>
-          <p>Área protegida en la que se encuentra</p>
         </div>
-        <div className="col-span-3 flex items-center">
+        <div className="col-span-4 flex items-center" ref={ref2}>
           <SelectAnp />
         </div>
-        <div className="col-span-2">
+        <div className="col-span-1 flex items-center">
           <label className="font-bold">Descripción</label>
           <p></p>
         </div>
-        <div className="col-span-3 flex items-center">
+        <div className="col-span-4 flex items-center" ref={ref3}>
           <TextArea maxLength={500} showCount className="mb-7 w-full" />
         </div>
-        <div className="col-span-2">
+        <div className="col-span-1 flex items-center">
           <label className="font-bold">Permite acampar</label>
-          <p>Los turistas podrán quedarse mas de un día en el lugar</p>
         </div>
-        <div className="col-span-3 flex items-center">
+        <div className="col-span-4 flex items-center" ref={ref4}>
           <Checkbox
             disabled={estaGuardando}
             checked={lugar.permiteAcampar}
@@ -202,11 +250,10 @@ export default function TabLugarInformacion() {
             }
           />
         </div>
-        <div className="col-span-2">
+        <div className="col-span-1 flex items-center">
           <label className="font-bold">Activo</label>
-          <p>Permite recibir visitas de turistas</p>
         </div>
-        <div className="col-span-3 flex items-center">
+        <div className="col-span-4 flex items-center" ref={ref5}>
           <Switch
             defaultChecked
             disabled={estaGuardando}
@@ -215,7 +262,7 @@ export default function TabLugarInformacion() {
           />
         </div>
       </div>
-      <div className="col-span-5 flex justify-end">
+      <div className="col-span-5 flex justify-end" ref={ref6}>
         <Popconfirm
           title={"Confirmación"}
           description={
@@ -243,6 +290,7 @@ export default function TabLugarInformacion() {
           </Button>
         </Popconfirm>
       </div>
+      <Tour open={openTour} onClose={() => setOpenTour(false)} steps={steps} />
     </form>
   );
 }
