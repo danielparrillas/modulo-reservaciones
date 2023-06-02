@@ -10,8 +10,9 @@ import { ColumnsType } from "antd/es/table";
 // 🌐 Librerias de terceros
 import { useEffect, useState } from "react";
 import axios from "axios";
-
 // 😁 Componentes y funciones propias
+import { dollarString } from "../../../utils/formats";
+
 interface Servicio {
   nombre: string;
   descripcion: string;
@@ -50,24 +51,37 @@ export default function TableServicios({ onClickRow }: TableServiciosProps) {
       dataIndex: "nombre",
       key: "servicio",
       className: "w-10",
+      showSorterTooltip: { title: "Click para ordenar" },
       sorter: (a, b) => a.nombre.localeCompare(b.nombre),
+    },
+    {
+      title: "Descripión",
+      dataIndex: "descripcion",
+      key: "descripcion",
+      responsive: ["sm"],
     },
     {
       title: "Precio",
       dataIndex: "precio",
       key: "precio",
-      width: 150,
-      sorter: (a, b) => a.nombre.localeCompare(b.nombre),
+      width: 100,
+      showSorterTooltip: { title: "Click para ordenar" },
+      sorter: (a, b) => a.precio - b.precio,
+      render: (precio: number) => (
+        <Tag color="green-inverse" className="font-bold">
+          {dollarString.format(precio)}
+        </Tag>
+      ),
     },
     {
       title: "Activo",
       dataIndex: "eliminado",
       key: "eliminado",
-      width: 150,
+      width: 130,
       render: (eliminado: boolean) => {
         if (!eliminado) {
           return (
-            <Tag icon={<CheckCircleOutlined />} color="success">
+            <Tag icon={<CheckCircleOutlined />} color="blue">
               Activo
             </Tag>
           );
