@@ -8,6 +8,7 @@ import { useLugarStore } from "../hooks/lugarStore";
 import TabLugarInformacion from "./tabs/TabLugarInformacion";
 import TabLugarDisponibilidades from "./tabs/TabLugarDisponibilidades";
 import TabPeriodosDeshabilitados from "./tabs/TabPeriodosDeshabilitados";
+// import TabServicios from "./tabs/TabServicios";
 
 export default function Detalle() {
   const { setVista, width } = useAppStore();
@@ -47,12 +48,6 @@ export default function Detalle() {
                 <Empty />
               ),
             // disabled: modo === "nuevo" || modo === "guardando",
-            disabled: !lugarSeleccionado || estaGuardando,
-          },
-          {
-            key: "4",
-            label: `Servicios`,
-            children: "Hola",
             disabled: !lugarSeleccionado || estaGuardando,
           },
           {

@@ -30,7 +30,7 @@ define("CONFIGURACION", $config_data);
 include_once(dirname(__DIR__) . '/utils/Database.php');
 
 // 3️⃣.1️⃣cambia la base de datos a conveniencia
-$database = "dev-local"; //dev-marn || dev-local || produccion
+$database = "dev-marn"; //dev-marn || dev-local || produccion
 $DB_RESERVACIONES = new Database(
   CONFIGURACION["databases"][$database]['host'],
   CONFIGURACION["databases"][$database]['name'],

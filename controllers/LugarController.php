@@ -29,6 +29,18 @@ class LugarController
     } else {
       $result["error"]["details"][] = "Debe enviarse el nombre";
     }
+    //📝 validacion de descripcion
+    if (isset($data["descripcion"])) {
+      if (!is_string($data["descripcion"])) {
+        $result["error"]["details"][] = "Descripcion debe ser texto";
+      } else {
+        if (trim($data["descripcion"]) === "") {
+          $result["error"]["details"][] = "Descripcion no debe ser un texto vacío";
+        }
+      }
+    } else {
+      $result["error"]["details"][] = "Debe enviarse la descripcion";
+    }
     //📝 validacion de permite acampar
     if (isset($data["permiteAcampar"])) {
       if (!is_bool($data["permiteAcampar"])) {
@@ -101,6 +113,18 @@ class LugarController
       }
     } else {
       $data["nombre"] = $lugar["data"]["nombre"];
+    }
+    //📝 validacion de descripcion
+    if (isset($data["descripcion"])) {
+      if (!is_string($data["descripcion"])) {
+        $result["error"]["details"][] = "Descripcion debe ser texto";
+      } else {
+        if (trim($data["descripcion"]) === "") {
+          $result["error"]["details"][] = "Descripcion no debe ser un texto vacío";
+        }
+      }
+    } else {
+      $result["error"]["details"][] = "Debe enviarse la descripcion";
     }
     //📝 validacion de permite acampar
     if (isset($data["permiteAcampar"])) {

@@ -15,8 +15,8 @@
 <script src="/vista/dist/js/app.min.js"></script>
 
 <!-- ✅ Modo produccion -->
-<script type="module" crossorigin src="/reservaciones/app/views/lugares/index.js"></script>
-<link rel="stylesheet" href="/reservaciones/app/views/lugares/index.css">
+<script type="module" crossorigin src="/reservaciones/views/servicios/index.js"></script>
+<link rel="stylesheet" href="/reservaciones/views/servicios/index.css">
 
 <div id="root"></div>
 </body>

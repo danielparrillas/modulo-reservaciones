@@ -23,12 +23,15 @@ import { useLugarStore } from "../../hooks/lugarStore";
 import SelectAnp from "../form/SelectAnp";
 import { useAppStore } from "../../hooks/appStore";
 import TextArea from "antd/es/input/TextArea";
+import { isString } from "antd/es/button";
 
 interface Lugar {
   id?: number;
   nombre?: string;
   permiteAcampar?: boolean;
   activo?: boolean;
+  anpId?: number;
+  descripcion?: string;
 }
 
 export default function TabLugarInformacion() {
@@ -36,14 +39,15 @@ export default function TabLugarInformacion() {
   const {
     lugarSeleccionado,
     estaGuardando,
+    anpId,
     setGuardando,
     setLugarSeleccionado,
+    setAnpId,
   } = useLugarStore();
   const [lugar, setLugar] = useState<Lugar>({
     activo: true,
     permiteAcampar: false,
   });
-  const [lugarCurrent, setLugarCurrent] = useState<Lugar>(lugar);
   //Se mandara a llamar cada vez que se seleccione un lugar o se cambie de tab
   useEffect(() => {
     if (!!lugarSeleccionado) {
@@ -52,9 +56,27 @@ export default function TabLugarInformacion() {
   }, [lugarSeleccionado]);
 
   const handleConfirmSave = () => {
-    // setGuardando(true);
-    guardar();
+    console.log({ ...lugar, anpId }); // 👀
+    let isError = false;
+
+    if (anpId === undefined || anpId < 1) {
+      notification.error({ message: "Debe seleccionar una anp" });
+      isError = true;
+    }
+    if (!lugar.nombre?.trim()) {
+      notification.error({ message: "Debe agregar un nombre" });
+      isError = true;
+    }
+    if (isString(!lugar.descripcion)) {
+      notification.error({ message: "Debe agregar una descripcion" });
+      isError = true;
+    }
+    if (!isError) {
+      setGuardando(true);
+      guardar();
+    }
   };
+  // console.log(lugar); //👀
   const guardar = async () => {
     if (!!lugarSeleccionado) {
       axios
@@ -62,14 +84,16 @@ export default function TabLugarInformacion() {
           nombre: lugar.nombre,
           permiteAcampar: lugar.permiteAcampar,
           activo: lugar.activo,
+          anpId: anpId,
+          descripcion: lugar.descripcion,
         })
         .then(() => {
           // console.log(response); //👀 cambiar ".then((response) => {"
           notification.success({ message: "Lugar guardado" });
           setGuardando(false);
-          setLugarCurrent(lugar);
         })
         .catch((error) => {
+          setGuardando(false);
           console.error(error);
           Modal.error({
             title: error.message,
@@ -92,15 +116,17 @@ export default function TabLugarInformacion() {
           nombre: lugar.nombre,
           permiteAcampar: lugar.permiteAcampar,
           activo: lugar.activo,
+          anpId: anpId,
+          descripcion: lugar.descripcion,
         })
         .then((response) => {
           console.log(response.data.id); //👀 cambiar a .then((response) => {
           setGuardando(false);
           setLugarSeleccionado(response.data.id);
-          setLugarCurrent(lugar);
           Modal.success({ title: "Nuevo lugar creado" });
         })
         .catch((error) => {
+          setGuardando(false);
           console.error(error);
           Modal.error({
             title: error.message,
@@ -124,9 +150,9 @@ export default function TabLugarInformacion() {
     await axios
       .get(`/reservaciones/api/lugares/${id}`)
       .then((response) => {
-        // console.log(response); //👀
+        console.log(response); //👀
         setLugar(response.data.data);
-        setLugarCurrent(response.data.data);
+        setAnpId(response.data.data.anpId);
       })
       .catch((error) => {
         console.error(error);
@@ -197,8 +223,12 @@ export default function TabLugarInformacion() {
         <Tooltip title={"Restablecer cambios"}>
           <Button
             icon={<UndoOutlined />}
-            onClick={() => setLugar(lugarCurrent)}
-            // disabled={value === currentValue}
+            onClick={() =>
+              lugarSeleccionado !== undefined
+                ? getLugar(lugarSeleccionado)
+                : notification.error({ message: "Debe seleccionar un lugar" })
+            }
+            disabled={estaGuardando}
           />
         </Tooltip>
         <Tooltip title={"Realizar tour de ayuda"}>
@@ -206,7 +236,7 @@ export default function TabLugarInformacion() {
             icon={<QuestionOutlined />}
             onClick={() => setOpenTour(true)}
             // onClick={() => setValue(currentValue)}
-            // disabled={value === currentValue}
+            disabled={estaGuardando}
           />
         </Tooltip>
       </div>
@@ -239,7 +269,16 @@ export default function TabLugarInformacion() {
           <p></p>
         </div>
         <div className="col-span-4 flex items-center" ref={ref3}>
-          <TextArea maxLength={500} showCount className="mb-7 w-full" />
+          <TextArea
+            disabled={estaGuardando}
+            maxLength={500}
+            showCount
+            className="mb-7 w-full"
+            value={lugar.descripcion}
+            onChange={(e) => {
+              setLugar({ ...lugar, descripcion: e.target.value });
+            }}
+          />
         </div>
         <div className="col-span-1 flex items-center">
           <label>Permite acampar</label>
@@ -276,14 +315,14 @@ export default function TabLugarInformacion() {
           onConfirm={handleConfirmSave}
           okText="Si"
           cancelText="No"
-          disabled={!lugar.nombre?.trim()}
+          disabled={estaGuardando}
         >
           <Button
             type="primary"
             icon={<SaveFilled />}
             size="large"
             loading={estaGuardando}
-            disabled={!lugar.nombre?.trim() || lugarCurrent === lugar}
+            // disabled={lugarCurrent === lugar}
           >
             {estaGuardando
               ? "Guardando"

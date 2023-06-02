@@ -30,4 +30,29 @@ class Servicio
     $conn = null;
     return $result;
   }
+
+  public function obtenerTodos(): array
+  {
+    $result = [];
+    try {
+      $conn = $this->db->conectar();
+      $sql = "SELECT id,nombre, grupo_disponibilidad_id AS disponibilidadId,
+                      precio, eliminado, descripcion
+              FROM servicios";
+      $stmt = $conn->prepare($sql);
+      $stmt->execute();
+      while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $row['precio'] = (float) $row['precio'];
+        $row["eliminado"] = (bool)$row["eliminado"];
+        $result[] = $row;
+      }
+    } catch (Exception $e) {
+      $conn = null;
+      $result["error"]["message"] = $e->getMessage();
+      $result["error"]["details"][] = ["database" => $e];
+      $result["error"]["details"][] = ["model" => "obtenerTodos"];
+    }
+    $conn = null;
+    return $result;
+  }
 }

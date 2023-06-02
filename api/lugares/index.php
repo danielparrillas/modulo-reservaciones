@@ -29,7 +29,7 @@ if (count($uri) === 1 && $uri[0] === "") {
   switch ($_SERVER["REQUEST_METHOD"]) {
     case "POST":
       //⚠️ Por falta de integracion con la base de munipios y anp se agregaran valores por default
-      $result = $controller->crear(array_merge($request, ["anpId" => 0, "municipioId" => 0]));
+      $result = $controller->crear(array_merge($request, ["municipioId" => 0]));
       break;
     case "GET":
       $result = $controller->obtenerTodos();

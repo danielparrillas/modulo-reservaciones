@@ -12,12 +12,13 @@ class Lugar
     try {
       $conn = $this->db->conectar();
       $sql = "INSERT INTO lugares_turisticos
-                (anp_id, municipio_id, nombre, permite_acampar, activo)
-              VALUES (:anp, :mun, :nom, :pa, :activo)";
+                (anp_id, municipio_id, nombre, permite_acampar, activo, descripcion)
+              VALUES (:anp, :mun, :nom, :pa, :activo, :descripcion)";
       $stmt = $conn->prepare($sql);
       $stmt->bindParam(':anp', $data['anpId'], PDO::PARAM_INT);
       $stmt->bindParam(':mun', $data['municipioId'], PDO::PARAM_INT);
       $stmt->bindParam(':nom', $data['nombre'], PDO::PARAM_STR);
+      $stmt->bindParam(':descripcion', $data['descripcion'], PDO::PARAM_STR);
       $stmt->bindParam(':pa', $data['permiteAcampar'], PDO::PARAM_BOOL);
       $stmt->bindParam(':activo', $data['activo'], PDO::PARAM_BOOL);
       $stmt->execute();
@@ -38,13 +39,14 @@ class Lugar
     try {
       $conn = $this->db->conectar();
       $sql = "UPDATE lugares_turisticos
-              SET anp_id = :anp, municipio_id = :mun, nombre = :nom, permite_acampar = :pa, activo = :activo
+              SET anp_id = :anp, municipio_id = :mun, nombre = :nom, permite_acampar = :pa, activo = :activo , descripcion = :descripcion
               WHERE id = :id";
       $stmt = $conn->prepare($sql);
       $stmt->bindParam(':id', $data['id'], PDO::PARAM_INT);
       $stmt->bindParam(':anp', $data['anpId'], PDO::PARAM_INT);
       $stmt->bindParam(':mun', $data['municipioId'], PDO::PARAM_INT);
       $stmt->bindParam(':nom', $data['nombre'], PDO::PARAM_STR);
+      $stmt->bindParam(':descripcion', $data['descripcion'], PDO::PARAM_STR);
       $stmt->bindParam(':pa', $data['permiteAcampar'], PDO::PARAM_BOOL);
       $stmt->bindParam(':activo', $data['activo'], PDO::PARAM_BOOL);
       $stmt->execute();
@@ -64,7 +66,7 @@ class Lugar
     $result = [];
     try {
       $conn = $this->db->conectar();
-      $sql = "SELECT id,municipio_id AS municipioId ,anp_id AS anpId , nombre,permite_acampar AS permiteAcampar, activo FROM lugares_turisticos
+      $sql = "SELECT id,municipio_id AS municipioId ,anp_id AS anpId , nombre,permite_acampar AS permiteAcampar, activo, descripcion FROM lugares_turisticos
               WHERE id = :lugarId AND eliminado = 0";
       $stmt = $conn->prepare($sql);
       $stmt->bindParam(':lugarId', $lugarId, PDO::PARAM_INT);
@@ -91,7 +93,7 @@ class Lugar
     $result = [];
     try {
       $conn = $this->db->conectar();
-      $sql = "SELECT id AS lugarId, nombre, permite_acampar AS permiteAcampar, activo
+      $sql = "SELECT id AS lugarId, nombre, permite_acampar AS permiteAcampar, activo, descripcion
               FROM lugares_turisticos WHERE eliminado = 0";
       $stmt = $conn->prepare($sql);
       $stmt->execute();
@@ -114,7 +116,7 @@ class Lugar
     $result = [];
     try {
       $conn = $this->db->conectar();
-      $sql = "SELECT id, nombre, permite_acampar AS permiteAcampar
+      $sql = "SELECT id, nombre, permite_acampar AS permiteAcampar, descripcion
               FROM lugares_turisticos WHERE activo = 1 AND eliminado = 0";
       $stmt = $conn->prepare($sql);
       $stmt->execute();

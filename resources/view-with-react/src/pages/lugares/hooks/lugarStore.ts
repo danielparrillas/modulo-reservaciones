@@ -8,7 +8,7 @@ interface useLugarProps {
   setGuardando: (guardando: boolean) => void;
   setLugarSeleccionado: (lugar: any) => void;
   setTab: (tab: number | string) => void;
-  setAnpId: (id: number) => void;
+  setAnpId: (id: number | undefined) => void;
 }
 export const useLugarStore = create<useLugarProps>()((set) => ({
   estaGuardando: false,
