@@ -2,16 +2,16 @@
 import {
   CheckCircleOutlined,
   ExclamationCircleOutlined,
-  PlusOutlined,
-  ArrowRightOutlined,
+  EditFilled,
 } from "@ant-design/icons";
-import { Table, Tag, Button, Modal } from "antd";
+import { Table, Tag, Modal } from "antd";
 import { ColumnsType } from "antd/es/table";
 // 🌐 Librerias de terceros
 import { useEffect, useState } from "react";
 import axios from "axios";
 // 😁 Componentes y funciones propias
 import { dollarString } from "../../../utils/formats";
+import { useServicioStore } from "../../../hooks/servicioStore";
 
 interface Servicio {
   nombre: string;
@@ -21,19 +21,19 @@ interface Servicio {
   id: number;
   precio: number;
 }
-interface TableServiciosProps {
-  onClickRow: () => void;
-}
-export default function TableServicios({ onClickRow }: TableServiciosProps) {
+
+export default function TableServicios() {
+  const { setServicioSeleccionadoId, setIsOpenForm } = useServicioStore();
+  const [data, setData] = useState<Servicio[]>([]);
+
   useEffect(() => {
     getServicios();
   }, []);
-  const [data, setData] = useState<Servicio[]>([]);
   const getServicios = async () => {
     await axios
       .get("/reservaciones/api/servicios")
       .then((response) => {
-        console.log(response); //👀
+        // console.log(response); //👀
         setData(response.data);
       })
       .catch((error) => {
@@ -65,19 +65,25 @@ export default function TableServicios({ onClickRow }: TableServiciosProps) {
       dataIndex: "precio",
       key: "precio",
       width: 100,
+      responsive: ["sm"],
       showSorterTooltip: { title: "Click para ordenar" },
       sorter: (a, b) => a.precio - b.precio,
-      render: (precio: number) => (
-        <Tag color="green-inverse" className="font-bold">
-          {dollarString.format(precio)}
-        </Tag>
-      ),
+      render: (precio: number) =>
+        precio === 0 ? (
+          <Tag color="green" className="font-bold">
+            Gratis
+          </Tag>
+        ) : (
+          <Tag color="green-inverse" className="font-bold">
+            {dollarString.format(precio)}
+          </Tag>
+        ),
     },
     {
       title: "Activo",
       dataIndex: "eliminado",
       key: "eliminado",
-      width: 130,
+      width: 110,
       render: (eliminado: boolean) => {
         if (!eliminado) {
           return (
@@ -100,39 +106,27 @@ export default function TableServicios({ onClickRow }: TableServiciosProps) {
       key: "actions",
       align: "center",
       width: 70,
-      render: (_) => (
-        <ArrowRightOutlined
-          className="w-full hover:text-blue-500"
+      render: (_, record) => (
+        <Tag
+          className="cursor-pointer shadow-md hover:shadow-lg"
           onClick={() => {
-            onClickRow();
+            setServicioSeleccionadoId(record.id);
+            setIsOpenForm(true);
           }}
-        />
+          color="gold-inverse"
+        >
+          <EditFilled />
+        </Tag>
       ),
     },
   ];
   return (
-    <div className="flex flex-col gap-4 h-full">
-      <div className="flex gap-8">
-        <h2 className="font-semibold">Servicios</h2>
-        <Button
-          type="primary"
-          icon={<PlusOutlined />}
-          onClick={() => {
-            onClickRow();
-          }}
-        >
-          Agregar nuevo
-        </Button>
-      </div>
-      <div className="h-full bg-white rounded-md">
-        <Table
-          pagination={false}
-          scroll={{ y: window.innerHeight - 230 }}
-          columns={columns}
-          dataSource={data}
-          rowKey={(item) => item.id}
-        />
-      </div>
-    </div>
+    <Table
+      pagination={false}
+      scroll={{ y: window.innerHeight - 190 }}
+      columns={columns}
+      dataSource={data}
+      rowKey={(item) => item.id}
+    />
   );
 }

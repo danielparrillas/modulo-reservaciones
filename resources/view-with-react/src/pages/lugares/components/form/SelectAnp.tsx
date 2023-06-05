@@ -4,7 +4,7 @@ import { Select, Modal } from "antd";
 import { useEffect, useState } from "react";
 import axios from "axios";
 // 😁 Componentes y funciones propias
-import { useLugarStore } from "../../hooks/lugarStore";
+import { useLugarStore } from "../../../../hooks/lugarStore";
 
 interface ANP {
   id: number;

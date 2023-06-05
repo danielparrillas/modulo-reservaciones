@@ -1,12 +1,23 @@
-import { useState, useEffect } from "react";
+// 🖌️ AntDesign
+import { PlusOutlined } from "@ant-design/icons";
+import { Button, message } from "antd";
 import "antd/dist/reset.css";
-import Modal from "antd/es/modal/Modal";
-import TableServicios from "./tables/TableServicios";
-import { useAppStore } from "../lugares/hooks/appStore";
+// 🌐 Librerias de terceros
+import { useEffect } from "react";
+// 😁 Componentes y funciones propias
+import TableServicios from "./components/TableServicios";
+import ServicioForm from "./components/ServicioForm";
+import { useAppStore } from "../../hooks/appStore";
+import { useServicioStore } from "../../hooks/servicioStore";
+useServicioStore;
+
+//⚙️ algunos settings
+message.config({ top: 50 }); // para que los mensajes aparezcan 50px mas abajo
 
 function App() {
   const { setHeight, setWidth } = useAppStore();
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const { setIsOpenForm, setDisponibilidadGrupoId, setServicioSeleccionadoId } =
+    useServicioStore();
   useEffect(() => {
     window.addEventListener("resize", handleResize);
   }, []);
@@ -16,17 +27,6 @@ function App() {
     setWidth(window.innerWidth);
   };
 
-  const showModal = () => {
-    setIsModalOpen(true);
-  };
-
-  const handleOk = () => {
-    setIsModalOpen(false);
-  };
-
-  const handleCancel = () => {
-    setIsModalOpen(false);
-  };
   return (
     <div
       className="flex flex-col p-2 md:p-6 w-full overflow-auto text-neutral-700 h-full"
@@ -34,17 +34,27 @@ function App() {
         height: window.innerHeight - 50,
       }}
     >
-      <TableServicios onClickRow={showModal} />
-      <Modal
-        title="Basic Modal"
-        open={isModalOpen}
-        onOk={handleOk}
-        onCancel={handleCancel}
-      >
-        <p>Some contents...</p>
-        <p>Some contents...</p>
-        <p>Some contents...</p>
-      </Modal>
+      <div className="flex flex-col gap-4 h-full">
+        <div className="flex gap-8">
+          <h2 className="font-semibold">Servicios</h2>
+          <Button
+            type="primary"
+            icon={<PlusOutlined />}
+            onClick={() => {
+              // limpiamos los valores
+              setDisponibilidadGrupoId();
+              setServicioSeleccionadoId();
+              setIsOpenForm(true);
+            }}
+          >
+            Agregar nuevo
+          </Button>
+        </div>
+        <div className="h-full bg-white rounded-md">
+          <TableServicios />
+        </div>
+      </div>
+      <ServicioForm />
     </div>
   );
 }

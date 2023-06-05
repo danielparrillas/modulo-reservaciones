@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 // 😁 Componentes y funciones propias
 import FormDisponibilidad from "../form/FormDisponibilidad";
-import { useLugarStore } from "../../hooks/lugarStore";
+import { useLugarStore } from "../../../../hooks/lugarStore";
 
 interface Disponibilidad {
   id: number;

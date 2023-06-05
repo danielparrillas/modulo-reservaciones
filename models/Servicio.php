@@ -11,13 +11,16 @@ class Servicio
     $result = [];
     try {
       $conn = $this->db->conectar();
-      $sql = "SELECT id AS servicioId ,precio, nombre AS servicio FROM servicios WHERE id = :id AND eliminado = 0";
+      $sql = "SELECT id,nombre, grupo_disponibilidad_id AS disponibilidadId,
+                      precio, eliminado, descripcion
+              FROM servicios WHERE id = :id AND eliminado = 0";
       $stmt = $conn->prepare($sql);
       $stmt->bindParam(':id', $servicio_id, PDO::PARAM_INT);
       $stmt->execute();
       if ($stmt->rowCount() > 0) {
-        $result["data"] = $stmt->fetch(PDO::FETCH_ASSOC);
-        $result["data"]["precio"] = (float) $result["data"]["precio"]; // convertimos a float
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        $result["eliminado"] = (bool)$result["eliminado"];
+        $result["precio"] = (float) $result["precio"]; // convertimos a float
       } else {
         throw new Exception("No se encuentra ningun servicio con el id " . $servicio_id);
       }

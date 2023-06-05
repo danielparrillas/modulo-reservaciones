@@ -15,4 +15,9 @@ class ServicioController
 
     return $result;
   }
+
+  public function obtenerPorId(int $id): array
+  {
+    return $this->model_servicio->obtenerPorId($id);
+  }
 }

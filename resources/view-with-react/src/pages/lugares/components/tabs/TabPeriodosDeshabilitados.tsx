@@ -20,7 +20,7 @@ import locale from "antd/es/date-picker/locale/es_ES";
 import axios from "axios";
 import { useState, useEffect } from "react";
 // 😁 Componentes y funciones propias
-import { useLugarStore } from "../../hooks/lugarStore";
+import { useLugarStore } from "../../../../hooks/lugarStore";
 //🖌️ AntDesign subcomponentes
 const { RangePicker } = DatePicker;
 

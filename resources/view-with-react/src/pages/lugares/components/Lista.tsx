@@ -10,8 +10,8 @@ import { ColumnsType } from "antd/es/table";
 // 🌐 Librerias de terceros
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { useLugarStore } from "../hooks/lugarStore";
-import { useAppStore } from "../hooks/appStore";
+import { useLugarStore } from "../../../hooks/lugarStore";
+import { useAppStore } from "../../../hooks/appStore";
 // 😁 Componentes y funciones propias
 
 interface Lugar {

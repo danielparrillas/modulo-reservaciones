@@ -13,17 +13,17 @@ import {
   Tooltip,
   Tour,
 } from "antd";
+import TextArea from "antd/es/input/TextArea";
+import { isString } from "antd/es/button";
 import type { TourProps } from "antd";
 import { SaveFilled, UndoOutlined, QuestionOutlined } from "@ant-design/icons";
 const { Panel } = Collapse;
 // 🌐 Librerias de terceros
 import axios from "axios";
 // 😁 Componentes y funciones propias
-import { useLugarStore } from "../../hooks/lugarStore";
+import { useLugarStore } from "../../../../hooks/lugarStore";
 import SelectAnp from "../form/SelectAnp";
-import { useAppStore } from "../../hooks/appStore";
-import TextArea from "antd/es/input/TextArea";
-import { isString } from "antd/es/button";
+import { useAppStore } from "../../../../hooks/appStore";
 
 interface Lugar {
   id?: number;

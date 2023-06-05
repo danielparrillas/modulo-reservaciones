@@ -1,5 +1,5 @@
 import "antd/dist/reset.css";
-import { useAppStore } from "./hooks/appStore";
+import { useAppStore } from "../../hooks/appStore";
 import Lista from "./components/Lista";
 import Detalle from "./components/Detalle";
 import { useEffect } from "react";

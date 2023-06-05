@@ -35,6 +35,25 @@ if (count($uri) === 1 && $uri[0] === "") {
       break;
   };
 }
+//2️⃣ /reservaciones/servicio/[id]
+else if (
+  count($uri) === 1 && $uri[0] !== ""
+) {
+  $id = $uri[0];
+  switch ($_SERVER["REQUEST_METHOD"]) {
+    case "GET":
+      $result = $controller->obtenerPorId($id);
+      break;
+    case "PUT":
+      $request["id"] = $id;
+      // $result = $controller->actualizar($request);
+      break;
+    default:
+      http_response_code(405);
+      header("Allow: GET, PUT");
+      break;
+  }
+}
 //❌ si la uri no se encuentra
 else {
   http_response_code(404);
