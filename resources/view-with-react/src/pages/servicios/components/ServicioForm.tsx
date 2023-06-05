@@ -1,5 +1,5 @@
 // 🖌️ AntDesign
-import { Modal, Input, InputNumber, Switch, message } from "antd";
+import { Modal, Input, InputNumber, Switch, message, notification } from "antd";
 import TextArea from "antd/es/input/TextArea";
 // 🌐 Librerias de terceros
 import { useEffect, useState } from "react";
@@ -62,11 +62,27 @@ export default function ServicioForm() {
     console.log("creando");
     setGuardando(false);
   };
-  const updatedServicio = () => {
+  const updatedServicio = async () => {
     setGuardando(true);
-    //setIsOpenForm(false);
-    console.log("actualizando");
-    // setServicio({ eliminado: false }); //reiniciamos el servicio
+    await axios
+      .put(`/reservaciones/api/servicios/${servicioSeleccionadoId}`, {
+        nombre: servicio.nombre,
+        descripcion: servicio.descripcion,
+        disponibilidadId: disponibilidadGrupoId,
+        precio: servicio.precio,
+        eliminado: servicio.eliminado,
+      })
+      .then(() => {
+        notification.success({ message: "Servicio guardado" });
+        getServicio();
+      })
+      .catch((error) => {
+        console.error(error);
+        Modal.error({
+          title: "Ocurrio un error al actualizar",
+          content: error.message,
+        });
+      });
     setGuardando(false);
   };
   // 🖐🏻 handlers

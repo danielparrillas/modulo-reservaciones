@@ -31,7 +31,7 @@ export default function SelectDisponibilidad({
     await axios
       .get("/reservaciones/api/disponibilidades")
       .then((response) => {
-        console.log(response); //👀
+        // console.log(response); //👀
         setOptions(response.data);
       })
       .catch((error) => {

@@ -46,7 +46,7 @@ else if (
       break;
     case "PUT":
       $request["id"] = $id;
-      // $result = $controller->actualizar($request);
+      $result = $controller->actualizar($request);
       break;
     default:
       http_response_code(405);
