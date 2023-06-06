@@ -17,7 +17,7 @@ $result = [];
 // if (isset(getallheaders()["Sec-Fetch-Site"])) {
 //   if (getallheaders()["Sec-Fetch-Site"] !== "same-origin") {
 //     http_response_code(401);
-//     exit;  
+//     exit;
 //   }
 // } else {
 //   http_response_code(401);
@@ -26,12 +26,15 @@ $result = [];
 //1️⃣ /reservaciones/servicios
 if (count($uri) === 1 && $uri[0] === "") {
   switch ($_SERVER["REQUEST_METHOD"]) {
+    case "PUT":
+      $result = $controller->crear($request);
+      break;
     case "GET":
       $result = $controller->obtenerTodos();
       break;
     default:
       http_response_code(405);
-      header("Allow: GET, POST");
+      header("Allow: GET, PUT");
       break;
   };
 }
@@ -44,7 +47,7 @@ else if (
     case "GET":
       $result = $controller->obtenerPorId($id);
       break;
-    case "PUT":
+    case "PATCH":
       $request["id"] = $id;
       $result = $controller->actualizar($request);
       break;
@@ -62,5 +65,5 @@ else {
 
 //❌ si hay error en el resultado establecemos el codigo para indicarle al cliente
 if (isset($result["error"])) http_response_code(404);
-// mandamos la respuesta 
+// mandamos la respuesta
 echo json_encode($result);

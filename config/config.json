@@ -5,7 +5,7 @@
       "port": 3306,
       "user": "php_user",
       "password": "12345678",
-      "name": "mapas",
+      "name": "mapa1",
       "charset": "utf8",
       "driver": "mysql"
     },

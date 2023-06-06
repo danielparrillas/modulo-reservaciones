@@ -20,6 +20,59 @@ class ServicioController
   {
     return $this->model_servicio->obtenerPorId($id);
   }
+  public function crear(array $data)
+  {
+    $result = [];
+    //📝 validacion de nombre
+    if (isset($data["nombre"])) {
+      if (!is_string($data["nombre"])) {
+        $result["error"]["details"][] = "Nombre debe ser texto";
+      } else {
+        if (trim($data["nombre"]) === "") {
+          $result["error"]["details"][] = "Nombre no debe ser un texto vacío";
+        }
+      }
+    } else {
+      $result["error"]["details"][] = "Debe enviarse el nombre";
+    }
+    //📝 validacion de descripcion
+    if (isset($data["descripcion"])) {
+      if (!is_string($data["descripcion"])) {
+        $result["error"]["details"][] = "Descripcion debe ser texto";
+      } else {
+        if (trim($data["descripcion"]) === "") {
+          $result["error"]["details"][] = "Descripcion no debe ser un texto vacío";
+        }
+      }
+    } else {
+      $result["error"]["details"][] = "Debe enviarse la descripcion";
+    }
+    //📝 validacion de eliminado
+    if (isset($data["eliminado"])) {
+      if (!is_bool($data["eliminado"])) {
+        $result["error"]["details"][] = "El campo eliminado debe ser un valor booleano";
+      }
+    } else {
+      $result["error"]["details"][] = "Debe enviarse el estado eliminado";
+    }
+    //📝 validacion de precio
+    if (isset($data["precio"])) {
+      if (!is_numeric($data["precio"])) {
+        $result["error"]["details"][] = "El campo precio debe ser un numero";
+      }
+    } else {
+      $result["error"]["details"][] = "Debe enviarse el precio";
+    }
+    //❌ En caso de error retornamos los mensajes de error
+    if (isset($result["error"])) {
+      $result["error"]["message"] = "Error en los parámetros";
+      return $result;
+    }
+    //✅ Realizamos la inserccion en la base de datos
+    $result = $this->model_servicio->crear($data);
+    $result["modo"] = "creando";
+    return $result;
+  }
   public function actualizar(array $data)
   {
     $result = [];

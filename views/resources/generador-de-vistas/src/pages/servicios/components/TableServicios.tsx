@@ -23,12 +23,14 @@ interface Servicio {
 }
 
 export default function TableServicios() {
-  const { setServicioSeleccionadoId, setIsOpenForm } = useServicioStore();
+  const { setServicioSeleccionadoId, setIsOpenForm, isOpenForm } =
+    useServicioStore();
   const [data, setData] = useState<Servicio[]>([]);
 
   useEffect(() => {
+    // actualizamos los datos cada vez que cambia el estado del formulario
     getServicios();
-  }, []);
+  }, [isOpenForm]);
   const getServicios = async () => {
     await axios
       .get("/reservaciones/api/servicios")

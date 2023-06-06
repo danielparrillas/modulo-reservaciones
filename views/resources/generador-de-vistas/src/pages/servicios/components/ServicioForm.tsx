@@ -32,14 +32,14 @@ export default function ServicioForm() {
 
   useEffect(() => {
     if (!!servicioSeleccionadoId) {
-      getServicio();
+      getServicio(servicioSeleccionadoId);
     }
   }, [servicioSeleccionadoId]);
 
   //🔃 comunicacion con backend
-  const getServicio = async () => {
+  const getServicio = async (id: number) => {
     await axios
-      .get(`/reservaciones/api/servicios/${servicioSeleccionadoId}`)
+      .get(`/reservaciones/api/servicios/${id}`)
       .then((response) => {
         // console.log(response); //👀
         setDisponibilidadGrupoId(response.data.disponibilidadId);
@@ -54,18 +54,47 @@ export default function ServicioForm() {
         console.error(error);
       });
   };
-
-  const createServicio = () => {
+  const createServicio = async () => {
     setGuardando(true);
-    //setIsOpenForm(false);
-    // setServicio({ eliminado: false }); //reiniciamos el servicio
-    console.log("creando");
+    axios
+      .put("/reservaciones/api/servicios", {
+        nombre: servicio.nombre,
+        descripcion: servicio.descripcion,
+        disponibilidadId: disponibilidadGrupoId,
+        precio: servicio.precio,
+        eliminado: servicio.eliminado,
+      })
+      .then(({ data }) => {
+        console.log(data); //👀
+        if (!!data.id) {
+          notification.success({
+            message: `Nuevo servicio creado [${data.id}]`,
+          });
+          // reiniciamos datos
+          setDisponibilidadGrupoId();
+          setServicio({ eliminado: false });
+          setServicioSeleccionadoId();
+          setIsOpenForm(false);
+        } else {
+          Modal.error({
+            title: "Ocurrio un error al crear un nuevo servicio",
+            content: "No se obtuvo la respuesta esperada",
+          });
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+        Modal.error({
+          title: "Ocurrio un error al crear un nuevo servicio",
+          content: error.message,
+        });
+      });
     setGuardando(false);
   };
   const updatedServicio = async () => {
     setGuardando(true);
     await axios
-      .put(`/reservaciones/api/servicios/${servicioSeleccionadoId}`, {
+      .patch(`/reservaciones/api/servicios/${servicioSeleccionadoId}`, {
         nombre: servicio.nombre,
         descripcion: servicio.descripcion,
         disponibilidadId: disponibilidadGrupoId,
@@ -74,7 +103,11 @@ export default function ServicioForm() {
       })
       .then(() => {
         notification.success({ message: "Servicio guardado" });
-        getServicio();
+        // reiniciamos datos
+        setDisponibilidadGrupoId();
+        setServicio({ eliminado: false });
+        setServicioSeleccionadoId();
+        setIsOpenForm(false);
       })
       .catch((error) => {
         console.error(error);
@@ -114,7 +147,7 @@ export default function ServicioForm() {
       }
     }
     //📝 validacion del precio
-    if (!servicio?.precio) {
+    if (servicio.precio === undefined || servicio.precio === null) {
       message.error({ content: "Debe poner un precio" });
       ok = false;
     }
@@ -178,7 +211,8 @@ export default function ServicioForm() {
             onChange={(value) =>
               setServicio({
                 ...servicio,
-                precio: !!value ? Math.abs(Number(value.toFixed(2))) : null,
+                precio:
+                  value !== null ? Math.abs(Number(value.toFixed(2))) : null,
               })
             }
             disabled={estaGuardando}

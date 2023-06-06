@@ -1,17 +1,23 @@
 <?php
 include_once(dirname(__DIR__) .  '/../config/index.php');
 include_once($PATH_CONTROLADORES . 'LugarController.php');
-
+include_once($PATH_MIDDLEWARES . 'AuthMiddleware.php');
 $uri = explode("/", explode("api/lugares/", $_SERVER["REQUEST_URI"])[1]);
 
-// se instancia un objeto que pueda manejar la solicitudes del cliente
+//⏺️ se instancia un objeto que pueda manejar la solicitudes del cliente
 $controller = new LugarController($DB_RESERVACIONES);
-// obtenemos los datos enviados por el cliente
+//⏺️ se instancia un objeto middleware
+$auth = new AuthMiddleware();
+//⏺️obtenemos los datos enviados por el cliente
 $request = json_decode(file_get_contents("php://input"), true);
 $result = [];
 
 // echo json_encode($request); //👀
 // exit; //👀
+
+//⏺️ verificando autorizacion
+// echo json_encode($auth->obtenerDatosSesion());
+// exit;
 
 //❌ si la peticion no viene del mismo origen
 // echo json_encode(getallheaders()["Sec-Fetch-Site"]); //👀

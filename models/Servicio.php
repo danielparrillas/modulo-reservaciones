@@ -5,6 +5,32 @@ class Servicio
   public function __construct(private Database $db)
   {
   }
+  public function crear(array $data)
+  {
+    $result = [];
+    try {
+      $conn = $this->db->conectar();
+      $sql = "INSERT INTO servicios
+                (grupo_disponibilidad_id,nombre,precio,descripcion,eliminado)
+              VALUES (:gdi, :n, :p, :d, :e)";
+      $stmt = $conn->prepare($sql);
+      $stmt->bindParam(':gdi', $data['disponibilidadId'], PDO::PARAM_INT);
+      $stmt->bindParam(':n', $data['nombre'], PDO::PARAM_STR);
+      $stmt->bindParam(':d', $data['descripcion'], PDO::PARAM_STR);
+      $stmt->bindParam(':p', $data['precio'], PDO::PARAM_STR);
+      $stmt->bindParam(':e', $data['eliminado'], PDO::PARAM_BOOL);
+      $stmt->execute();
+
+      $result["id"] = (int) $conn->lastInsertId();
+    } catch (Exception $e) {
+      $conn = null;
+      $result["error"]["message"] = $e->getMessage();
+      $result["error"]["details"][] = ["database" => $e];
+      $result["error"]["details"][] = ["model" => "crear"];
+    }
+    $conn = null;
+    return $result;
+  }
   public function actualizar(array $data)
   {
     $result = [];
