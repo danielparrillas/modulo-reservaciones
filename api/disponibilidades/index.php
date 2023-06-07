@@ -1,9 +1,35 @@
 <?php
-include_once(dirname(__DIR__) .  '/../config/index.php');
-include_once($PATH_CONTROLADORES . 'DisponibilidadController.php');
+
+include_once($_SERVER['DOCUMENT_ROOT'] . "/reservaciones/config/index.php");
+include_once($_SERVER['DOCUMENT_ROOT'] . "/reservaciones/controllers/DisponibilidadController.php");
+include_once($_SERVER['DOCUMENT_ROOT'] . "/reservaciones/middlewares/AuthMiddleware.php");
+
+//⏺️ se instancia un objeto middleware
+$auth = new AuthMiddleware();
+//🟨 solo se permite peticiones del mismo dominio
+if (isset(getallheaders()["Sec-Fetch-Site"])) {
+  //❌ si la peticion no viene del mismo origen
+  if (getallheaders()["Sec-Fetch-Site"] !== "same-origin") {
+    http_response_code(401);
+    exit;
+  }
+} else {
+  http_response_code(401);
+  exit;
+}
+
+//🔒 verificando autorizacion
+$datos_auth = $auth->obtenerDatosSesion();
+if (isset($datos_auth["idtipousuario"])) {
+  $tipo_user = $datos_auth["idtipousuario"];
+  //❌ si el usuario no es del tipo permitido
+  if ($tipo_user !== TIPO_USER_ADMIN && $tipo_user !== TIPO_USER_INT_ADMIN_RESERVACIONES) {
+    http_response_code(401);
+    exit;
+  }
+}
 
 $uri = explode("/", explode("api/disponibilidades/", $_SERVER["REQUEST_URI"])[1]);
-
 // se instancia un objeto que pueda manejar la solicitudes del cliente
 $controller = new DisponbilidadController($DB_RESERVACIONES);
 

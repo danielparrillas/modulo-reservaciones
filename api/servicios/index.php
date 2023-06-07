@@ -1,28 +1,41 @@
 <?php
 include_once($_SERVER['DOCUMENT_ROOT'] . "/reservaciones/config/index.php");
 require_once $_SERVER['DOCUMENT_ROOT'] . "/reservaciones/controllers/ServicioController.php";
+include_once($_SERVER['DOCUMENT_ROOT'] . "/reservaciones/middlewares/AuthMiddleware.php");
 
+//⏺️ se instancia un objeto middleware
+$auth = new AuthMiddleware();
+//🟨 solo se permite peticiones del mismo dominio
+if (isset(getallheaders()["Sec-Fetch-Site"])) {
+  //❌ si la peticion no viene del mismo origen
+  if (getallheaders()["Sec-Fetch-Site"] !== "same-origin") {
+    http_response_code(401);
+    exit;
+  }
+} else {
+  http_response_code(401);
+  exit;
+}
+
+//🔒 verificando autorizacion
+$datos_auth = $auth->obtenerDatosSesion();
+if (isset($datos_auth["idtipousuario"])) {
+  $tipo_user = $datos_auth["idtipousuario"];
+  //❌ si el usuario no es del tipo permitido
+  if ($tipo_user !== TIPO_USER_ADMIN && $tipo_user !== TIPO_USER_INT_ADMIN_RESERVACIONES) {
+    http_response_code(401);
+    exit;
+  }
+}
+
+//⏺️
 $uri = explode("/", explode("/api/servicios/", $_SERVER["REQUEST_URI"])[1]);
-
 // se instancia un objeto que pueda manejar la solicitudes del cliente
 $controller = new ServicioController($DB_RESERVACIONES);
 // obtenemos los datos enviados por el cliente
 $request = json_decode(file_get_contents("php://input"), true);
 $result = [];
-// echo json_encode($request); //👀
-// exit; //👀
 
-//❌ si la peticion no viene del mismo origen
-// echo json_encode(getallheaders()["Sec-Fetch-Site"]); //👀
-// if (isset(getallheaders()["Sec-Fetch-Site"])) {
-//   if (getallheaders()["Sec-Fetch-Site"] !== "same-origin") {
-//     http_response_code(401);
-//     exit;
-//   }
-// } else {
-//   http_response_code(401);
-//   exit;
-// }
 //1️⃣ /reservaciones/servicios
 if (count($uri) === 1 && $uri[0] === "") {
   switch ($_SERVER["REQUEST_METHOD"]) {

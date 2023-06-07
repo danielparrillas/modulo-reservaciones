@@ -3,6 +3,7 @@ import { message } from "antd";
 import "antd/dist/reset.css";
 // 🌐 Librerias de terceros
 import { useEffect } from "react";
+import axios from "axios";
 // 😁 Componentes y funciones propias
 import { useAppStore } from "../../hooks/appStore";
 
@@ -13,8 +14,19 @@ function App() {
   const { setHeight, setWidth } = useAppStore();
   useEffect(() => {
     window.addEventListener("resize", handleResize);
+    test();
   }, []);
 
+  const test = async () => {
+    await axios
+      .get("/reservaciones/api/lugares")
+      .then((response) => {
+        console.log(response);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
   const handleResize = () => {
     setHeight(window.innerHeight);
     setWidth(window.innerWidth);
