@@ -4,15 +4,13 @@ import "antd/dist/reset.css";
 // 🌐 Librerias de terceros
 import { useEffect } from "react";
 // 😁 Componentes y funciones propias
-import TableServicios from "./components/TableServicios";
-import TabServicio from "./components/TabServicio";
 import { useAppStore } from "../../hooks/appStore";
 
 //⚙️ algunos settings
 message.config({ top: 50 }); // para que los mensajes aparezcan 50px mas abajo
 
 function App() {
-  const { setHeight, setWidth, vista } = useAppStore();
+  const { setHeight, setWidth } = useAppStore();
   useEffect(() => {
     window.addEventListener("resize", handleResize);
   }, []);
@@ -28,9 +26,7 @@ function App() {
       style={{
         height: window.innerHeight - 50,
       }}
-    >
-      {vista === "lista" ? <TableServicios /> : <TabServicio />}
-    </div>
+    ></div>
   );
 }
 

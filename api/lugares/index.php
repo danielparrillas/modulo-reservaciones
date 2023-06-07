@@ -15,10 +15,6 @@ $result = [];
 // echo json_encode($request); //👀
 // exit; //👀
 
-//⏺️ verificando autorizacion
-// echo json_encode($auth->obtenerDatosSesion());
-// exit;
-
 //❌ si la peticion no viene del mismo origen
 // echo json_encode(getallheaders()["Sec-Fetch-Site"]); //👀
 if (isset(getallheaders()["Sec-Fetch-Site"])) {
@@ -30,6 +26,11 @@ if (isset(getallheaders()["Sec-Fetch-Site"])) {
   http_response_code(401);
   exit;
 }
+
+//⏺️ verificando autorizacion
+echo json_encode($auth->obtenerDatosSesion());
+// exit;
+
 //1️⃣ /reservaciones/api/lugares
 if (count($uri) === 1 && $uri[0] === "") {
   switch ($_SERVER["REQUEST_METHOD"]) {

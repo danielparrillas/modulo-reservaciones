@@ -1,12 +1,24 @@
 // 🖌️ AntDesign
-import { Modal, Input, InputNumber, Switch, message, notification } from "antd";
+import {
+  Modal,
+  Input,
+  InputNumber,
+  Switch,
+  message,
+  notification,
+  Divider,
+  Popconfirm,
+  Button,
+} from "antd";
 import TextArea from "antd/es/input/TextArea";
+import { SaveFilled } from "@ant-design/icons";
 // 🌐 Librerias de terceros
 import { useEffect, useState } from "react";
 import axios from "axios";
 // 😁 Componentes y funciones propias
 import SelectDisponibilidad from "./SelectDisponibilidad";
 import { useServicioStore } from "../../../hooks/servicioStore";
+import { useAppStore } from "../../../hooks/appStore";
 
 interface Servicio {
   descripcion?: string;
@@ -21,14 +33,14 @@ export default function ServicioForm() {
   const {
     servicioSeleccionadoId,
     setServicioSeleccionadoId,
-    isOpenForm,
-    setIsOpenForm,
+
     setDisponibilidadGrupoId,
     disponibilidadGrupoId,
     estaGuardando,
     setGuardando,
   } = useServicioStore();
   const [servicio, setServicio] = useState<Servicio>({ eliminado: false });
+  const { height, setVista } = useAppStore();
 
   useEffect(() => {
     if (!!servicioSeleccionadoId) {
@@ -46,7 +58,6 @@ export default function ServicioForm() {
         setServicio(response.data);
       })
       .catch((error) => {
-        setIsOpenForm(false);
         Modal.error({
           title: "Ocurrio un error al llamar el servicio",
           content: error.message,
@@ -74,7 +85,7 @@ export default function ServicioForm() {
           setDisponibilidadGrupoId();
           setServicio({ eliminado: false });
           setServicioSeleccionadoId();
-          setIsOpenForm(false);
+          setVista("lista");
         } else {
           Modal.error({
             title: "Ocurrio un error al crear un nuevo servicio",
@@ -107,7 +118,7 @@ export default function ServicioForm() {
         setDisponibilidadGrupoId();
         setServicio({ eliminado: false });
         setServicioSeleccionadoId();
-        setIsOpenForm(false);
+        setVista("lista");
       })
       .catch((error) => {
         console.error(error);
@@ -164,48 +175,55 @@ export default function ServicioForm() {
     }
   };
 
-  const handleCancel = () => {
-    setIsOpenForm(false);
-    setServicio({ eliminado: false }); //reiniciamos el servicio
-    setServicioSeleccionadoId(undefined);
-  };
   return (
-    <Modal
-      title={!!servicioSeleccionadoId ? "Editar servicio" : "Nuevo servicio"}
-      open={isOpenForm}
-      onOk={handleOk}
-      onCancel={handleCancel}
-      okText="Guardar"
-      cancelText="Cancelar"
-      closable={!estaGuardando}
-      okButtonProps={{ loading: estaGuardando }}
-      cancelButtonProps={{ disabled: estaGuardando }}
-      maskClosable={false}
+    <form
+      onSubmit={(e) => e.preventDefault()}
+      className="text-neutral-600 flex flex-col gap-2"
     >
-      <form
-        onSubmit={(e) => e.preventDefault()}
-        className="grid grid-cols-1 gap-4 text-neutral-600"
+      <div className="col-span-5 p-4 flex gap-4">
+        {!!servicioSeleccionadoId ? (
+          <h3>Editar servicio</h3>
+        ) : !servicioSeleccionadoId ? (
+          <h3>Nuevo lugar turístico</h3>
+        ) : (
+          <h3 className="animate-pulse">Guardando lugar turístico</h3>
+        )}
+      </div>
+      <Divider className="m-0 p-0" />
+      <div
+        className="flex flex-col md:grid md:grid-cols-5 overflow-auto px-4 gap-2"
+        style={{ height: height - 330 }}
       >
-        <label className="font-normal">Servicio</label>
-        <Input
-          value={servicio?.nombre}
-          onChange={({ target }) =>
-            setServicio({ ...servicio, nombre: target.value })
-          }
-          disabled={estaGuardando}
-        />
-        <label className="font-normal">Descripción</label>
-        <TextArea
-          value={servicio?.descripcion}
-          onChange={({ target }) =>
-            setServicio({ ...servicio, descripcion: target.value })
-          }
-          maxLength={500}
-          disabled={estaGuardando}
-          showCount
-        />
-        <div className="flex flex-col md:flex-row gap-6 pb-4">
-          <label className="font-normal w-36">Precio</label>
+        <div className="col-span-1 flex items-center">
+          <label>Servicio</label>
+        </div>
+        <div className="col-span-4 flex items-center">
+          <Input
+            value={servicio?.nombre}
+            onChange={({ target }) =>
+              setServicio({ ...servicio, nombre: target.value })
+            }
+            disabled={estaGuardando}
+          />
+        </div>
+        <div className="col-span-1 flex items-center">
+          <label>Descripción</label>
+        </div>
+        <div className="col-span-4 flex items-center">
+          <TextArea
+            value={servicio?.descripcion}
+            onChange={({ target }) =>
+              setServicio({ ...servicio, descripcion: target.value })
+            }
+            maxLength={500}
+            disabled={estaGuardando}
+            showCount
+          />
+        </div>
+        <div className="col-span-1 flex items-center">
+          <label className="w-36">Precio</label>
+        </div>
+        <div className="col-span-4 flex items-center">
           <InputNumber
             value={servicio?.precio}
             onChange={(value) =>
@@ -220,8 +238,10 @@ export default function ServicioForm() {
             className="w-72"
           />
         </div>
-        <div className="flex flex-col md:flex-row gap-6 pb-4">
-          <label className="font-normal w-36">Disponibilidad</label>
+        <div className="col-span-1 flex items-center">
+          <label className="w-36">Disponibilidad</label>
+        </div>
+        <div className="col-span-4 flex items-center">
           <SelectDisponibilidad
             onSelect={setDisponibilidadGrupoId}
             idDisponibilidad={disponibilidadGrupoId}
@@ -229,8 +249,10 @@ export default function ServicioForm() {
             className="w-72"
           />
         </div>
-        <div className="flex gap-6 pb-4">
-          <label className="font-normal w-36">Activo</label>
+        <div className="col-span-1 flex items-center">
+          <label className="w-36">Activo</label>
+        </div>
+        <div className="col-span-4 flex items-center">
           <Switch
             checked={!servicio?.eliminado}
             onChange={(value) =>
@@ -239,7 +261,34 @@ export default function ServicioForm() {
             disabled={estaGuardando}
           />
         </div>
-      </form>
-    </Modal>
+      </div>
+      <div className="col-span-5 flex justify-end">
+        <Popconfirm
+          title={"Confirmación"}
+          description={
+            !!servicioSeleccionadoId
+              ? "¿Desea guardar los nuevos cambios para este servicio?"
+              : "¿Desea crear un nuevo servicio?"
+          }
+          onConfirm={handleOk}
+          okText="Si"
+          cancelText="No"
+          disabled={estaGuardando}
+        >
+          <Button
+            type="primary"
+            icon={<SaveFilled />}
+            size="large"
+            loading={estaGuardando}
+          >
+            {estaGuardando
+              ? "Guardando"
+              : !!servicioSeleccionadoId
+              ? "Guardar"
+              : "Crear"}
+          </Button>
+        </Popconfirm>
+      </div>
+    </form>
   );
 }

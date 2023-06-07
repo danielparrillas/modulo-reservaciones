@@ -2,9 +2,10 @@
 import {
   CheckCircleOutlined,
   ExclamationCircleOutlined,
-  EditFilled,
+  ArrowRightOutlined,
+  PlusOutlined,
 } from "@ant-design/icons";
-import { Table, Tag, Modal } from "antd";
+import { Table, Tag, Modal, Button } from "antd";
 import { ColumnsType } from "antd/es/table";
 // 🌐 Librerias de terceros
 import { useEffect, useState } from "react";
@@ -12,6 +13,7 @@ import axios from "axios";
 // 😁 Componentes y funciones propias
 import { dollarString } from "../../../utils/formats";
 import { useServicioStore } from "../../../hooks/servicioStore";
+import { useAppStore } from "../../../hooks/appStore";
 
 interface Servicio {
   nombre: string;
@@ -23,14 +25,15 @@ interface Servicio {
 }
 
 export default function TableServicios() {
-  const { setServicioSeleccionadoId, setIsOpenForm, isOpenForm } =
+  const { setServicioSeleccionadoId, setDisponibilidadGrupoId } =
     useServicioStore();
+  const { setVista } = useAppStore();
   const [data, setData] = useState<Servicio[]>([]);
 
   useEffect(() => {
     // actualizamos los datos cada vez que cambia el estado del formulario
     getServicios();
-  }, [isOpenForm]);
+  }, []);
   const getServicios = async () => {
     await axios
       .get("/reservaciones/api/servicios")
@@ -109,26 +112,43 @@ export default function TableServicios() {
       align: "center",
       width: 70,
       render: (_, record) => (
-        <Tag
-          className="cursor-pointer shadow-md hover:shadow-lg"
+        <ArrowRightOutlined
+          className="w-full hover:text-blue-500"
           onClick={() => {
             setServicioSeleccionadoId(record.id);
-            setIsOpenForm(true);
+            // setIsOpenForm(true);
+            setVista("detalle");
           }}
-          color="gold-inverse"
-        >
-          <EditFilled />
-        </Tag>
+        />
       ),
     },
   ];
   return (
-    <Table
-      pagination={false}
-      scroll={{ y: window.innerHeight - 190 }}
-      columns={columns}
-      dataSource={data}
-      rowKey={(item) => item.id}
-    />
+    <div className="flex flex-col gap-4 h-full">
+      <div className="flex gap-8">
+        <h2 className="font-semibold">Servicios</h2>
+        <Button
+          type="primary"
+          icon={<PlusOutlined />}
+          onClick={() => {
+            // limpiamos los valores
+            setDisponibilidadGrupoId();
+            setServicioSeleccionadoId();
+            setVista("detalle");
+          }}
+        >
+          Agregar nuevo
+        </Button>
+      </div>
+      <div className="h-full bg-white rounded-md">
+        <Table
+          pagination={false}
+          scroll={{ y: window.innerHeight - 190 }}
+          columns={columns}
+          dataSource={data}
+          rowKey={(item) => item.id}
+        />
+      </div>
+    </div>
   );
 }
