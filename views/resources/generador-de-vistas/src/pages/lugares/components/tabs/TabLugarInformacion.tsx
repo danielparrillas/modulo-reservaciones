@@ -40,6 +40,8 @@ export default function TabLugarInformacion() {
     lugarSeleccionado,
     estaGuardando,
     anpId,
+    setNombre: setNombreLugar,
+    nombre: nombreLugar,
     setGuardando,
     setLugarSeleccionado,
     setAnpId,
@@ -89,6 +91,7 @@ export default function TabLugarInformacion() {
         })
         .then(() => {
           // console.log(response); //👀 cambiar ".then((response) => {"
+          getLugar(lugarSeleccionado);
           notification.success({ message: "Lugar guardado" });
           setGuardando(false);
         })
@@ -150,9 +153,10 @@ export default function TabLugarInformacion() {
     await axios
       .get(`/reservaciones/api/lugares/${id}`)
       .then((response) => {
-        console.log(response); //👀
+        // console.log(response); //👀
         setLugar(response.data.data);
         setAnpId(response.data.data.anpId);
+        setNombreLugar(response.data.data.nombre);
       })
       .catch((error) => {
         console.error(error);
@@ -214,11 +218,11 @@ export default function TabLugarInformacion() {
     >
       <div className="col-span-5 p-4 flex gap-4">
         {!!lugarSeleccionado ? (
-          <h2>Editar lugar turístico</h2>
+          <h3>Editar {nombreLugar}</h3>
         ) : !lugarSeleccionado ? (
-          <h2>Nuevo lugar turístico</h2>
+          <h3>Nuevo lugar turístico</h3>
         ) : (
-          <h2 className="animate-pulse">Guardando lugar turístico</h2>
+          <h3 className="animate-pulse">Guardando lugar turístico</h3>
         )}
         <Tooltip title={"Restablecer cambios"}>
           <Button

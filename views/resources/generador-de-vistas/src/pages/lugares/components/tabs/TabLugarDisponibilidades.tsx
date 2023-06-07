@@ -23,7 +23,7 @@ export default function TabLugarDisponibilidades({
   const [disponibilidades, setDisponibilidades] = useState<Disponibilidad[]>(
     []
   );
-  const { tab } = useLugarStore();
+  const { tab, nombre: nombreLugar } = useLugarStore();
 
   useEffect(() => {
     if (!!lugarId) transformarData();
@@ -83,7 +83,7 @@ export default function TabLugarDisponibilidades({
 
   return (
     <div className="gap-4 md:p-4 text-neutral-600">
-      <h2 className="mb-6">Disponibilidades</h2>
+      <h3 className="mb-6">Disponibilidades de {nombreLugar}</h3>
       <p>
         Indica la cantidad maxima diaria de estos servicios. Esta cantidad será
         utilizada en el sistema para validar las reservaciones.

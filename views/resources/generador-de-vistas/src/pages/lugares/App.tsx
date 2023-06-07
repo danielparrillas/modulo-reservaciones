@@ -13,7 +13,6 @@ function App() {
   const handleResize = () => {
     setHeight(window.innerHeight);
     setWidth(window.innerWidth);
-    console.log(document.cookie);
   };
   return (
     <div

@@ -49,7 +49,7 @@ export default function TabPeriodosDeshabilitados({
   lugarId,
 }: TabPeriodosDeshabilitadosProps) {
   const [range, setRange] = useState<RangePickerProps["value"]>();
-  const { estaGuardando, setGuardando } = useLugarStore();
+  const { estaGuardando, setGuardando, nombre: nombreLugar } = useLugarStore();
   const [periodos, setPeriodos] = useState<PeriodoDeshabilitados[]>([]);
   useEffect(() => {
     getAllPeriodosDeshabilitados();
@@ -134,7 +134,7 @@ export default function TabPeriodosDeshabilitados({
 
   return (
     <div className="gap-4 md:p-4 text-neutral-600">
-      <h2 className="mb-6">Periodos deshabilitados</h2>
+      <h3 className="mb-6">Periodos deshabilitados de {nombreLugar}</h3>
       <p>
         Agrega o quita periodos en el que lugar turístico estara cerrado las
         visitas de turístas
