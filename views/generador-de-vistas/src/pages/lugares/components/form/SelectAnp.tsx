@@ -25,8 +25,33 @@ export default function AutocompleteAnp() {
     await axios
       .get("/areas/api/anp")
       .then((response) => {
-        // console.log(response); // 👀
-        setOptions(response.data);
+        console.log(response); // 👀
+
+        if (typeof response.data === "string") {
+          if (response.data.includes("script")) {
+            Modal.warning({
+              title: "Respuesta del servidor con script",
+              content: response.data,
+              width: "80%",
+            });
+          } else {
+            Modal.warning({
+              title: "Respuesta del servidor no esperada",
+              content: (
+                <div dangerouslySetInnerHTML={{ __html: response.data }}></div>
+              ),
+              width: "80%",
+            });
+          }
+        } else if (Array.isArray(response.data)) {
+          setOptions(response.data);
+        } else {
+          Modal.error({
+            title: "Respuesta del servidor no esperada",
+            content:
+              "Formato de la respuesta del servidor con formato incompatible",
+          });
+        }
       })
       .catch((error) => {
         console.error(error);
