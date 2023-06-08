@@ -37,8 +37,8 @@ if (count($url) === 1 && $url[0] === "") { // api/reservaciones/
     http_response_code(404);
     echo json_encode($result_api);
   }
-} else if (count($url) === 1 && $url[0] !== "") { // api/reservaciones/[id]
-  $id = $url[0];
+} else if (count($url) === 2 && $url[1] !== "") { // api/reservaciones/[id]
+  $id = $url[1];
   $result_api = $middleware_api->validarApiKey();
   if (!isset($result_api["error"])) {
     // obtenemos los datos enviados por el cliente

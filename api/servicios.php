@@ -54,9 +54,9 @@ if (count($url) === 1 && $url[0] === "") {
 }
 //2️⃣ /reservaciones/servicio/[id]
 else if (
-  count($url) === 1 && $url[0] !== ""
+  count($url) === 2 && $url[1] !== ""
 ) {
-  $id = $url[0];
+  $id = $url[1];
   switch ($_SERVER["REQUEST_METHOD"]) {
     case "GET":
       $result = $controller->obtenerPorId($id);
