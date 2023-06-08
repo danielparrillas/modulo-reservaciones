@@ -23,7 +23,7 @@ export default function AutocompleteAnp() {
 
   const getANPs = async () => {
     await axios
-      .get("/areas/api/anp")
+      .get("../areas/api/anp")
       .then((response) => {
         console.log(response); // 👀
 
