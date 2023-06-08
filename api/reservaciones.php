@@ -6,7 +6,7 @@ include_once("../middlewares/ApiMiddleware.php");
 
 //Extraemos el uri solicitado por el cliente y lo particionamos desde el subdirectorio "reservaciones"
 // uri[0] = "", uri[1] = "api", uri[2] = "lugares"
-$uri = explode("/", explode("reservaciones/api/reservaciones/", $_SERVER["REQUEST_URI"])[1]);
+$uri = explode("/", explode("reservaciones/api/reservaciones", $_SERVER["REQUEST_URI"])[1]);
 
 $middleware_api = new ApiMiddleware($DATABASE);
 $controller_reservacion = new ReservacionController($DATABASE);

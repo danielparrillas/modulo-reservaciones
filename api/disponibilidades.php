@@ -29,7 +29,7 @@ if (isset($datos_auth["idtipousuario"])) {
   }
 }
 
-$uri = explode("/", explode("api/disponibilidades/", $_SERVER["REQUEST_URI"])[1]);
+$uri = explode("/", explode("api/disponibilidades", $_SERVER["REQUEST_URI"])[1]);
 // se instancia un objeto que pueda manejar la solicitudes del cliente
 $controller = new DisponbilidadController($DATABASE);
 

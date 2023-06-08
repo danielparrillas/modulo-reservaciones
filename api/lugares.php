@@ -32,7 +32,8 @@ else {
   exit;
 }
 //⏺️
-$uri = explode("/", explode("api/lugares/", $_SERVER["REQUEST_URI"])[1]);
+$uri = explode("/", explode("api/lugares", $_SERVER["REQUEST_URI"])[1]);
+// echo ($_SERVER["REQUEST_URI"]);
 // se instancia un objeto que pueda manejar la solicitudes del cliente
 $controller = new LugarController($DATABASE);
 //obtenemos los datos enviados por el cliente
