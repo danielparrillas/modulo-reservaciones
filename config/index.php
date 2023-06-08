@@ -1,7 +1,7 @@
 <?php
 
 /**
- * *2️⃣SE IMPORTAN LA CONFIGURACIONES DEL ARCHIVO "config.json"
+ * *1️⃣SE IMPORTAN LA CONFIGURACIONES DEL ARCHIVO "config.json"
  * Obtencion de los datos del archivo de configuracion
  * Para guardarla en la constante CONFIGURACION
  */
@@ -11,12 +11,12 @@ $config_data = json_decode($config_file, true);
 define("CONFIGURACION", $config_data);
 
 /**
- * *3️⃣CONFIGURACION DE LAS BASES DE DATOS
+ * *2️⃣CONFIGURACION DE LAS BASES DE DATOS
  * Se obtienen los datos de la configuracion de conexion con db de la constante CONFIGURACION
  */
 include_once('../utils/Database.php');
 
-// 3️⃣.1️⃣cambia la base de datos a conveniencia
+// 3️⃣cambia la base de datos a conveniencia
 $database_name = "produccion"; //local || desarrollo || produccion
 $DATABASE = new Database(
   CONFIGURACION["databases"][$database_name]['host'],
