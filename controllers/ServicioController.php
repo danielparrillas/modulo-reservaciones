@@ -1,5 +1,5 @@
 <?php
-include_once($_SERVER['DOCUMENT_ROOT'] . "/reservaciones/models/Servicio.php");
+include_once("../models/Servicio.php");
 
 class ServicioController
 {

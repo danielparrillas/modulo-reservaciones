@@ -1,28 +1,28 @@
 {
   "databases": {
-    "dev-local": {
+    "local": {
       "host": "localhost",
       "port": 3306,
       "user": "php_user",
       "password": "12345678",
-      "name": "mapa1",
+      "name": "mapas",
       "charset": "utf8",
       "driver": "mysql"
     },
-    "dev-marn": {
-      "host": "192.168.6.41",
+    "desarrollo": {
+      "host": "192.168.6.30",
       "port": 3306,
-      "user": "mysqladmin",
-      "password": "cljnDsCxe4",
+      "user": "sqldesarrollo",
+      "password": "Marn2023.",
       "name": "mapas",
       "charset": "utf8",
       "driver": "mysql"
     },
     "produccion": {
-      "host": "__",
+      "host": "192.168.6.41",
       "port": 3306,
-      "user": "__",
-      "password": "___",
+      "user": "mysqladmin",
+      "password": "cljnDsCxe4",
       "name": "mapas",
       "charset": "utf8",
       "driver": "mysql"

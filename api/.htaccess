@@ -1,1 +1,17 @@
-Options -Indexes
+RewriteEngine On
+
+# Redireccionar URL con la palabra "lugares"
+RewriteCond %{REQUEST_URI} lugares [NC]
+RewriteRule ^ lugares.php [L]
+
+# Redireccionar URL con la palabra "servicios"
+RewriteCond %{REQUEST_URI} servicios [NC]
+RewriteRule ^ servicios.php [L]
+
+# Redireccionar URL con la palabra "disponibilidades"
+RewriteCond %{REQUEST_URI} disponibilidades [NC]
+RewriteRule ^ disponibilidades.php [L]
+
+# Redireccionar URL con la palabra "reservaciones"
+RewriteCond %{REQUEST_URI} reservaciones [NC]
+RewriteRule ^ reservaciones.php [L]

@@ -1,9 +1,9 @@
 <?php
-include_once(dirname(__DIR__) . '/models/Reservacion.php');
-include_once(dirname(__DIR__) . '/models/ReservacionDetalle.php');
-include_once(dirname(__DIR__) . '/models/Lugar.php');
-include_once(dirname(__DIR__) . '/models/Servicio.php');
-include_once(dirname(__DIR__) . '/utils/validarDui.php');
+include_once('../models/Reservacion.php');
+include_once('../models/ReservacionDetalle.php');
+include_once('../models/Lugar.php');
+include_once('../models/Servicio.php');
+include_once('../utils/validarDui.php');
 
 class ReservacionController
 {

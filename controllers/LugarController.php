@@ -1,7 +1,7 @@
 <?php
-include_once(dirname(__DIR__) . '/models/Lugar.php');
-include_once(dirname(__DIR__) . '/models/PeriodoDeshabilitado.php');
-include_once(dirname(__DIR__) . '/models/Disponibilidad.php');
+include_once('../models/Lugar.php');
+include_once('../models/PeriodoDeshabilitado.php');
+include_once('../models/Disponibilidad.php');
 class LugarController
 {
   private $model_lugar;

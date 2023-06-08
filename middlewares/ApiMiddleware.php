@@ -1,6 +1,6 @@
 <?php
 
-include_once(dirname(__DIR__) . '/models/Cliente.php');
+include_once('../models/Cliente.php');
 class ApiMiddleware
 {
   private $model_cliente;

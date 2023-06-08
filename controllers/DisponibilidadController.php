@@ -1,5 +1,5 @@
 <?php
-include_once(dirname(__DIR__) . '/models/GrupoDisponibilidad.php');
+include_once("../models/GrupoDisponibilidad.php");
 
 class DisponbilidadController
 {
