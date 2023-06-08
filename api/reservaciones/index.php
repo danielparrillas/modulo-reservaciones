@@ -1,8 +1,8 @@
 <?php
 
-include_once(dirname(__DIR__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'app' . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'index.php');
-include_once($PATH_CONTROLADORES . 'ReservacionController.php');
-include_once($PATH_MIDDLEWARES . 'ApiMiddleware.php');
+include_once($_SERVER['DOCUMENT_ROOT'] . "/reservaciones/config/index.php");
+include_once($_SERVER['DOCUMENT_ROOT'] . "/reservaciones/controllers/ReservacionController.php");
+include_once($_SERVER['DOCUMENT_ROOT'] . "/reservaciones/middlewares/ApiMiddleware.php");
 
 //Extraemos el uri solicitado por el cliente y lo particionamos desde el subdirectorio "reservaciones"
 // uri[0] = "", uri[1] = "api", uri[2] = "lugares"

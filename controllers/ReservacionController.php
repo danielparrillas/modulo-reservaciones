@@ -87,7 +87,7 @@ class ReservacionController
       foreach ($result_validado['data']["detalles"] as $key => $detalle) {
         $detalle_guardado = $this->model_detalle->crear([
           "reservacionId" => $result_validado["data"]["reservacionId"],
-          "servicioId" => $detalle["data"]["servicioId"],
+          "servicioId" => $detalle["data"]["id"],
           "cantidad" => $detalle["data"]["cantidad"],
           "precio" => $detalle["data"]["precio"]
         ]);
@@ -441,8 +441,8 @@ class ReservacionController
         $lugar_data = $this->model_lugar->obtenerPorId($data["lugarId"]);
         if (!isset($lugar_data["error"])) {
           if ($lugar_data["data"]["activo"]) {
-            $result["data"]["lugarId"] = $lugar_data["data"]["lugarId"];
-            $result["data"]["lugar"] = $lugar_data["data"]["lugar"];
+            $result["data"]["lugarId"] = $lugar_data["data"]["id"];
+            $result["data"]["lugar"] = $lugar_data["data"]["nombre"];
             $result["data"]["lugarActivo"] = $lugar_data["data"]["activo"];
           } else {
             $result["error"]["status"] = true;
@@ -630,8 +630,8 @@ class ReservacionController
           if (!isset($result["error"]["details"]["detalles"])) {
             $servicio_id_sin_repetir = [];
             foreach ($result["data"]["detalles"] as $key => $detalle) {
-              if (!in_array($detalle["data"]["servicioId"], $servicio_id_sin_repetir)) {
-                $servicio_id_sin_repetir[] = $detalle["data"]["servicioId"];
+              if (!in_array($detalle["data"]["id"], $servicio_id_sin_repetir)) {
+                $servicio_id_sin_repetir[] = $detalle["data"]["id"];
               } else {
                 $result["error"]["status"] = true;
                 $result["error"]["details"]["detalles"][] = "No debe enviar servicios duplicados";
@@ -670,7 +670,7 @@ class ReservacionController
           if ($data["servicioId"] > 0) {
             $result_model = $this->model_servicio->obtenerPorId($data["servicioId"]);
             if (!isset($result_model["error"])) {
-              $result["data"] = $result_model["data"];
+              $result["data"] = $result_model;
               // se mantendra null hasta que sea guardado, asi indcamos que todavia no se ha guarda
               $result["data"]["detalleId"] = null;
             } else {
