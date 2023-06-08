@@ -29,11 +29,13 @@ if (isset($datos_auth["idtipousuario"])) {
   }
 }
 
-$uri = explode("/", explode("api/disponibilidades", $_SERVER["REQUEST_URI"])[1]);
+//⏺️
+$uri = explode("api/disponibilidades", $_SERVER["REQUEST_URI"]);
+$url = count($uri) > 1 ? explode("/", $uri[1]) : [""];
 // se instancia un objeto que pueda manejar la solicitudes del cliente
 $controller = new DisponbilidadController($DATABASE);
 
-if (count($uri) === 1 && $uri[0] === "") { // services/disponibilidades
+if (count($url) === 1 && $url[0] === "") { // services/disponibilidades
   switch ($_SERVER["REQUEST_METHOD"]) {
     case "GET":
       $result = $controller->obtenerTodos();

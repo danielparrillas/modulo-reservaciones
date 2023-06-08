@@ -32,7 +32,8 @@ else {
   exit;
 }
 //⏺️
-$uri = explode("/", explode("api/lugares", $_SERVER["REQUEST_URI"])[1]);
+$uri = explode("api/lugares", $_SERVER["REQUEST_URI"]);
+$url = count($uri) > 0 ? explode("/", $uri[1]) : [""];
 // echo ($_SERVER["REQUEST_URI"]);
 // se instancia un objeto que pueda manejar la solicitudes del cliente
 $controller = new LugarController($DATABASE);
@@ -41,7 +42,7 @@ $request = json_decode(file_get_contents("php://input"), true);
 $result = [];
 
 //1️⃣ /reservaciones/api/lugares
-if (count($uri) === 1 && $uri[0] === "") {
+if (count($url) === 1 && $url[0] === "") {
   switch ($_SERVER["REQUEST_METHOD"]) {
     case "POST":
       //⚠️ Por falta de integracion con la base de munipios y anp se agregaran valores por default
@@ -58,9 +59,9 @@ if (count($uri) === 1 && $uri[0] === "") {
 }
 //2️⃣ /reservaciones/api/lugares/[id]
 else if (
-  count($uri) === 1 && $uri[0] !== ""
+  count($url) === 2 && $url[1] !== ""
 ) {
-  $id = $uri[0];
+  $id = $url[1];
   switch ($_SERVER["REQUEST_METHOD"]) {
     case "GET":
       $result = $controller->obtenerPorId($id);
@@ -76,8 +77,8 @@ else if (
   }
 }
 //3️⃣ /reservaciones/api/lugares/[id]/disponibilidades
-else if (count($uri) === 2 && $uri[1] === "disponibilidades") {
-  $id = $uri[0];
+else if (count($url) === 3 && $url[2] === "disponibilidades") {
+  $id = $url[1];
   switch ($_SERVER["REQUEST_METHOD"]) {
     case "GET":
       $result = $controller->obtenerDisponibilidadesPorLugar($id);
@@ -89,9 +90,9 @@ else if (count($uri) === 2 && $uri[1] === "disponibilidades") {
   }
 }
 //4️⃣ /reservaciones/api/lugares/[id]/disponibilidades/[grupoDisponbilidadId]
-else if (count($uri) ===  3 && $uri[1] === "disponibilidades") {
-  $id = $uri[0];
-  $grupoDisponibilidad = $uri[2];
+else if (count($url) ===  4 && $url[2] === "disponibilidades") {
+  $id = $url[1];
+  $grupoDisponibilidad = $url[3];
   switch ($_SERVER["REQUEST_METHOD"]) {
     case "PUT":
       if ($request === null) {
@@ -108,8 +109,8 @@ else if (count($uri) ===  3 && $uri[1] === "disponibilidades") {
   }
 }
 //5️⃣ /reservaciones/api/lugares/[id]/periodosDeshabilitados
-else if (count($uri) === 2 && $uri[1] === "periodosDeshabilitados") {
-  $id = $uri[0];
+else if (count($url) === 3 && $url[2] === "periodosDeshabilitados") {
+  $id = $url[1];
   switch ($_SERVER["REQUEST_METHOD"]) {
     case "POST":
       $result = $controller->crearPeriodoDeshabilitado(array_merge($request, ["id" => $id]));
@@ -124,9 +125,9 @@ else if (count($uri) === 2 && $uri[1] === "periodosDeshabilitados") {
   }
 }
 //6️⃣ /reservaciones/api/lugares/[id]/periodosDeshabilitados/[periodoDeshabilitadoId]
-else if (count($uri) === 3 && $uri[1] === "periodosDeshabilitados") {
-  $id = $uri[0];
-  $periodoDeshabilitadoId = $uri[2];
+else if (count($url) === 4 && $url[2] === "periodosDeshabilitados") {
+  $id = $url[1];
+  $periodoDeshabilitadoId = $url[3];
   switch ($_SERVER["REQUEST_METHOD"]) {
     case "DELETE":
       $result = $controller->eliminarPeriodoDeshabilitado(array_merge(["id" => $id, "periodoId" => $periodoDeshabilitadoId]));
@@ -139,6 +140,7 @@ else if (count($uri) === 3 && $uri[1] === "periodosDeshabilitados") {
 }
 //❌ si la uri no se encuentra
 else {
+  echo json_encode($url);
   http_response_code(404);
   exit;
 }

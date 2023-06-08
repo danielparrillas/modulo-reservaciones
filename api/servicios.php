@@ -29,7 +29,8 @@ if (isset($datos_auth["idtipousuario"])) {
 }
 
 //⏺️
-$uri = explode("/", explode("/api/servicios", $_SERVER["REQUEST_URI"])[1]);
+$uri = explode("api/servicios", $_SERVER["REQUEST_URI"]);
+$url = count($uri) > 1 ? explode("/", $uri[1]) : [""];
 // se instancia un objeto que pueda manejar la solicitudes del cliente
 $controller = new ServicioController($DATABASE);
 // obtenemos los datos enviados por el cliente
@@ -37,7 +38,7 @@ $request = json_decode(file_get_contents("php://input"), true);
 $result = [];
 
 //1️⃣ /reservaciones/servicios
-if (count($uri) === 1 && $uri[0] === "") {
+if (count($url) === 1 && $url[0] === "") {
   switch ($_SERVER["REQUEST_METHOD"]) {
     case "PUT":
       $result = $controller->crear($request);
@@ -53,9 +54,9 @@ if (count($uri) === 1 && $uri[0] === "") {
 }
 //2️⃣ /reservaciones/servicio/[id]
 else if (
-  count($uri) === 1 && $uri[0] !== ""
+  count($url) === 1 && $url[0] !== ""
 ) {
-  $id = $uri[0];
+  $id = $url[0];
   switch ($_SERVER["REQUEST_METHOD"]) {
     case "GET":
       $result = $controller->obtenerPorId($id);

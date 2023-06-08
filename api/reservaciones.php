@@ -6,12 +6,13 @@ include_once("../middlewares/ApiMiddleware.php");
 
 //Extraemos el uri solicitado por el cliente y lo particionamos desde el subdirectorio "reservaciones"
 // uri[0] = "", uri[1] = "api", uri[2] = "lugares"
-$uri = explode("/", explode("reservaciones/api/reservaciones", $_SERVER["REQUEST_URI"])[1]);
+$uri = explode("api/reservaciones", $_SERVER["REQUEST_URI"]);
+$url = count($uri) > 1 ? explode("/", $uri[1]) : [""];
 
 $middleware_api = new ApiMiddleware($DATABASE);
 $controller_reservacion = new ReservacionController($DATABASE);
 
-if (count($uri) === 1 && $uri[0] === "") { // api/reservaciones/
+if (count($url) === 1 && $url[0] === "") { // api/reservaciones/
   $result_api = $middleware_api->validarApiKey();
   if (!isset($result_api["error"])) {
     // obtenemos los datos enviados por el cliente
@@ -36,8 +37,8 @@ if (count($uri) === 1 && $uri[0] === "") { // api/reservaciones/
     http_response_code(404);
     echo json_encode($result_api);
   }
-} else if (count($uri) === 1 && $uri[0] !== "") { // api/reservaciones/[id]
-  $id = $uri[0];
+} else if (count($url) === 1 && $url[0] !== "") { // api/reservaciones/[id]
+  $id = $url[0];
   $result_api = $middleware_api->validarApiKey();
   if (!isset($result_api["error"])) {
     // obtenemos los datos enviados por el cliente
