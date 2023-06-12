@@ -1,7 +1,7 @@
 <?php
-include_once("../config/index.php");
+include_once("../../config/index.php");
 include_once("../controllers/LugarController.php");
-include_once("../middlewares/AuthMiddleware.php");
+include_once("../../middlewares/AuthMiddleware.php");
 
 //⏺️ se instancia un objeto middleware
 $auth = new AuthMiddleware();

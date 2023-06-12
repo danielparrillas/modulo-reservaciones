@@ -1,7 +1,6 @@
 <?php
 
-include_once(dirname(__DIR__) . '/models/Cliente.php');
-include_once(dirname(__DIR__) . '/utils/Database.php');
+include_once('../../utils/Database.php');
 
 class Cliente
 {

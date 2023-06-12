@@ -1,8 +1,8 @@
 <?php
 
-include_once("../config/index.php");
+include_once("../../config/index.php");
 include_once("../controllers/ReservacionController.php");
-include_once("../middlewares/ApiMiddleware.php");
+include_once("../../middlewares/ApiMiddleware.php");
 
 //Extraemos el uri solicitado por el cliente y lo particionamos desde el subdirectorio "reservaciones"
 // uri[0] = "", uri[1] = "api", uri[2] = "lugares"

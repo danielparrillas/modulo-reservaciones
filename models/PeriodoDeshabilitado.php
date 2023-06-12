@@ -1,6 +1,6 @@
 <?php
 
-include_once('../utils/Database.php');
+include_once('../../utils/Database.php');
 class PeriodoDeshabilitado
 {
   public function __construct(private Database $db)

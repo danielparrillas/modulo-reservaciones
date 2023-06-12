@@ -1,5 +1,5 @@
 <?php
-include_once('../utils/Database.php');
+include_once('../../utils/Database.php');
 class ReservacionDetalle
 {
   public function __construct(public Database $db)

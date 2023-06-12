@@ -1,5 +1,5 @@
 <?php
-include_once('../utils/Database.php');
+include_once('../../utils/Database.php');
 class GrupoDisponibilidad
 {
   public function __construct(private Database $db)
